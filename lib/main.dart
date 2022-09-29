@@ -1,3 +1,4 @@
+import 'package:dcs_inventory_system/config/theme.dart';
 import 'package:dcs_inventory_system/views/screens/screens.dart';
 import 'package:flutter/material.dart';
 
@@ -13,10 +14,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      initialRoute: "/dashboard",
+      theme: theme(),
+      initialRoute: "/inventory",
       routes: {
         DashboardScreen.routeName: (context) => const DashboardScreen(),
         LoginScreen.routeName: (context) => const LoginScreen(),
