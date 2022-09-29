@@ -67,8 +67,12 @@ class _Table extends StatelessWidget {
           child: Row(
             children: headers
                 .map(
-                  (header) =>
-                      Expanded(flex: header.flex, child: Text(header.title)),
+                  (header) => Expanded(
+                      flex: header.flex,
+                      child: Text(
+                        header.title,
+                        style: Theme.of(context).textTheme.bodyText1,
+                      )),
                 )
                 .toList(),
           ),
@@ -105,7 +109,7 @@ class _Table extends StatelessWidget {
                       child: PopupMenuButton(
                           onSelected: (value) {
                             if (value == 0) {
-                              showBottomModal(context, const _AddProduct());
+                              showBottomModal(context, const _EditProduct());
                             }
                           },
                           icon: const Icon(Icons.more_horiz),
@@ -172,7 +176,7 @@ class _AddProduct extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text("Add Product"),
+            Text("Add Product", style: Theme.of(context).textTheme.headline4),
             const SizedBox(height: 20),
             TextFormField(
               decoration: InputDecoration(
@@ -188,7 +192,71 @@ class _AddProduct extends StatelessWidget {
             const SizedBox(height: 15),
             TextFormField(
               decoration: InputDecoration(
-                hintText: "Product Price",
+                hintText: "Price",
+                fillColor: Colors.grey.shade200,
+                filled: true,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20.0),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+            ),
+            const SizedBox(height: 15),
+            SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).primaryColor,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30))),
+                onPressed: () {},
+                child: const Text("Save"),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _EditProduct extends StatelessWidget {
+  const _EditProduct({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding:
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0))),
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text("Edit Product", style: Theme.of(context).textTheme.headline4),
+            const SizedBox(height: 20),
+            TextFormField(
+              decoration: InputDecoration(
+                hintText: "Product Name",
+                fillColor: Colors.grey.shade200,
+                filled: true,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20.0),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+            ),
+            const SizedBox(height: 15),
+            TextFormField(
+              decoration: InputDecoration(
+                hintText: "Price",
                 fillColor: Colors.grey.shade200,
                 filled: true,
                 border: OutlineInputBorder(
@@ -237,16 +305,7 @@ class _FloatingActionButton extends StatelessWidget {
         SpeedDialChild(
           child: const Icon(Icons.add),
           label: "Add",
-          onTap: () => {
-            showModalBottomSheet(
-                context: context,
-                builder: (context) {
-                  return Container(
-                    height: 200,
-                    color: Colors.amber,
-                  );
-                })
-          },
+          onTap: () => {showBottomModal(context, const _AddProduct())},
         )
       ],
     );
