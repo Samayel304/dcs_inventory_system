@@ -1,6 +1,6 @@
-import 'dart:math';
-
+import 'package:dcs_inventory_system/models/header_model.dart';
 import 'package:dcs_inventory_system/models/product_model.dart';
+import 'package:dcs_inventory_system/utils/helper.dart';
 import 'package:dcs_inventory_system/views/widgets/bottom_navbar.dart';
 import "package:flutter/material.dart";
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -11,7 +11,6 @@ class InventoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<String> tabs = ['Coffee', 'Milktea', 'Dimsum'];
-    List<String> headers = ['ID', 'Product Name', 'Quantity', ''];
 
     return DefaultTabController(
         initialIndex: 0,
@@ -22,16 +21,7 @@ class InventoryScreen extends StatelessWidget {
               backgroundColor: Colors.transparent,
               elevation: 0,
               leading: IconButton(
-                onPressed: () {
-                  showModalBottomSheet(
-                      context: context,
-                      builder: (context) {
-                        return Container(
-                          height: 200,
-                          color: Colors.amber,
-                        );
-                      });
-                },
+                onPressed: () {},
                 icon: const Icon(
                   Icons.menu,
                   color: Colors.black,
@@ -47,8 +37,8 @@ class InventoryScreen extends StatelessWidget {
                   _Category(tabs: tabs),
                   Expanded(
                     child: _Table(
-                      headers: headers,
-                      products: Product.products,
+                      headers: Header.headers,
+                      products: Product.milktea,
                     ),
                   )
                 ],
@@ -65,7 +55,7 @@ class _Table extends StatelessWidget {
     required this.products,
   }) : super(key: key);
 
-  final List<String> headers;
+  final List<Header> headers;
   final List<Product> products;
 
   @override
@@ -77,9 +67,8 @@ class _Table extends StatelessWidget {
           child: Row(
             children: headers
                 .map(
-                  (header) => header == "Product Name"
-                      ? Expanded(flex: 3, child: Text(header))
-                      : Expanded(child: Text(header)),
+                  (header) =>
+                      Expanded(flex: header.flex, child: Text(header.title)),
                 )
                 .toList(),
           ),
@@ -97,14 +86,22 @@ class _Table extends StatelessWidget {
                   color: Color(0xEEEBE6E6),
                 ),
                 child: Row(children: [
-                  Expanded(child: _ListText(text: products[index].productId)),
+                  Expanded(
+                      flex: 1,
+                      child: _ListText(text: products[index].productId)),
                   Expanded(
                       flex: 3,
                       child: _ListText(text: products[index].productName)),
                   Expanded(
+                      flex: 2,
+                      child: _ListText(
+                          text: formatCurrency(products[index].unitPrice))),
+                  Expanded(
+                      flex: 2,
                       child:
                           _ListText(text: products[index].quantity.toString())),
                   Expanded(
+                      flex: 1,
                       child: PopupMenuButton(
                           onSelected: (value) {
                             if (value == 0) {
@@ -177,15 +174,9 @@ class _AddProduct extends StatelessWidget {
           children: [
             const Text("Add Product"),
             const SizedBox(height: 20),
-            const Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                "Product Name",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              ),
-            ),
             TextFormField(
               decoration: InputDecoration(
+                hintText: "Product Name",
                 fillColor: Colors.grey.shade200,
                 filled: true,
                 border: OutlineInputBorder(
@@ -195,15 +186,9 @@ class _AddProduct extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 15),
-            const Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                "Product Price",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              ),
-            ),
             TextFormField(
               decoration: InputDecoration(
+                hintText: "Product Price",
                 fillColor: Colors.grey.shade200,
                 filled: true,
                 border: OutlineInputBorder(
