@@ -19,7 +19,8 @@ class MyApp extends StatelessWidget {
       initialRoute: "/dashboard",
       routes: {
         DashboardScreen.routeName: (context) => const DashboardScreen(),
-        LoginScreen.routeName: (context) => const LoginScreen()
+        LoginScreen.routeName: (context) => const LoginScreen(),
+        InventoryScreen.routeName: (context) => const InventoryScreen()
       },
     );
   }
