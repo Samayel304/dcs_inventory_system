@@ -72,7 +72,10 @@ class AddProduct extends StatelessWidget {
                   switch (category) {
                     case 0: //coffee
                       Product coffee = Product(
-                          productId: "12",
+                          productId: (int.parse(inventoryViewModel
+                                      .coffee.last.productId) +
+                                  1)
+                              .toString(),
                           productName: productNameController.text,
                           quantity: 0,
                           category: "Coffee",
@@ -83,7 +86,10 @@ class AddProduct extends StatelessWidget {
                       break;
                     case 1: //milktea
                       Product milktea = Product(
-                          productId: "12",
+                          productId: (int.parse(inventoryViewModel
+                                      .milktea.last.productId) +
+                                  1)
+                              .toString(),
                           productName: productNameController.text,
                           quantity: 0,
                           category: "Milktea",
@@ -93,7 +99,10 @@ class AddProduct extends StatelessWidget {
                       break;
                     case 2: //dimsum
                       Product dimsum = Product(
-                          productId: "12",
+                          productId: (int.parse(inventoryViewModel
+                                      .dimsum.last.productId) +
+                                  1)
+                              .toString(),
                           productName: productNameController.text,
                           quantity: 0,
                           category: "Dimsum",
