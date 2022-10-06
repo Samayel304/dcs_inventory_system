@@ -1,3 +1,4 @@
+import 'package:dcs_inventory_system/views/widgets/textfield/custom_textfield.dart';
 import 'package:flutter/material.dart';
 
 class EditProduct extends StatelessWidget {
@@ -21,29 +22,10 @@ class EditProduct extends StatelessWidget {
           children: [
             Text("Edit Product", style: Theme.of(context).textTheme.headline4),
             const SizedBox(height: 20),
-            TextFormField(
-              decoration: InputDecoration(
-                hintText: "Product Name",
-                fillColor: Colors.grey.shade200,
-                filled: true,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-            ),
+            const CustomTextField(hintText: "Product Name"),
             const SizedBox(height: 15),
-            TextFormField(
-              decoration: InputDecoration(
-                hintText: "Price",
-                fillColor: Colors.grey.shade200,
-                filled: true,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-            ),
+            const CustomTextField(
+                hintText: "Price", textInputType: TextInputType.number),
             const SizedBox(height: 15),
             SizedBox(
               width: double.infinity,

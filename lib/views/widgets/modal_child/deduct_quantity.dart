@@ -1,8 +1,8 @@
 import 'package:dcs_inventory_system/views/widgets/textfield/custom_textfield.dart';
 import 'package:flutter/material.dart';
 
-class AddProduct extends StatelessWidget {
-  const AddProduct({
+class DeductQuantity extends StatelessWidget {
+  const DeductQuantity({
     Key? key,
   }) : super(key: key);
 
@@ -20,14 +20,11 @@ class AddProduct extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text("Add Product", style: Theme.of(context).textTheme.headline4),
+            Text("Deduct Quantity",
+                style: Theme.of(context).textTheme.headline4),
             const SizedBox(height: 20),
             const CustomTextField(
-              hintText: "Product Name",
-            ),
-            const SizedBox(height: 15),
-            const CustomTextField(
-              hintText: "Price",
+              hintText: "Quantity",
               textInputType: TextInputType.number,
             ),
             const SizedBox(height: 15),

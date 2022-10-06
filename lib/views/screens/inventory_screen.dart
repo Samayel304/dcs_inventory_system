@@ -3,6 +3,7 @@ import 'package:dcs_inventory_system/models/product_model.dart';
 import 'package:dcs_inventory_system/utils/helper.dart';
 import 'package:dcs_inventory_system/views/widgets/bottom_navbar.dart';
 import 'package:dcs_inventory_system/views/widgets/modal_child/add_product.dart';
+import 'package:dcs_inventory_system/views/widgets/modal_child/deduct_quantity.dart';
 import "package:flutter/material.dart";
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
@@ -117,7 +118,7 @@ class _Table extends StatelessWidget {
                                 break;
                               default:
                                 showBottomModal(
-                                    context, const _DeductQuantity());
+                                    context, const DeductQuantity());
                                 break;
                             }
                           },
@@ -164,60 +165,6 @@ Future<dynamic> showBottomModal(BuildContext context, Widget child) {
       builder: (context) {
         return child;
       });
-}
-
-class _DeductQuantity extends StatelessWidget {
-  const _DeductQuantity({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding:
-          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-      decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0))),
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text("Deduct Quantity",
-                style: Theme.of(context).textTheme.headline4),
-            const SizedBox(height: 20),
-            TextFormField(
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                hintText: "Quantity",
-                fillColor: Colors.grey.shade200,
-                filled: true,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-            ),
-            const SizedBox(height: 15),
-            SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).primaryColor,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30))),
-                onPressed: () {},
-                child: const Text("Save"),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
 }
 
 class _FloatingActionButton extends StatelessWidget {
