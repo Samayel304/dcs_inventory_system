@@ -39,7 +39,7 @@ class InventoryViewModel extends ChangeNotifier {
 
   getCoffee() {
     var response = Product.coffee;
-    setMilktea(response);
+    setCoffee(response);
   }
 
   addCoffee(Product coffee) {
@@ -55,7 +55,7 @@ class InventoryViewModel extends ChangeNotifier {
 
   getDimsum() {
     var response = Product.dimsum;
-    setMilktea(response);
+    setDimsum(response);
   }
 
   addDimsum(Product dimsum) {
