@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: theme(),
-        initialRoute: "/inventory",
+        initialRoute: "/login",
         routes: {
           DashboardScreen.routeName: (context) => const DashboardScreen(),
           LoginScreen.routeName: (context) => const LoginScreen(),

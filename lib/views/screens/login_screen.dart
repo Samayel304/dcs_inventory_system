@@ -1,3 +1,4 @@
+import 'package:dcs_inventory_system/views/screens/screens.dart';
 import 'package:dcs_inventory_system/views/widgets/textfield/custom_textfield.dart';
 import 'package:flutter/material.dart';
 
@@ -58,7 +59,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           backgroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30))),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.pushNamed(context, DashboardScreen.routeName);
+                      },
                       child: Text(
                         "Login",
                         style: Theme.of(context)
