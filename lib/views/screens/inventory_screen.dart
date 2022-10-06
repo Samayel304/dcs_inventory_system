@@ -19,9 +19,8 @@ class InventoryScreen extends StatefulWidget {
   State<InventoryScreen> createState() => _InventoryScreenState();
 }
 
-class _InventoryScreenState extends State<InventoryScreen> {
-  int defaultQuantity = 0;
-
+class _InventoryScreenState extends State<InventoryScreen>
+    with TickerProviderStateMixin {
   TextEditingController productNameAddController = TextEditingController();
   TextEditingController productPriceAddController = TextEditingController();
 
@@ -62,6 +61,9 @@ class _InventoryScreenState extends State<InventoryScreen> {
       ),
     ];
 
+    TabController tabController =
+        TabController(length: tabBarView.length, vsync: this);
+
     return DefaultTabController(
         initialIndex: 0,
         length: tabs.length,
@@ -71,7 +73,9 @@ class _InventoryScreenState extends State<InventoryScreen> {
               backgroundColor: Colors.transparent,
               elevation: 0,
               leading: IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  print(tabController.index);
+                },
                 icon: const Icon(
                   Icons.menu,
                   color: Colors.black,
@@ -84,10 +88,11 @@ class _InventoryScreenState extends State<InventoryScreen> {
               child: Column(
                 children: [
                   const _SearchBar(),
-                  _Category(tabs: tabs),
+                  _Category(tabs: tabs, controller: tabController),
                   Expanded(
                     child: SizedBox(
                       child: TabBarView(
+                          controller: tabController,
                           children: tabBarView.map((view) => view).toList()),
                     ),
                   ),
@@ -97,6 +102,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
             floatingActionButton: _FloatingActionButton(
               productNameAddController: productNameAddController,
               productPriceAddController: productPriceEditController,
+              category: tabController.index,
             )));
   }
 }
@@ -231,11 +237,13 @@ class _FloatingActionButton extends StatelessWidget {
   const _FloatingActionButton(
       {Key? key,
       required this.productNameAddController,
-      required this.productPriceAddController})
+      required this.productPriceAddController,
+      required this.category})
       : super(key: key);
 
   final TextEditingController productNameAddController;
   final TextEditingController productPriceAddController;
+  final int category;
 
   @override
   Widget build(BuildContext context) {
@@ -257,7 +265,8 @@ class _FloatingActionButton extends StatelessWidget {
                 context,
                 AddProduct(
                     productNameController: productNameAddController,
-                    productPriceController: productPriceAddController))
+                    productPriceController: productPriceAddController,
+                    category: category))
           },
         )
       ],
@@ -292,15 +301,18 @@ class _Category extends StatelessWidget {
   const _Category({
     Key? key,
     required this.tabs,
+    required this.controller,
   }) : super(key: key);
 
   final List<String> tabs;
+  final TabController controller;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         TabBar(
+          controller: controller,
           labelColor: Colors.black,
           unselectedLabelColor: Colors.grey,
           isScrollable: true,

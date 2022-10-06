@@ -9,10 +9,12 @@ class AddProduct extends StatelessWidget {
     Key? key,
     required this.productNameController,
     required this.productPriceController,
+    required this.category,
   }) : super(key: key);
 
   final TextEditingController productNameController;
   final TextEditingController productPriceController;
+  final int category;
 
   @override
   Widget build(BuildContext context) {
@@ -52,13 +54,35 @@ class AddProduct extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30))),
                 onPressed: () {
-                  Product milktea = Product(
-                      productId: "12",
-                      productName: productNameController.text,
-                      quantity: 0,
-                      category: "Milktea",
-                      unitPrice: int.parse(productPriceController.text));
-                  inventoryViewModel.addMilktea(milktea);
+                  switch (category) {
+                    case 0: //coffee
+                      Product coffee = Product(
+                          productId: "12",
+                          productName: productNameController.text,
+                          quantity: 0,
+                          category: "Coffee",
+                          unitPrice: int.parse(productPriceController.text));
+                      inventoryViewModel.addCoffee(coffee);
+                      break;
+                    case 1: //milktea
+                      Product milktea = Product(
+                          productId: "12",
+                          productName: productNameController.text,
+                          quantity: 0,
+                          category: "Milktea",
+                          unitPrice: int.parse(productPriceController.text));
+                      inventoryViewModel.addMilktea(milktea);
+                      break;
+                    case 2: //dimsum
+                      Product dimsum = Product(
+                          productId: "12",
+                          productName: productNameController.text,
+                          quantity: 0,
+                          category: "Dimsum",
+                          unitPrice: int.parse(productPriceController.text));
+                      inventoryViewModel.addDimsum(dimsum);
+                      break;
+                  }
                 },
                 child: const Text("Save"),
               ),
