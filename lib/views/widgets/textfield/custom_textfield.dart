@@ -11,7 +11,9 @@ class CustomTextField extends StatelessWidget {
       this.fillColor = const Color(0xFFD9D9D9),
       this.style,
       this.borderColor = const Color(0xFFD9D9D9),
-      this.suffixIcon});
+      this.suffixIcon,
+      this.controller});
+
   final String hintText;
   final TextInputType? textInputType;
   final bool isObscureText;
@@ -21,10 +23,12 @@ class CustomTextField extends StatelessWidget {
   final TextStyle? style;
   final Color borderColor;
   final Widget? suffixIcon;
+  final TextEditingController? controller;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: controller,
       style: style,
       obscureText: isObscureText,
       enableSuggestions: isEnableSuggestion,

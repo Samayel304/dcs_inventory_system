@@ -1,13 +1,22 @@
+import 'package:dcs_inventory_system/view_models/inventory_view_model.dart';
 import 'package:dcs_inventory_system/views/widgets/textfield/custom_textfield.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AddProduct extends StatelessWidget {
   const AddProduct({
     Key? key,
+    required this.productNameController,
+    required this.productPriceController,
   }) : super(key: key);
+
+  final TextEditingController productNameController;
+  final TextEditingController productPriceController;
 
   @override
   Widget build(BuildContext context) {
+    InventoryViewModel inventoryViewModel = context.watch<InventoryViewModel>();
+
     return Container(
       padding:
           EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -22,11 +31,13 @@ class AddProduct extends StatelessWidget {
           children: [
             Text("Add Product", style: Theme.of(context).textTheme.headline4),
             const SizedBox(height: 20),
-            const CustomTextField(
+            CustomTextField(
+              controller: productNameController,
               hintText: "Product Name",
             ),
             const SizedBox(height: 15),
-            const CustomTextField(
+            CustomTextField(
+              controller: productPriceController,
               hintText: "Price",
               textInputType: TextInputType.number,
             ),
@@ -39,7 +50,9 @@ class AddProduct extends StatelessWidget {
                     backgroundColor: Theme.of(context).primaryColor,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30))),
-                onPressed: () {},
+                onPressed: () {
+                  print(productNameController.text);
+                },
                 child: const Text("Save"),
               ),
             )

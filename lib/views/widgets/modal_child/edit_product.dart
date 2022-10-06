@@ -4,7 +4,12 @@ import 'package:flutter/material.dart';
 class EditProduct extends StatelessWidget {
   const EditProduct({
     Key? key,
+    required this.productNameController,
+    required this.productPriceController,
   }) : super(key: key);
+
+  final TextEditingController productNameController;
+  final TextEditingController productPriceController;
 
   @override
   Widget build(BuildContext context) {
@@ -22,10 +27,13 @@ class EditProduct extends StatelessWidget {
           children: [
             Text("Edit Product", style: Theme.of(context).textTheme.headline4),
             const SizedBox(height: 20),
-            const CustomTextField(hintText: "Product Name"),
+            CustomTextField(
+                hintText: "Product Name", controller: productNameController),
             const SizedBox(height: 15),
-            const CustomTextField(
-                hintText: "Price", textInputType: TextInputType.number),
+            CustomTextField(
+                hintText: "Price",
+                textInputType: TextInputType.number,
+                controller: productPriceController),
             const SizedBox(height: 15),
             SizedBox(
               width: double.infinity,

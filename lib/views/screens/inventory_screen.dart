@@ -1,35 +1,61 @@
 import 'package:dcs_inventory_system/models/header_model.dart';
 import 'package:dcs_inventory_system/models/product_model.dart';
 import 'package:dcs_inventory_system/utils/helper.dart';
+import 'package:dcs_inventory_system/view_models/inventory_view_model.dart';
 import 'package:dcs_inventory_system/views/widgets/bottom_navbar.dart';
 import 'package:dcs_inventory_system/views/widgets/modal_child/add_product.dart';
 import 'package:dcs_inventory_system/views/widgets/modal_child/deduct_quantity.dart';
 import "package:flutter/material.dart";
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:provider/provider.dart';
 
 import '../widgets/modal_child/edit_product.dart';
 
-class InventoryScreen extends StatelessWidget {
+class InventoryScreen extends StatefulWidget {
   const InventoryScreen({super.key});
   static const routeName = '/inventory';
+
+  @override
+  State<InventoryScreen> createState() => _InventoryScreenState();
+}
+
+class _InventoryScreenState extends State<InventoryScreen> {
+  int defaultQuantity = 0;
+
+  TextEditingController productNameAddController = TextEditingController();
+  TextEditingController productPriceAddController = TextEditingController();
+
+  TextEditingController productNameEditController = TextEditingController();
+  TextEditingController productPriceEditController = TextEditingController();
+
+  TextEditingController productQuantityController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+    InventoryViewModel inventoryViewModel = context.watch<InventoryViewModel>();
+
     List<String> tabs = ['Coffee', 'Milktea', 'Dimsum'];
     List<Widget> tabBarView = [
       SizedBox(
         child: _Table(
+          productNameEditController: productNameEditController,
+          productPriceEditController: productPriceEditController,
           headers: Header.headers,
           products: Product.coffee,
         ),
       ),
       SizedBox(
         child: _Table(
+          productNameEditController: productNameEditController,
+          productPriceEditController: productPriceEditController,
           headers: Header.headers,
           products: Product.milktea,
         ),
       ),
       SizedBox(
         child: _Table(
+          productNameEditController: productNameEditController,
+          productPriceEditController: productPriceEditController,
           headers: Header.headers,
           products: Product.dimsum,
         ),
@@ -68,7 +94,10 @@ class InventoryScreen extends StatelessWidget {
                 ],
               ),
             ),
-            floatingActionButton: const _FloatingActionButton()));
+            floatingActionButton: _FloatingActionButton(
+              productNameAddController: productNameAddController,
+              productPriceAddController: productPriceEditController,
+            )));
   }
 }
 
@@ -77,10 +106,15 @@ class _Table extends StatelessWidget {
     Key? key,
     required this.headers,
     required this.products,
+    required this.productNameEditController,
+    required this.productPriceEditController,
   }) : super(key: key);
 
   final List<Header> headers;
   final List<Product> products;
+
+  final TextEditingController productNameEditController;
+  final TextEditingController productPriceEditController;
 
   @override
   Widget build(BuildContext context) {
@@ -134,7 +168,13 @@ class _Table extends StatelessWidget {
                           onSelected: (value) {
                             switch (value) {
                               case 0:
-                                showBottomModal(context, const EditProduct());
+                                showBottomModal(
+                                    context,
+                                    EditProduct(
+                                        productNameController:
+                                            productNameEditController,
+                                        productPriceController:
+                                            productPriceEditController));
                                 break;
                               default:
                                 showBottomModal(
@@ -188,9 +228,14 @@ Future<dynamic> showBottomModal(BuildContext context, Widget child) {
 }
 
 class _FloatingActionButton extends StatelessWidget {
-  const _FloatingActionButton({
-    Key? key,
-  }) : super(key: key);
+  const _FloatingActionButton(
+      {Key? key,
+      required this.productNameAddController,
+      required this.productPriceAddController})
+      : super(key: key);
+
+  final TextEditingController productNameAddController;
+  final TextEditingController productPriceAddController;
 
   @override
   Widget build(BuildContext context) {
@@ -207,7 +252,13 @@ class _FloatingActionButton extends StatelessWidget {
         SpeedDialChild(
           child: const Icon(Icons.add),
           label: "Add",
-          onTap: () => {showBottomModal(context, const AddProduct())},
+          onTap: () => {
+            showBottomModal(
+                context,
+                AddProduct(
+                    productNameController: productNameAddController,
+                    productPriceController: productPriceAddController))
+          },
         )
       ],
     );
