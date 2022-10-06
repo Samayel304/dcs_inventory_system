@@ -41,7 +41,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
           productNameEditController: productNameEditController,
           productPriceEditController: productPriceEditController,
           headers: Header.headers,
-          products: Product.coffee,
+          products: inventoryViewModel.coffee,
         ),
       ),
       SizedBox(
@@ -49,7 +49,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
           productNameEditController: productNameEditController,
           productPriceEditController: productPriceEditController,
           headers: Header.headers,
-          products: Product.milktea,
+          products: inventoryViewModel.milktea,
         ),
       ),
       SizedBox(
@@ -57,7 +57,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
           productNameEditController: productNameEditController,
           productPriceEditController: productPriceEditController,
           headers: Header.headers,
-          products: Product.dimsum,
+          products: inventoryViewModel.dimsum,
         ),
       ),
     ];

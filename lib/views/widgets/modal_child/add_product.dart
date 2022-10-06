@@ -1,3 +1,4 @@
+import 'package:dcs_inventory_system/models/product_model.dart';
 import 'package:dcs_inventory_system/view_models/inventory_view_model.dart';
 import 'package:dcs_inventory_system/views/widgets/textfield/custom_textfield.dart';
 import 'package:flutter/material.dart';
@@ -51,7 +52,13 @@ class AddProduct extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30))),
                 onPressed: () {
-                  print(productNameController.text);
+                  Product milktea = Product(
+                      productId: "12",
+                      productName: productNameController.text,
+                      quantity: 0,
+                      category: "Milktea",
+                      unitPrice: int.parse(productPriceController.text));
+                  inventoryViewModel.addMilktea(milktea);
                 },
                 child: const Text("Save"),
               ),
