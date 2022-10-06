@@ -21,13 +21,13 @@ class Product {
         unitPrice: 1000),
     Product(
         productId: '1',
-        productName: 'Vanilla',
+        productName: 'Dimsum',
         quantity: 2,
         category: "Dimsum",
         unitPrice: 100),
     Product(
         productId: '1',
-        productName: 'Vanilla',
+        productName: 'Coffee',
         quantity: 2,
         category: "Coffee",
         unitPrice: 300)

@@ -15,6 +15,26 @@ class InventoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<String> tabs = ['Coffee', 'Milktea', 'Dimsum'];
+    List<Widget> tabBarView = [
+      SizedBox(
+        child: _Table(
+          headers: Header.headers,
+          products: Product.coffee,
+        ),
+      ),
+      SizedBox(
+        child: _Table(
+          headers: Header.headers,
+          products: Product.milktea,
+        ),
+      ),
+      SizedBox(
+        child: _Table(
+          headers: Header.headers,
+          products: Product.dimsum,
+        ),
+      ),
+    ];
 
     return DefaultTabController(
         initialIndex: 0,
@@ -40,11 +60,11 @@ class InventoryScreen extends StatelessWidget {
                   const _SearchBar(),
                   _Category(tabs: tabs),
                   Expanded(
-                    child: _Table(
-                      headers: Header.headers,
-                      products: Product.milktea,
+                    child: SizedBox(
+                      child: TabBarView(
+                          children: tabBarView.map((view) => view).toList()),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -230,15 +250,15 @@ class _Category extends StatelessWidget {
     return Column(
       children: [
         TabBar(
+          labelColor: Colors.black,
+          unselectedLabelColor: Colors.grey,
           isScrollable: true,
           indicatorColor: Colors.black,
+          labelStyle: Theme.of(context).textTheme.headline3,
           tabs: tabs
               .map(
                 (tab) => Tab(
-                  icon: Text(
-                    tab,
-                    style: Theme.of(context).textTheme.headline4,
-                  ),
+                  text: tab,
                 ),
               )
               .toList(),
