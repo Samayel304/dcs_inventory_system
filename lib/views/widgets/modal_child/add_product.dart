@@ -2,6 +2,7 @@ import 'package:dcs_inventory_system/models/product_model.dart';
 import 'package:dcs_inventory_system/view_models/inventory_view_model.dart';
 import 'package:dcs_inventory_system/views/widgets/textfield/custom_textfield.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
 class AddProduct extends StatelessWidget {
@@ -18,6 +19,20 @@ class AddProduct extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    void success() {
+      productNameController.clear();
+      productPriceController.clear();
+      Fluttertoast.showToast(
+          msg: "Success",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 5,
+          backgroundColor: Colors.grey.shade200,
+          textColor: Colors.black,
+          fontSize: 12.0);
+      Navigator.pop(context);
+    }
+
     InventoryViewModel inventoryViewModel = context.watch<InventoryViewModel>();
 
     return Container(
@@ -63,6 +78,8 @@ class AddProduct extends StatelessWidget {
                           category: "Coffee",
                           unitPrice: int.parse(productPriceController.text));
                       inventoryViewModel.addCoffee(coffee);
+                      success();
+
                       break;
                     case 1: //milktea
                       Product milktea = Product(
@@ -72,6 +89,7 @@ class AddProduct extends StatelessWidget {
                           category: "Milktea",
                           unitPrice: int.parse(productPriceController.text));
                       inventoryViewModel.addMilktea(milktea);
+                      success();
                       break;
                     case 2: //dimsum
                       Product dimsum = Product(
@@ -81,6 +99,7 @@ class AddProduct extends StatelessWidget {
                           category: "Dimsum",
                           unitPrice: int.parse(productPriceController.text));
                       inventoryViewModel.addDimsum(dimsum);
+                      success();
                       break;
                   }
                 },
