@@ -1,18 +1,41 @@
+import 'package:dcs_inventory_system/view_models/inventory_view_model.dart';
 import 'package:dcs_inventory_system/views/widgets/textfield/custom_textfield.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 
 class EditProduct extends StatelessWidget {
   const EditProduct({
     Key? key,
     required this.productNameController,
     required this.productPriceController,
+    required this.category,
+    required this.productId,
   }) : super(key: key);
 
   final TextEditingController productNameController;
   final TextEditingController productPriceController;
 
+  final int category;
+  final String productId;
+
   @override
   Widget build(BuildContext context) {
+    void success() {
+      productNameController.clear();
+      productPriceController.clear();
+      Fluttertoast.showToast(
+          msg: "Success",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 5,
+          backgroundColor: Colors.grey.shade200,
+          textColor: Colors.black,
+          fontSize: 12.0);
+      Navigator.pop(context);
+    }
+
+    InventoryViewModel inventoryViewModel = context.watch<InventoryViewModel>();
     return Container(
       padding:
           EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -43,7 +66,31 @@ class EditProduct extends StatelessWidget {
                     backgroundColor: Theme.of(context).primaryColor,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30))),
-                onPressed: () {},
+                onPressed: () {
+                  switch (category) {
+                    case 0: //coffee
+                      inventoryViewModel.editCoffee(
+                          productId,
+                          productNameController.text,
+                          int.parse(productPriceController.text));
+                      success();
+                      break;
+                    case 1: //milktea
+                      inventoryViewModel.editMilktea(
+                          productId,
+                          productNameController.text,
+                          int.parse(productPriceController.text));
+                      success();
+                      break;
+                    case 2:
+                      inventoryViewModel.editDimsum(
+                          productId,
+                          productNameController.text,
+                          int.parse(productPriceController.text));
+                      success();
+                      break;
+                  }
+                },
                 child: const Text("Save"),
               ),
             )

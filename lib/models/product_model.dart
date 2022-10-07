@@ -1,9 +1,9 @@
 class Product {
   final String productId;
-  final String productName;
+  late String productName;
   final int quantity;
   final String category;
-  final int unitPrice;
+  late int unitPrice;
 
   Product(
       {required this.productId,

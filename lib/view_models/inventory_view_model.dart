@@ -32,6 +32,14 @@ class InventoryViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  editMilktea(String producId, String producName, int unitPrice) {
+    Product milktea =
+        _milktea.firstWhere((milktea) => milktea.productId == producId);
+    milktea.productName = producName;
+    milktea.unitPrice = unitPrice;
+    notifyListeners();
+  }
+
   setCoffee(List<Product> coffee) {
     _coffee = coffee;
     notifyListeners();
@@ -48,6 +56,14 @@ class InventoryViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  editCoffee(String producId, String producName, int unitPrice) {
+    Product coffee =
+        _coffee.firstWhere((coffee) => coffee.productId == producId);
+    coffee.productName = producName;
+    coffee.unitPrice = unitPrice;
+    notifyListeners();
+  }
+
   setDimsum(List<Product> dimsum) {
     _dimsum = dimsum;
     notifyListeners();
@@ -61,6 +77,14 @@ class InventoryViewModel extends ChangeNotifier {
   addDimsum(Product dimsum) {
     // _milktea.add(value)
     _dimsum.add(dimsum);
+    notifyListeners();
+  }
+
+  editDimsum(String producId, String producName, int unitPrice) {
+    Product dimsum =
+        _dimsum.firstWhere((dimsum) => dimsum.productId == producId);
+    dimsum.productName = producName;
+    dimsum.unitPrice = unitPrice;
     notifyListeners();
   }
 }

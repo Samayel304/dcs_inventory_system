@@ -5,6 +5,7 @@ import 'package:dcs_inventory_system/view_models/inventory_view_model.dart';
 import 'package:dcs_inventory_system/views/widgets/bottom_navbar.dart';
 import 'package:dcs_inventory_system/views/widgets/modal_child/add_product.dart';
 import 'package:dcs_inventory_system/views/widgets/modal_child/deduct_quantity.dart';
+import 'package:flutter/foundation.dart';
 import "package:flutter/material.dart";
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:provider/provider.dart';
@@ -58,6 +59,7 @@ class _InventoryScreenState extends State<InventoryScreen>
     List<Widget> tabBarView = [
       SizedBox(
         child: _Table(
+          category: _currentTabIndex,
           productNameEditController: productNameEditController,
           productPriceEditController: productPriceEditController,
           headers: Header.headers,
@@ -66,6 +68,7 @@ class _InventoryScreenState extends State<InventoryScreen>
       ),
       SizedBox(
         child: _Table(
+          category: _currentTabIndex,
           productNameEditController: productNameEditController,
           productPriceEditController: productPriceEditController,
           headers: Header.headers,
@@ -74,6 +77,7 @@ class _InventoryScreenState extends State<InventoryScreen>
       ),
       SizedBox(
         child: _Table(
+          category: _currentTabIndex,
           productNameEditController: productNameEditController,
           productPriceEditController: productPriceEditController,
           headers: Header.headers,
@@ -132,6 +136,7 @@ class _Table extends StatelessWidget {
     required this.products,
     required this.productNameEditController,
     required this.productPriceEditController,
+    required this.category,
   }) : super(key: key);
 
   final List<Header> headers;
@@ -139,6 +144,8 @@ class _Table extends StatelessWidget {
 
   final TextEditingController productNameEditController;
   final TextEditingController productPriceEditController;
+
+  final int category;
 
   @override
   Widget build(BuildContext context) {
@@ -195,6 +202,8 @@ class _Table extends StatelessWidget {
                                 showBottomModal(
                                     context,
                                     EditProduct(
+                                        productId: products[index].productId,
+                                        category: category,
                                         productNameController:
                                             productNameEditController,
                                         productPriceController:
