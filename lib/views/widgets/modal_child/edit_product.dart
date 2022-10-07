@@ -1,3 +1,4 @@
+import 'package:dcs_inventory_system/models/product_model.dart';
 import 'package:dcs_inventory_system/view_models/inventory_view_model.dart';
 import 'package:dcs_inventory_system/views/widgets/textfield/custom_textfield.dart';
 import 'package:flutter/material.dart';
@@ -10,14 +11,14 @@ class EditProduct extends StatelessWidget {
     required this.productNameController,
     required this.productPriceController,
     required this.category,
-    required this.productId,
+    required this.selectedProduct,
   }) : super(key: key);
 
   final TextEditingController productNameController;
   final TextEditingController productPriceController;
 
   final int category;
-  final String productId;
+  final Product selectedProduct;
 
   @override
   Widget build(BuildContext context) {
@@ -51,10 +52,11 @@ class EditProduct extends StatelessWidget {
             Text("Edit Product", style: Theme.of(context).textTheme.headline4),
             const SizedBox(height: 20),
             CustomTextField(
-                hintText: "Product Name", controller: productNameController),
+                hintText: selectedProduct.productName,
+                controller: productNameController),
             const SizedBox(height: 15),
             CustomTextField(
-                hintText: "Price",
+                hintText: selectedProduct.unitPrice.toString(),
                 textInputType: TextInputType.number,
                 controller: productPriceController),
             const SizedBox(height: 15),
@@ -70,21 +72,21 @@ class EditProduct extends StatelessWidget {
                   switch (category) {
                     case 0: //coffee
                       inventoryViewModel.editCoffee(
-                          productId,
+                          selectedProduct.productId,
                           productNameController.text,
                           int.parse(productPriceController.text));
                       success();
                       break;
                     case 1: //milktea
                       inventoryViewModel.editMilktea(
-                          productId,
+                          selectedProduct.productId,
                           productNameController.text,
                           int.parse(productPriceController.text));
                       success();
                       break;
                     case 2:
                       inventoryViewModel.editDimsum(
-                          productId,
+                          selectedProduct.productId,
                           productNameController.text,
                           int.parse(productPriceController.text));
                       success();

@@ -202,7 +202,7 @@ class _Table extends StatelessWidget {
                                 showBottomModal(
                                     context,
                                     EditProduct(
-                                        productId: products[index].productId,
+                                        selectedProduct: products[index],
                                         category: category,
                                         productNameController:
                                             productNameEditController,
