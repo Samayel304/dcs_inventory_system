@@ -20,7 +20,8 @@ class InventoryScreen extends StatefulWidget {
 }
 
 class _InventoryScreenState extends State<InventoryScreen>
-    with TickerProviderStateMixin {
+    with SingleTickerProviderStateMixin {
+  int _currentTabIndex = 0;
   TextEditingController productNameAddController = TextEditingController();
   TextEditingController productPriceAddController = TextEditingController();
 
@@ -28,6 +29,26 @@ class _InventoryScreenState extends State<InventoryScreen>
   TextEditingController productPriceEditController = TextEditingController();
 
   TextEditingController productQuantityController = TextEditingController();
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+    _tabController.addListener(_handleTabSelection);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  _handleTabSelection() {
+    setState(() {
+      _currentTabIndex = _tabController.index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,9 +82,6 @@ class _InventoryScreenState extends State<InventoryScreen>
       ),
     ];
 
-    TabController tabController =
-        TabController(length: tabBarView.length, vsync: this);
-
     return DefaultTabController(
         initialIndex: 0,
         length: tabs.length,
@@ -74,7 +92,7 @@ class _InventoryScreenState extends State<InventoryScreen>
               elevation: 0,
               leading: IconButton(
                 onPressed: () {
-                  print(tabController.index);
+                  print(_tabController.index);
                 },
                 icon: const Icon(
                   Icons.menu,
@@ -88,11 +106,11 @@ class _InventoryScreenState extends State<InventoryScreen>
               child: Column(
                 children: [
                   const _SearchBar(),
-                  _Category(tabs: tabs, controller: tabController),
+                  _Category(tabs: tabs, controller: _tabController),
                   Expanded(
                     child: SizedBox(
                       child: TabBarView(
-                          controller: tabController,
+                          controller: _tabController,
                           children: tabBarView.map((view) => view).toList()),
                     ),
                   ),
@@ -102,7 +120,7 @@ class _InventoryScreenState extends State<InventoryScreen>
             floatingActionButton: _FloatingActionButton(
               productNameAddController: productNameAddController,
               productPriceAddController: productPriceEditController,
-              category: tabController.index,
+              category: _currentTabIndex,
             )));
   }
 }
