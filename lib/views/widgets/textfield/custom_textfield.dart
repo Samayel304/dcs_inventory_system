@@ -12,7 +12,8 @@ class CustomTextField extends StatelessWidget {
       this.style,
       this.borderColor = const Color(0xFFD9D9D9),
       this.suffixIcon,
-      this.controller});
+      this.controller,
+      this.prefixIcon});
 
   final String hintText;
   final TextInputType? textInputType;
@@ -24,6 +25,7 @@ class CustomTextField extends StatelessWidget {
   final Color borderColor;
   final Widget? suffixIcon;
   final TextEditingController? controller;
+  final Widget? prefixIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +40,7 @@ class CustomTextField extends StatelessWidget {
           hintText: hintText,
           hintStyle: style,
           suffixIcon: suffixIcon,
+          prefixIcon: prefixIcon,
           fillColor: fillColor,
           filled: true,
           border: OutlineInputBorder(

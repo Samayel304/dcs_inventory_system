@@ -1,15 +1,17 @@
 import 'package:dcs_inventory_system/models/header_model.dart';
 import 'package:dcs_inventory_system/models/product_model.dart';
-import 'package:dcs_inventory_system/utils/helper.dart';
 import 'package:dcs_inventory_system/view_models/inventory_view_model.dart';
 import 'package:dcs_inventory_system/views/widgets/bottom_navbar.dart';
 import 'package:dcs_inventory_system/views/widgets/modal_child/add_product.dart';
 import 'package:dcs_inventory_system/views/widgets/modal_child/deduct_quantity.dart';
-import 'package:flutter/foundation.dart';
+import 'package:dcs_inventory_system/views/widgets/textfield/custom_textfield.dart';
+
 import "package:flutter/material.dart";
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:provider/provider.dart';
 
+import '../widgets/custom_app_bar.dart';
+import '../widgets/custom_tab_bar.dart';
 import '../widgets/modal_child/edit_product.dart';
 
 class InventoryScreen extends StatefulWidget {
@@ -58,7 +60,7 @@ class _InventoryScreenState extends State<InventoryScreen>
     List<String> tabs = ['Coffee', 'Milktea', 'Dimsum'];
     List<Widget> tabBarView = [
       SizedBox(
-        child: _Table(
+        child: _TabBarViewChild(
           category: _currentTabIndex,
           productNameEditController: productNameEditController,
           productPriceEditController: productPriceEditController,
@@ -67,7 +69,7 @@ class _InventoryScreenState extends State<InventoryScreen>
         ),
       ),
       SizedBox(
-        child: _Table(
+        child: _TabBarViewChild(
           category: _currentTabIndex,
           productNameEditController: productNameEditController,
           productPriceEditController: productPriceEditController,
@@ -76,7 +78,7 @@ class _InventoryScreenState extends State<InventoryScreen>
         ),
       ),
       SizedBox(
-        child: _Table(
+        child: _TabBarViewChild(
           category: _currentTabIndex,
           productNameEditController: productNameEditController,
           productPriceEditController: productPriceEditController,
@@ -91,31 +93,24 @@ class _InventoryScreenState extends State<InventoryScreen>
         length: tabs.length,
         child: Scaffold(
             resizeToAvoidBottomInset: false,
-            appBar: AppBar(
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              leading: IconButton(
-                onPressed: () {
-                  print(_tabController.index);
-                },
-                icon: const Icon(
-                  Icons.menu,
-                  color: Colors.black,
-                ),
-              ),
-            ),
+            appBar: const CustomAppBar(),
             bottomNavigationBar: const BottomNavBar(index: 1),
             body: Container(
               padding: const EdgeInsets.all(15),
               child: Column(
                 children: [
-                  const _SearchBar(),
-                  _Category(tabs: tabs, controller: _tabController),
+                  const CustomTextField(
+                    hintText: "Search",
+                    prefixIcon: Icon(
+                      Icons.search,
+                      color: Colors.grey,
+                    ),
+                  ),
                   Expanded(
-                    child: SizedBox(
-                      child: TabBarView(
-                          controller: _tabController,
-                          children: tabBarView.map((view) => view).toList()),
+                    child: CustomTabBar(
+                      tabs: tabs,
+                      tabBarController: _tabController,
+                      tabBarViewChild: tabBarView,
                     ),
                   ),
                 ],
@@ -129,8 +124,8 @@ class _InventoryScreenState extends State<InventoryScreen>
   }
 }
 
-class _Table extends StatelessWidget {
-  const _Table({
+class _TabBarViewChild extends StatelessWidget {
+  const _TabBarViewChild({
     Key? key,
     required this.headers,
     required this.products,
@@ -181,18 +176,20 @@ class _Table extends StatelessWidget {
                 child: Row(children: [
                   Expanded(
                       flex: 1,
-                      child: _ListText(text: products[index].productId)),
+                      child: Text(products[index].productId,
+                          style: Theme.of(context).textTheme.headline3)),
                   Expanded(
                       flex: 3,
-                      child: _ListText(text: products[index].productName)),
+                      child: Text(products[index].productName,
+                          style: Theme.of(context).textTheme.headline3)),
                   Expanded(
                       flex: 2,
-                      child: _ListText(
-                          text: formatCurrency(products[index].unitPrice))),
+                      child: Text(products[index].unitPrice.toString(),
+                          style: Theme.of(context).textTheme.headline3)),
                   Expanded(
                       flex: 2,
-                      child:
-                          _ListText(text: products[index].quantity.toString())),
+                      child: Text(products[index].quantity.toString(),
+                          style: Theme.of(context).textTheme.headline3)),
                   Expanded(
                       flex: 1,
                       child: PopupMenuButton(
@@ -233,20 +230,6 @@ class _Table extends StatelessWidget {
         )
       ],
     );
-  }
-}
-
-class _ListText extends StatelessWidget {
-  const _ListText({
-    Key? key,
-    required this.text,
-  }) : super(key: key);
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(text, style: Theme.of(context).textTheme.headline3);
   }
 }
 
@@ -296,63 +279,6 @@ class _FloatingActionButton extends StatelessWidget {
                     category: category))
           },
         )
-      ],
-    );
-  }
-}
-
-class _SearchBar extends StatelessWidget {
-  const _SearchBar({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      decoration: InputDecoration(
-        hintText: 'Search',
-        fillColor: Colors.grey.shade200,
-        filled: true,
-        prefixIcon: const Icon(
-          Icons.search,
-          color: Colors.grey,
-        ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20.0),
-          borderSide: BorderSide.none,
-        ),
-      ),
-    );
-  }
-}
-
-class _Category extends StatelessWidget {
-  const _Category({
-    Key? key,
-    required this.tabs,
-    required this.controller,
-  }) : super(key: key);
-
-  final List<String> tabs;
-  final TabController controller;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        TabBar(
-          controller: controller,
-          labelColor: Colors.black,
-          unselectedLabelColor: Colors.grey,
-          isScrollable: true,
-          indicatorColor: Colors.black,
-          labelStyle: Theme.of(context).textTheme.headline3,
-          tabs: tabs
-              .map(
-                (tab) => Tab(
-                  text: tab,
-                ),
-              )
-              .toList(),
-        ),
       ],
     );
   }

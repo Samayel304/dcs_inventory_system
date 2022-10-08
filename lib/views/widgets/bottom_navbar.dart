@@ -44,7 +44,7 @@ class BottomNavBar extends StatelessWidget {
             margin: const EdgeInsets.only(right: 50),
             child: IconButton(
               onPressed: () {
-                print('No profile screen yet');
+                Navigator.pushNamed(context, OrderScreen.routeName);
               },
               icon: const Icon(Icons.shopping_cart),
             ),
