@@ -57,19 +57,21 @@ class _OrderScreenState extends State<OrderScreen>
     List<String> tabs = ["All", "Pending", "Received", "Cancelled"];
 
     List<Widget> tabBarViewChildren = [
-      const Text("All"),
-      const Text("Pending"),
-      const Text("Received"),
-      const Text("Cancelled"),
+      const _TabBarViewChild(),
+      const _TabBarViewChild(),
+      const _TabBarViewChild(),
+      const _TabBarViewChild(),
     ];
 
     return DefaultTabController(
+      initialIndex: 0,
       length: tabs.length,
       child: Scaffold(
           resizeToAvoidBottomInset: false,
           appBar: const CustomAppBar(),
+          bottomNavigationBar: const BottomNavBar(index: 2),
           body: Container(
-            padding: const EdgeInsets.all(15),
+            padding: const EdgeInsets.only(left: 15, right: 15),
             child: Column(
               children: [
                 const CustomTextField(
@@ -89,9 +91,30 @@ class _OrderScreenState extends State<OrderScreen>
               ],
             ),
           ),
-          bottomNavigationBar: const BottomNavBar(index: 2),
           floatingActionButton:
               CustomFloatingActionButton(children: fabChildren)),
+    );
+  }
+}
+
+class _TabBarViewChild extends StatelessWidget {
+  const _TabBarViewChild({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 15),
+      child: ListView.builder(
+          itemCount: 1,
+          itemBuilder: (context, index) => Container(
+                child: Column(
+                  children: [
+                    Row(
+                      children: [Text("ID :"), Text("1")],
+                    ),
+                  ],
+                ),
+              )),
     );
   }
 }

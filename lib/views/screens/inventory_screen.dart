@@ -97,7 +97,7 @@ class _InventoryScreenState extends State<InventoryScreen>
             appBar: const CustomAppBar(),
             bottomNavigationBar: const BottomNavBar(index: 1),
             body: Container(
-              padding: const EdgeInsets.all(15),
+              padding: const EdgeInsets.only(left: 15, right: 15),
               child: Column(
                 children: [
                   const CustomTextField(
@@ -148,7 +148,7 @@ class _TabBarViewChild extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(15.0),
           child: Row(
             children: headers
                 .map(
@@ -168,8 +168,8 @@ class _TabBarViewChild extends StatelessWidget {
             itemCount: products.length,
             itemBuilder: (BuildContext context, int index) {
               return Container(
-                margin: const EdgeInsets.all(5),
-                padding: const EdgeInsets.all(20.0),
+                //margin: const EdgeInsets.all(5),
+                padding: const EdgeInsets.all(15.0),
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(15)),
                   color: Color(0xEEEBE6E6),
