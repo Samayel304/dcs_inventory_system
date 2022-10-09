@@ -10,6 +10,7 @@ import "package:flutter/material.dart";
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:provider/provider.dart';
 
+import '../../utils/helper.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/custom_tab_bar.dart';
 import '../widgets/modal_child/edit_product.dart';
@@ -184,7 +185,7 @@ class _TabBarViewChild extends StatelessWidget {
                           style: Theme.of(context).textTheme.headline3)),
                   Expanded(
                       flex: 2,
-                      child: Text(products[index].unitPrice.toString(),
+                      child: Text(formatCurrency(products[index].unitPrice),
                           style: Theme.of(context).textTheme.headline3)),
                   Expanded(
                       flex: 2,
