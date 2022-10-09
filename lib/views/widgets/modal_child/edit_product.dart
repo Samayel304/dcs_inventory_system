@@ -1,6 +1,6 @@
 import 'package:dcs_inventory_system/models/product_model.dart';
 import 'package:dcs_inventory_system/view_models/inventory_view_model.dart';
-import 'package:dcs_inventory_system/views/widgets/textfield/custom_textfield.dart';
+import 'package:dcs_inventory_system/views/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';

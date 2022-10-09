@@ -1,6 +1,7 @@
-import 'package:dcs_inventory_system/views/screens/screens.dart';
-import 'package:dcs_inventory_system/views/widgets/textfield/custom_textfield.dart';
+import 'package:dcs_inventory_system/views/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
+
+import '../widgets/custom_elevated_button.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -54,21 +55,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                     width: double.infinity,
                     height: 60,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30))),
-                      onPressed: () {
-                        Navigator.pushNamed(context, DashboardScreen.routeName);
-                      },
-                      child: Text(
-                        "Login",
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline3!
-                            .copyWith(color: Colors.black),
-                      ),
+                    child: CustomElevatedButton(
+                      text: "Login",
+                      backgroundColor: Colors.white,
+                      onPressed: () {},
                     ))
               ],
             ),
