@@ -107,6 +107,11 @@ class _TabBarViewChild extends StatelessWidget {
       child: ListView.builder(
           itemCount: 1,
           itemBuilder: (context, index) => Container(
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(15)),
+                  color: Color(0xEEEBE6E6),
+                ),
+                padding: const EdgeInsets.all(15.0),
                 child: Column(
                   children: [
                     Row(
