@@ -6,20 +6,24 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
-class EditProduct extends StatelessWidget {
+class EditProduct extends StatefulWidget {
   const EditProduct({
     Key? key,
-    required this.productNameController,
-    required this.productPriceController,
     required this.category,
     required this.selectedProduct,
   }) : super(key: key);
 
-  final TextEditingController productNameController;
-  final TextEditingController productPriceController;
-
   final int category;
   final Product selectedProduct;
+
+  @override
+  State<EditProduct> createState() => _EditProductState();
+}
+
+class _EditProductState extends State<EditProduct> {
+  TextEditingController productNameController = TextEditingController();
+  TextEditingController productPriceController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -47,55 +51,73 @@ class EditProduct extends StatelessWidget {
               topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0))),
       child: Padding(
         padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text("Edit Product", style: Theme.of(context).textTheme.headline4),
-            const SizedBox(height: 20),
-            CustomTextField(
-                hintText: selectedProduct.productName,
-                controller: productNameController),
-            const SizedBox(height: 15),
-            CustomTextField(
-                hintText: selectedProduct.unitPrice.toString(),
-                textInputType: TextInputType.number,
-                controller: productPriceController),
-            const SizedBox(height: 15),
-            SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: CustomElevatedButton(
-                backgroundColor: Colors.black,
-                fontColor: Colors.white,
-                text: "Save",
-                onPressed: () {
-                  switch (category) {
-                    case 0: //coffee
-                      inventoryViewModel.editCoffee(
-                          selectedProduct.productId,
-                          productNameController.text,
-                          int.parse(productPriceController.text));
-                      success();
-                      break;
-                    case 1: //milktea
-                      inventoryViewModel.editMilktea(
-                          selectedProduct.productId,
-                          productNameController.text,
-                          int.parse(productPriceController.text));
-                      success();
-                      break;
-                    case 2:
-                      inventoryViewModel.editDimsum(
-                          selectedProduct.productId,
-                          productNameController.text,
-                          int.parse(productPriceController.text));
-                      success();
-                      break;
-                  }
-                },
-              ),
-            )
-          ],
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text("Edit Product",
+                  style: Theme.of(context).textTheme.headline4),
+              const SizedBox(height: 20),
+              CustomTextField(
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Enter Product Name";
+                    }
+                    return null;
+                  },
+                  hintText: widget.selectedProduct.productName,
+                  controller: productNameController),
+              const SizedBox(height: 15),
+              CustomTextField(
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Enter Product Price";
+                    }
+                    return null;
+                  },
+                  hintText: widget.selectedProduct.unitPrice.toString(),
+                  textInputType: TextInputType.number,
+                  controller: productPriceController),
+              const SizedBox(height: 15),
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: CustomElevatedButton(
+                  backgroundColor: Colors.black,
+                  fontColor: Colors.white,
+                  text: "Save",
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      switch (widget.category) {
+                        case 0: //coffee
+                          inventoryViewModel.editCoffee(
+                              widget.selectedProduct.productId,
+                              productNameController.text,
+                              int.parse(productPriceController.text));
+                          success();
+                          break;
+                        case 1: //milktea
+                          inventoryViewModel.editMilktea(
+                              widget.selectedProduct.productId,
+                              productNameController.text,
+                              int.parse(productPriceController.text));
+                          success();
+                          break;
+                        case 2:
+                          inventoryViewModel.editDimsum(
+                              widget.selectedProduct.productId,
+                              productNameController.text,
+                              int.parse(productPriceController.text));
+                          success();
+                          break;
+                      }
+                    }
+                  },
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

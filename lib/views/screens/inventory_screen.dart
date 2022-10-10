@@ -26,8 +26,6 @@ class InventoryScreen extends StatefulWidget {
 class _InventoryScreenState extends State<InventoryScreen>
     with SingleTickerProviderStateMixin {
   int _currentTabIndex = 0;
-  TextEditingController productNameAddController = TextEditingController();
-  TextEditingController productPriceAddController = TextEditingController();
 
   TextEditingController productNameEditController = TextEditingController();
   TextEditingController productPriceEditController = TextEditingController();
@@ -63,8 +61,6 @@ class _InventoryScreenState extends State<InventoryScreen>
       SizedBox(
         child: _TabBarViewChild(
           category: _currentTabIndex,
-          productNameEditController: productNameEditController,
-          productPriceEditController: productPriceEditController,
           headers: Header.headers,
           products: inventoryViewModel.coffee,
         ),
@@ -72,8 +68,6 @@ class _InventoryScreenState extends State<InventoryScreen>
       SizedBox(
         child: _TabBarViewChild(
           category: _currentTabIndex,
-          productNameEditController: productNameEditController,
-          productPriceEditController: productPriceEditController,
           headers: Header.headers,
           products: inventoryViewModel.milktea,
         ),
@@ -81,8 +75,6 @@ class _InventoryScreenState extends State<InventoryScreen>
       SizedBox(
         child: _TabBarViewChild(
           category: _currentTabIndex,
-          productNameEditController: productNameEditController,
-          productPriceEditController: productPriceEditController,
           headers: Header.headers,
           products: inventoryViewModel.dimsum,
         ),
@@ -118,8 +110,6 @@ class _InventoryScreenState extends State<InventoryScreen>
               ),
             ),
             floatingActionButton: _FloatingActionButton(
-              productNameAddController: productNameAddController,
-              productPriceAddController: productPriceEditController,
               category: _currentTabIndex,
             )));
   }
@@ -130,16 +120,11 @@ class _TabBarViewChild extends StatelessWidget {
     Key? key,
     required this.headers,
     required this.products,
-    required this.productNameEditController,
-    required this.productPriceEditController,
     required this.category,
   }) : super(key: key);
 
   final List<Header> headers;
   final List<Product> products;
-
-  final TextEditingController productNameEditController;
-  final TextEditingController productPriceEditController;
 
   final int category;
 
@@ -168,7 +153,7 @@ class _TabBarViewChild extends StatelessWidget {
             itemCount: products.length,
             itemBuilder: (BuildContext context, int index) {
               return Container(
-                //margin: const EdgeInsets.all(5),
+                margin: const EdgeInsets.only(top: 5, bottom: 5),
                 padding: const EdgeInsets.all(15.0),
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -200,12 +185,9 @@ class _TabBarViewChild extends StatelessWidget {
                                 showBottomModal(
                                     context,
                                     EditProduct(
-                                        selectedProduct: products[index],
-                                        category: category,
-                                        productNameController:
-                                            productNameEditController,
-                                        productPriceController:
-                                            productPriceEditController));
+                                      selectedProduct: products[index],
+                                      category: category,
+                                    ));
                                 break;
                               default:
                                 showBottomModal(
@@ -245,15 +227,9 @@ Future<dynamic> showBottomModal(BuildContext context, Widget child) {
 }
 
 class _FloatingActionButton extends StatelessWidget {
-  const _FloatingActionButton(
-      {Key? key,
-      required this.productNameAddController,
-      required this.productPriceAddController,
-      required this.category})
+  const _FloatingActionButton({Key? key, required this.category})
       : super(key: key);
 
-  final TextEditingController productNameAddController;
-  final TextEditingController productPriceAddController;
   final int category;
 
   @override
@@ -271,14 +247,8 @@ class _FloatingActionButton extends StatelessWidget {
         SpeedDialChild(
           child: const Icon(Icons.add),
           label: "Add",
-          onTap: () => {
-            showBottomModal(
-                context,
-                AddProduct(
-                    productNameController: productNameAddController,
-                    productPriceController: productPriceAddController,
-                    category: category))
-          },
+          onTap: () =>
+              {showBottomModal(context, AddProduct(category: category))},
         )
       ],
     );

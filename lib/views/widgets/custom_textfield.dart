@@ -13,7 +13,8 @@ class CustomTextField extends StatelessWidget {
       this.borderColor = const Color(0xFFD9D9D9),
       this.suffixIcon,
       this.controller,
-      this.prefixIcon});
+      this.prefixIcon,
+      this.validator});
 
   final String hintText;
   final TextInputType? textInputType;
@@ -26,10 +27,12 @@ class CustomTextField extends StatelessWidget {
   final Widget? suffixIcon;
   final TextEditingController? controller;
   final Widget? prefixIcon;
+  final String? Function(String?)? validator;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      validator: validator,
       controller: controller,
       style: style,
       obscureText: isObscureText,
