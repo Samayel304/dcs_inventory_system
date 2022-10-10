@@ -1,5 +1,6 @@
 import 'package:dcs_inventory_system/models/product_model.dart';
 import 'package:dcs_inventory_system/view_models/inventory_view_model.dart';
+import 'package:dcs_inventory_system/views/widgets/custom_elevated_button.dart';
 import 'package:dcs_inventory_system/views/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -63,11 +64,10 @@ class EditProduct extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               height: 50,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).primaryColor,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30))),
+              child: CustomElevatedButton(
+                backgroundColor: Colors.black,
+                fontColor: Colors.white,
+                text: "Save",
                 onPressed: () {
                   switch (category) {
                     case 0: //coffee
@@ -93,7 +93,6 @@ class EditProduct extends StatelessWidget {
                       break;
                   }
                 },
-                child: const Text("Save"),
               ),
             )
           ],

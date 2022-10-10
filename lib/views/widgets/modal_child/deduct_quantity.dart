@@ -34,6 +34,7 @@ class DeductQuantity extends StatelessWidget {
               height: 50,
               child: CustomElevatedButton(
                 text: "Save",
+                fontColor: Colors.white,
                 backgroundColor: Colors.black,
                 onPressed: () {},
               ),

@@ -2,6 +2,7 @@ import 'package:dcs_inventory_system/models/order_model.dart';
 import 'package:dcs_inventory_system/utils/helper.dart';
 import 'package:dcs_inventory_system/views/widgets/bottom_navbar.dart';
 import 'package:dcs_inventory_system/views/widgets/custom_app_bar.dart';
+import 'package:dcs_inventory_system/views/widgets/custom_elevated_button.dart';
 import 'package:dcs_inventory_system/views/widgets/custom_floating_action_button.dart';
 import 'package:dcs_inventory_system/views/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
@@ -126,7 +127,7 @@ class _TabBarViewChild extends StatelessWidget {
                         text: Order.orders[index].quantity.toString()),
                     _OrderDetailContainer(
                         title: "Ordered Date",
-                        text: Order.orders[index].orderedDate.toString()),
+                        text: formatDateTime(Order.orders[index].orderedDate)),
                     _OrderDetailContainer(
                       title: "Status",
                       text: Order.orders[index].status,
@@ -134,7 +135,22 @@ class _TabBarViewChild extends StatelessWidget {
                     ),
                     const SizedBox(height: 10),
                     Row(
-                      children: [],
+                      children: [
+                        Expanded(
+                          child: CustomElevatedButton(
+                              text: "Receive",
+                              fontColor: Colors.white,
+                              backgroundColor: Colors.black,
+                              onPressed: () {}),
+                        ),
+                        const SizedBox(width: 5),
+                        Expanded(
+                          child: CustomElevatedButton(
+                              text: "Cancel",
+                              backgroundColor: Colors.white,
+                              onPressed: () {}),
+                        )
+                      ],
                     )
                   ],
                 ),

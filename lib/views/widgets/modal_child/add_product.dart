@@ -66,6 +66,7 @@ class AddProduct extends StatelessWidget {
               height: 50,
               child: CustomElevatedButton(
                 text: "Save",
+                fontColor: Colors.white,
                 backgroundColor: Colors.black,
                 onPressed: () {
                   switch (category) {

@@ -4,7 +4,7 @@ import 'package:dcs_inventory_system/view_models/inventory_view_model.dart';
 import 'package:dcs_inventory_system/views/widgets/bottom_navbar.dart';
 import 'package:dcs_inventory_system/views/widgets/modal_child/add_product.dart';
 import 'package:dcs_inventory_system/views/widgets/modal_child/deduct_quantity.dart';
-import 'package:dcs_inventory_system/views/widgets/textfield/custom_textfield.dart';
+import 'package:dcs_inventory_system/views/widgets/custom_textfield.dart';
 
 import "package:flutter/material.dart";
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';

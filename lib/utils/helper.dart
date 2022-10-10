@@ -19,3 +19,8 @@ Color statusFormatColor(String status) {
   }
   return Colors.black;
 }
+
+String formatDateTime(DateTime dateTime) {
+  String formatedDateTime = DateFormat("MMM dd, yyyy").format(dateTime);
+  return formatedDateTime;
+}
