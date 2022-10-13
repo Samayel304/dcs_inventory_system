@@ -1,10 +1,11 @@
-import 'package:dcs_inventory_system/config/theme.dart';
-import 'package:dcs_inventory_system/view_models/inventory_view_model.dart';
+import 'package:dcs_inventory_system/bloc/bloc.dart';
 import 'package:dcs_inventory_system/views/screens/screens.dart';
+import 'package:dcs_inventory_system/config/theme.dart';
+import 'package:dcs_inventory_system/repositories/repository.dart';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -21,8 +22,14 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => InventoryViewModel())],
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) =>
+              ProductBloc(productRepository: ProductRepository())
+                ..add(LoadProducts()),
+        ),
+      ],
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: theme(),

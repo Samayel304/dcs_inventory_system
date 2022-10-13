@@ -17,7 +17,7 @@ class Order {
   static List<Order> orders = [
     Order(
         orderId: "1",
-        products: Product.products.first,
+        products: Product(category: "Milktea", productName: "sdsd"),
         orderedDate: DateTime.now(),
         quantity: 1,
         status: "Pending")

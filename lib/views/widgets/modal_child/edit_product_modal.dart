@@ -1,13 +1,12 @@
-import 'package:dcs_inventory_system/models/product_model.dart';
-import 'package:dcs_inventory_system/view_models/inventory_view_model.dart';
-import 'package:dcs_inventory_system/views/widgets/custom_elevated_button.dart';
-import 'package:dcs_inventory_system/views/widgets/custom_textfield.dart';
+import 'package:dcs_inventory_system/models/model.dart';
+
+import 'package:dcs_inventory_system/views/widgets/widgets.dart';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:provider/provider.dart';
 
-class EditProduct extends StatefulWidget {
-  const EditProduct({
+class EditProductModal extends StatefulWidget {
+  const EditProductModal({
     Key? key,
     required this.category,
     required this.selectedProduct,
@@ -17,10 +16,10 @@ class EditProduct extends StatefulWidget {
   final Product selectedProduct;
 
   @override
-  State<EditProduct> createState() => _EditProductState();
+  State<EditProductModal> createState() => _EditProductModalState();
 }
 
-class _EditProductState extends State<EditProduct> {
+class _EditProductModalState extends State<EditProductModal> {
   TextEditingController productNameController = TextEditingController();
   TextEditingController productPriceController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -41,7 +40,6 @@ class _EditProductState extends State<EditProduct> {
       Navigator.pop(context);
     }
 
-    InventoryViewModel inventoryViewModel = context.watch<InventoryViewModel>();
     return Container(
       padding:
           EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -91,24 +89,14 @@ class _EditProductState extends State<EditProduct> {
                     if (_formKey.currentState!.validate()) {
                       switch (widget.category) {
                         case 0: //coffee
-                          inventoryViewModel.editCoffee(
-                              widget.selectedProduct.productId,
-                              productNameController.text,
-                              int.parse(productPriceController.text));
+
                           success();
                           break;
                         case 1: //milktea
-                          inventoryViewModel.editMilktea(
-                              widget.selectedProduct.productId,
-                              productNameController.text,
-                              int.parse(productPriceController.text));
+
                           success();
                           break;
                         case 2:
-                          inventoryViewModel.editDimsum(
-                              widget.selectedProduct.productId,
-                              productNameController.text,
-                              int.parse(productPriceController.text));
                           success();
                           break;
                       }

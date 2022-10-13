@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-String formatCurrency(int value) {
+String formatCurrency(double value) {
   var format = NumberFormat.compactCurrency(
           locale: 'en-PH', symbol: '₱', decimalDigits: 0)
       .format(value);

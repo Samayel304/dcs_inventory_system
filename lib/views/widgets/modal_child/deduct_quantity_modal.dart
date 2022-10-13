@@ -2,8 +2,8 @@ import 'package:dcs_inventory_system/views/widgets/custom_elevated_button.dart';
 import 'package:dcs_inventory_system/views/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 
-class DeductQuantity extends StatelessWidget {
-  const DeductQuantity({
+class DeductQuantityModal extends StatelessWidget {
+  const DeductQuantityModal({
     Key? key,
   }) : super(key: key);
 

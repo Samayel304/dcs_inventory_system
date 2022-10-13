@@ -1,13 +1,10 @@
-import 'package:dcs_inventory_system/models/product_model.dart';
-import 'package:dcs_inventory_system/view_models/inventory_view_model.dart';
 import 'package:dcs_inventory_system/views/widgets/custom_elevated_button.dart';
 import 'package:dcs_inventory_system/views/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:provider/provider.dart';
 
-class AddProduct extends StatefulWidget {
-  const AddProduct({
+class AddProductModal extends StatefulWidget {
+  const AddProductModal({
     Key? key,
     required this.category,
   }) : super(key: key);
@@ -15,10 +12,10 @@ class AddProduct extends StatefulWidget {
   final int category;
 
   @override
-  State<AddProduct> createState() => _AddProductState();
+  State<AddProductModal> createState() => _AddProductModalState();
 }
 
-class _AddProductState extends State<AddProduct> {
+class _AddProductModalState extends State<AddProductModal> {
   TextEditingController productNameController = TextEditingController();
   TextEditingController productPriceController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -38,8 +35,6 @@ class _AddProductState extends State<AddProduct> {
           fontSize: 12.0);
       Navigator.pop(context);
     }
-
-    InventoryViewModel inventoryViewModel = context.watch<InventoryViewModel>();
 
     return Container(
       padding:
@@ -91,46 +86,16 @@ class _AddProductState extends State<AddProduct> {
                     if (_formKey.currentState!.validate()) {
                       switch (widget.category) {
                         case 0: //coffee
-                          Product coffee = Product(
-                              productId: (int.parse(inventoryViewModel
-                                          .coffee.last.productId) +
-                                      1)
-                                  .toString(),
-                              productName: productNameController.text,
-                              quantity: 0,
-                              category: "Coffee",
-                              unitPrice:
-                                  int.parse(productPriceController.text));
-                          inventoryViewModel.addCoffee(coffee);
+
                           success();
 
                           break;
                         case 1: //milktea
-                          Product milktea = Product(
-                              productId: (int.parse(inventoryViewModel
-                                          .milktea.last.productId) +
-                                      1)
-                                  .toString(),
-                              productName: productNameController.text,
-                              quantity: 0,
-                              category: "Milktea",
-                              unitPrice:
-                                  int.parse(productPriceController.text));
-                          inventoryViewModel.addMilktea(milktea);
+
                           success();
                           break;
                         case 2: //dimsum
-                          Product dimsum = Product(
-                              productId: (int.parse(inventoryViewModel
-                                          .dimsum.last.productId) +
-                                      1)
-                                  .toString(),
-                              productName: productNameController.text,
-                              quantity: 0,
-                              category: "Dimsum",
-                              unitPrice:
-                                  int.parse(productPriceController.text));
-                          inventoryViewModel.addDimsum(dimsum);
+
                           success();
                           break;
                       }

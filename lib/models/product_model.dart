@@ -1,44 +1,53 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Product {
-  final String productId;
+  final String? productId;
   late String productName;
   final int quantity;
   final String category;
-  late int unitPrice;
+  final double unitPrice;
 
   Product(
-      {required this.productId,
-      required this.productName,
-      required this.quantity,
-      required this.category,
-      required this.unitPrice});
+      {this.productId,
+      this.productName = "",
+      this.quantity = 0,
+      this.category = "",
+      this.unitPrice = 0});
 
-  static List<Product> products = [
-    Product(
-        productId: '1',
-        productName: 'Vanilla',
-        quantity: 2,
-        category: "Milktea",
-        unitPrice: 1000),
-    Product(
-        productId: '1',
-        productName: 'Dimsum',
-        quantity: 2,
-        category: "Dimsum",
-        unitPrice: 100),
-    Product(
-        productId: '1',
-        productName: 'Coffee',
-        quantity: 2,
-        category: "Coffee",
-        unitPrice: 300)
-  ];
+  Product copyWith({
+    String? productId,
+    String? productName,
+    int? quantity,
+    String? category,
+    double? unitPrice,
+  }) {
+    return Product(
+      productId: productId ?? this.productId,
+      productName: productName ?? this.productName,
+      quantity: quantity ?? this.quantity,
+      category: category ?? this.category,
+      unitPrice: unitPrice ?? this.unitPrice,
+    );
+  }
 
-  static List<Product> milktea =
-      products.where((product) => product.category == "Milktea").toList();
+  factory Product.fromSnapshot(DocumentSnapshot snap) {
+    return Product(
+      productId: snap.id,
+      productName: snap['productName'],
+      quantity: snap['quantity'],
+      category: snap['category'],
+      unitPrice: double.parse(snap['unitPrice'].toString()),
+    );
+  }
 
-  static List<Product> coffee =
-      products.where((product) => product.category == "Coffee").toList();
+  Map<String, Object> toDocument() {
+    return {
+      'productName': productName,
+      'quantity': quantity,
+      'category': category,
+      'unitPrice': unitPrice,
+    };
+  }
 
-  static List<Product> dimsum =
-      products.where((product) => product.category == "Dimsum").toList();
+
 }
