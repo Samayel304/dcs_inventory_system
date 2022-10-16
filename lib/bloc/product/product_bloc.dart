@@ -18,8 +18,9 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         super(ProductsLoading()) {
     on<LoadProducts>(_onLoadProducts);
     on<UpdateProducts>(_onUpdateProducts);
-    on<AddProduct>(_addProduct);
-    on<DeductProductQuantity>(_deductProductQuantity);
+    on<AddProduct>(_onAddProduct);
+    on<DeductProductQuantity>(_onDeductProductQuantity);
+    on<EditProduct>(_onEditProduct);
   }
 
   void _onLoadProducts(
@@ -36,7 +37,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     //emit(ProductsLoaded(products: products));
   }
 
-  void _addProduct(AddProduct event, Emitter<ProductState> emit) async {
+  void _onAddProduct(AddProduct event, Emitter<ProductState> emit) async {
     if (state is ProductsLoaded) {
       try {
         await _productRepository.createProduct(event.product);
@@ -49,7 +50,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     }
   }
 
-  void _deductProductQuantity(
+  void _onDeductProductQuantity(
       DeductProductQuantity event, Emitter<ProductState> emit) async {
     if (state is ProductsLoaded) {
       try {
@@ -62,6 +63,14 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         //: productList;
 
         // emit(ProductsLoaded(products: productList));
+      } catch (_) {}
+    }
+  }
+
+  void _onEditProduct(EditProduct event, Emitter<ProductState> emit) async {
+    if (state is ProductsLoaded) {
+      try {
+        await _productRepository.editProductDetails(event.product);
       } catch (_) {}
     }
   }

@@ -38,68 +38,63 @@ class _DeductQuantityModalState extends State<DeductQuantityModal> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ProductBloc, ProductState>(
-      builder: (context, state) {
-        return Container(
-          padding:
-              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-          decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30.0),
-                  topRight: Radius.circular(30.0))),
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text("Deduct Quantity",
-                      style: Theme.of(context).textTheme.headline4),
-                  const SizedBox(height: 20),
-                  CustomTextField(
-                    controller: productQuantityController,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Enter quantity";
-                      } else if (int.parse(value) >
-                          widget.selectedProduct.quantity) {
-                        return "Quantity exceeded";
-                      }
-                      return null;
-                    },
-                    hintText: "Quantity",
-                    textInputType: TextInputType.number,
-                  ),
-                  const SizedBox(height: 15),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: CustomElevatedButton(
-                      text: "Save",
-                      fontColor: Colors.white,
-                      backgroundColor: Colors.black,
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          int newQuantity = widget.selectedProduct.quantity -
-                              int.parse(productQuantityController.text);
-
-                          context.read<ProductBloc>().add(DeductProductQuantity(
-                              widget.selectedProduct
-                                  .copyWith(quantity: newQuantity)));
-
-                          success();
-                        }
-                      },
-                    ),
-                  )
-                ],
+    return Container(
+      padding:
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0))),
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text("Deduct Quantity",
+                  style: Theme.of(context).textTheme.headline4),
+              const SizedBox(height: 20),
+              CustomTextField(
+                controller: productQuantityController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Enter quantity";
+                  } else if (int.parse(value) >
+                      widget.selectedProduct.quantity) {
+                    return "Quantity exceeded";
+                  }
+                  return null;
+                },
+                hintText: "Quantity",
+                textInputType: TextInputType.number,
               ),
-            ),
+              const SizedBox(height: 15),
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: CustomElevatedButton(
+                  text: "Save",
+                  fontColor: Colors.white,
+                  backgroundColor: Colors.black,
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      int newQuantity = widget.selectedProduct.quantity -
+                          int.parse(productQuantityController.text);
+
+                      BlocProvider.of<ProductBloc>(context).add(
+                          DeductProductQuantity(widget.selectedProduct
+                              .copyWith(quantity: newQuantity)));
+
+                      success();
+                    }
+                  },
+                ),
+              )
+            ],
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }

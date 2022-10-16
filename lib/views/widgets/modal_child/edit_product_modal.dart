@@ -1,8 +1,10 @@
+import 'package:dcs_inventory_system/bloc/bloc.dart';
 import 'package:dcs_inventory_system/models/model.dart';
 
 import 'package:dcs_inventory_system/views/widgets/widgets.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class EditProductModal extends StatefulWidget {
@@ -21,6 +23,20 @@ class _EditProductModalState extends State<EditProductModal> {
   TextEditingController productNameController = TextEditingController();
   TextEditingController productPriceController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    productNameController.text = widget.selectedProduct.productName;
+    productPriceController.text = widget.selectedProduct.unitPrice.toString();
+  }
+
+  @override
+  void dispose() {
+    productNameController.dispose();
+    productPriceController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +78,7 @@ class _EditProductModalState extends State<EditProductModal> {
                     }
                     return null;
                   },
-                  hintText: widget.selectedProduct.productName,
+                  hintText: "Product Name",
                   controller: productNameController),
               const SizedBox(height: 15),
               CustomTextField(
@@ -72,7 +88,7 @@ class _EditProductModalState extends State<EditProductModal> {
                     }
                     return null;
                   },
-                  hintText: widget.selectedProduct.unitPrice.toString(),
+                  hintText: "Product Price",
                   textInputType: TextInputType.number,
                   controller: productPriceController),
               const SizedBox(height: 15),
@@ -84,7 +100,21 @@ class _EditProductModalState extends State<EditProductModal> {
                   fontColor: Colors.white,
                   text: "Save",
                   onPressed: () {
-                    if (_formKey.currentState!.validate()) {}
+                    if (_formKey.currentState!.validate()) {
+                      Product editedProduct = widget.selectedProduct.copyWith(
+                          productName: productNameController.text,
+                          unitPrice: double.parse(productPriceController.text));
+                      if (widget.selectedProduct.productName ==
+                              productNameController.text &&
+                          widget.selectedProduct.unitPrice ==
+                              double.parse(productPriceController.text)) {
+                        success();
+                      } else {
+                        BlocProvider.of<ProductBloc>(context)
+                            .add(EditProduct(editedProduct));
+                        success();
+                      }
+                    }
                   },
                 ),
               )
