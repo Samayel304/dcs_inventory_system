@@ -35,6 +35,7 @@ class ProductRepository extends BaseProductRepository {
   Stream<List<Product>> getAllProducts() {
     return _firebaseFirestore
         .collection("products")
+        .orderBy('dateCreated')
         .snapshots()
         .map((snapshot) {
       return snapshot.docs.map((doc) => Product.fromSnapshot(doc)).toList();

@@ -8,11 +8,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 class EditProductModal extends StatefulWidget {
   const EditProductModal({
     Key? key,
-    required this.category,
     required this.selectedProduct,
   }) : super(key: key);
 
-  final int category;
   final Product selectedProduct;
 
   @override
@@ -86,21 +84,7 @@ class _EditProductModalState extends State<EditProductModal> {
                   fontColor: Colors.white,
                   text: "Save",
                   onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      switch (widget.category) {
-                        case 0: //coffee
-
-                          success();
-                          break;
-                        case 1: //milktea
-
-                          success();
-                          break;
-                        case 2:
-                          success();
-                          break;
-                      }
-                    }
+                    if (_formKey.currentState!.validate()) {}
                   },
                 ),
               )

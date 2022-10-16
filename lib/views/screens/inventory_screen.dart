@@ -6,6 +6,7 @@ import 'package:dcs_inventory_system/views/widgets/bottom_navbar.dart';
 import 'package:dcs_inventory_system/views/widgets/modal_child/add_product_modal.dart';
 import 'package:dcs_inventory_system/views/widgets/modal_child/deduct_quantity_modal.dart';
 import 'package:dcs_inventory_system/views/widgets/custom_textfield.dart';
+import 'package:flutter/foundation.dart';
 
 import "package:flutter/material.dart";
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,10 +29,6 @@ class _InventoryScreenState extends State<InventoryScreen>
     with SingleTickerProviderStateMixin {
   int _currentTabIndex = 0;
 
-  TextEditingController productNameEditController = TextEditingController();
-  TextEditingController productPriceEditController = TextEditingController();
-
-  TextEditingController productQuantityController = TextEditingController();
   late TabController _tabController;
 
   @override
@@ -82,12 +79,9 @@ class _InventoryScreenState extends State<InventoryScreen>
                           tabs: tabs,
                           tabBarController: _tabController,
                           tabBarViewChild: [
-                            SizedBox(
-                                child: _getWidget(state, _currentTabIndex)),
-                            SizedBox(
-                                child: _getWidget(state, _currentTabIndex)),
-                            SizedBox(
-                                child: _getWidget(state, _currentTabIndex)),
+                            SizedBox(child: _getWidget(state, 'Coffee')),
+                            SizedBox(child: _getWidget(state, 'Milktea')),
+                            SizedBox(child: _getWidget(state, 'Dimsum')),
                           ]),
                     ),
                   ],
@@ -100,16 +94,16 @@ class _InventoryScreenState extends State<InventoryScreen>
   }
 }
 
-Widget _getWidget(ProductState state, int currentTabIndex) {
+Widget _getWidget(ProductState state, String category) {
   if (state is ProductsLoading) {
     return const Center(child: CircularProgressIndicator());
   }
   if (state is ProductsLoaded) {
     return _TabBarViewChild(
-      category: currentTabIndex,
-      headers: Header.headers,
-      products: state.products,
-    );
+        headers: Header.headers,
+        products: state.products
+            .where((product) => product.category == category)
+            .toList());
   }
   return const Center(child: Text("Something went wrong"));
 }
@@ -119,13 +113,10 @@ class _TabBarViewChild extends StatelessWidget {
     Key? key,
     required this.headers,
     required this.products,
-    required this.category,
   }) : super(key: key);
 
   final List<Header> headers;
   final List<Product> products;
-
-  final int category;
 
   @override
   Widget build(BuildContext context) {
@@ -161,7 +152,7 @@ class _TabBarViewChild extends StatelessWidget {
                 child: Row(children: [
                   Expanded(
                       flex: 1,
-                      child: Text(products[index].productId!,
+                      child: Text((index + 1).toString(),
                           style: Theme.of(context).textTheme.headline3)),
                   Expanded(
                       flex: 3,
@@ -185,12 +176,14 @@ class _TabBarViewChild extends StatelessWidget {
                                     context,
                                     EditProductModal(
                                       selectedProduct: products[index],
-                                      category: category,
                                     ));
                                 break;
                               default:
                                 showBottomModal(
-                                    context, const DeductQuantityModal());
+                                    context,
+                                    DeductQuantityModal(
+                                      selectedProduct: products[index],
+                                    ));
                                 break;
                             }
                           },

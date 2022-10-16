@@ -23,9 +23,20 @@ class UpdateProducts extends ProductEvent {
 class AddProduct extends ProductEvent {
   final Product product;
 
-  const AddProduct({
-    required this.product,
-  });
+  const AddProduct(
+    this.product,
+  );
+
+  @override
+  List<Object> get props => [product];
+}
+
+class DeductProductQuantity extends ProductEvent {
+  final Product product;
+
+  const DeductProductQuantity(
+    this.product,
+  );
 
   @override
   List<Object> get props => [product];

@@ -18,6 +18,8 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         super(ProductsLoading()) {
     on<LoadProducts>(_onLoadProducts);
     on<UpdateProducts>(_onUpdateProducts);
+    on<AddProduct>(_addProduct);
+    on<DeductProductQuantity>(_deductProductQuantity);
   }
 
   void _onLoadProducts(
@@ -30,9 +32,47 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
             UpdateProducts(products: products),
           ),
         );
+
+    //emit(ProductsLoaded(products: products));
+  }
+
+  void _addProduct(AddProduct event, Emitter<ProductState> emit) async {
+    if (state is ProductsLoaded) {
+      try {
+        await _productRepository.createProduct(event.product);
+
+        //       emit(ProductsLoaded(
+        //       products: List.from((state as ProductsLoaded).products)
+        //       ..add(event.product),
+        //  ));
+      } catch (_) {}
+    }
+  }
+
+  void _deductProductQuantity(
+      DeductProductQuantity event, Emitter<ProductState> emit) async {
+    if (state is ProductsLoaded) {
+      try {
+        await _productRepository.deductProductQuantity(event.product);
+        //List<Product> productList = List.of((state as ProductsLoaded).products);
+        //productList.contains(event.product)
+        //  ? productList[productList
+        //        .indexWhere((product) => product == event.product)]
+        //  .copyWith(quantity: event.product.quantity)
+        //: productList;
+
+        // emit(ProductsLoaded(products: productList));
+      } catch (_) {}
+    }
   }
 
   void _onUpdateProducts(UpdateProducts event, Emitter<ProductState> emit) {
     emit(ProductsLoaded(products: event.products));
+  }
+
+  @override
+  Future<void> close() async {
+    _productSubscription?.cancel();
+    super.close();
   }
 }

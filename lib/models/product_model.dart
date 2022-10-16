@@ -6,28 +6,30 @@ class Product {
   final int quantity;
   final String category;
   final double unitPrice;
+  final DateTime dateCreated;
 
   Product(
       {this.productId,
       this.productName = "",
       this.quantity = 0,
       this.category = "",
-      this.unitPrice = 0});
+      this.unitPrice = 0,
+      required this.dateCreated});
 
-  Product copyWith({
-    String? productId,
-    String? productName,
-    int? quantity,
-    String? category,
-    double? unitPrice,
-  }) {
+  Product copyWith(
+      {String? productId,
+      String? productName,
+      int? quantity,
+      String? category,
+      double? unitPrice,
+      DateTime? dateCreated}) {
     return Product(
-      productId: productId ?? this.productId,
-      productName: productName ?? this.productName,
-      quantity: quantity ?? this.quantity,
-      category: category ?? this.category,
-      unitPrice: unitPrice ?? this.unitPrice,
-    );
+        productId: productId ?? this.productId,
+        productName: productName ?? this.productName,
+        quantity: quantity ?? this.quantity,
+        category: category ?? this.category,
+        unitPrice: unitPrice ?? this.unitPrice,
+        dateCreated: dateCreated ?? this.dateCreated);
   }
 
   factory Product.fromSnapshot(DocumentSnapshot snap) {
@@ -37,6 +39,8 @@ class Product {
       quantity: snap['quantity'],
       category: snap['category'],
       unitPrice: double.parse(snap['unitPrice'].toString()),
+      dateCreated: DateTime.parse(
+          ((snap['dateCreated']) as Timestamp).toDate().toString()),
     );
   }
 
@@ -46,8 +50,7 @@ class Product {
       'quantity': quantity,
       'category': category,
       'unitPrice': unitPrice,
+      'dateCreated': dateCreated
     };
   }
-
-
 }
