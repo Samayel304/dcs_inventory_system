@@ -7,18 +7,17 @@ class User extends Equatable {
   final String middleName;
   final String lastName;
   final String email;
-  final String password;
+
   final String role;
   final String avatarUrl;
 
   const User(
       {this.id,
-      this.firstName = "",
+      required this.firstName,
       this.middleName = "",
-      this.lastName = "",
-      this.email = "",
-      this.password = "",
-      this.role = "",
+      required this.lastName,
+      required this.email,
+      required this.role,
       this.avatarUrl = ""});
 
   User copyWith({
@@ -35,8 +34,8 @@ class User extends Equatable {
         id: id ?? this.id,
         firstName: firstName ?? this.firstName,
         middleName: middleName ?? this.middleName,
+        lastName: lastName ?? this.lastName,
         email: email ?? this.email,
-        password: password ?? this.password,
         role: role ?? this.role,
         avatarUrl: avatarUrl ?? this.avatarUrl);
   }
@@ -48,7 +47,6 @@ class User extends Equatable {
       middleName: snap['middleName'],
       lastName: snap['lastName'],
       email: snap['email'],
-      password: snap['password'],
       role: snap['role'],
       avatarUrl: snap['avatarUrl'],
     );
@@ -60,7 +58,6 @@ class User extends Equatable {
       'middleName': middleName,
       'lastName': lastName,
       'email': email,
-      'password': password,
       'role': role,
       'avatarUrl': avatarUrl,
     };
@@ -68,5 +65,5 @@ class User extends Equatable {
 
   @override
   List<Object?> get props =>
-      [id, firstName, middleName, lastName, email, password, role, avatarUrl];
+      [id, firstName, middleName, lastName, email, role, avatarUrl];
 }

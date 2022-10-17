@@ -1,6 +1,8 @@
 import 'package:dcs_inventory_system/bloc/product/product_bloc.dart';
+import 'package:dcs_inventory_system/bloc/product_category/product_category_bloc.dart';
 import 'package:dcs_inventory_system/models/header_model.dart';
 import 'package:dcs_inventory_system/models/product_model.dart';
+import 'package:dcs_inventory_system/utils/constant.dart';
 
 import 'package:dcs_inventory_system/views/widgets/bottom_navbar.dart';
 import 'package:dcs_inventory_system/views/widgets/modal_child/add_product_modal.dart';
@@ -61,7 +63,7 @@ class _InventoryScreenState extends State<InventoryScreen>
             resizeToAvoidBottomInset: false,
             appBar: const CustomAppBar(),
             bottomNavigationBar: const BottomNavBar(index: 1),
-            body: BlocBuilder<ProductBloc, ProductState>(
+            body: BlocBuilder<ProductCategoryBloc, ProductCategoryState>(
                 builder: (context, state) {
               return Container(
                 padding: const EdgeInsets.only(left: 15, right: 15),
@@ -79,9 +81,15 @@ class _InventoryScreenState extends State<InventoryScreen>
                           tabs: tabs,
                           tabBarController: _tabController,
                           tabBarViewChild: [
-                            SizedBox(child: _getWidget(state, 'Coffee')),
-                            SizedBox(child: _getWidget(state, 'Milktea')),
-                            SizedBox(child: _getWidget(state, 'Dimsum')),
+                            SizedBox(
+                                child: _getListOfProducts(
+                                    state, ProductCategory.coffee)),
+                            SizedBox(
+                                child: _getListOfProducts(
+                                    state, ProductCategory.milktea)),
+                            SizedBox(
+                                child: _getListOfProducts(
+                                    state, ProductCategory.dimsum)),
                           ]),
                     ),
                   ],
@@ -94,16 +102,25 @@ class _InventoryScreenState extends State<InventoryScreen>
   }
 }
 
-Widget _getWidget(ProductState state, String category) {
-  if (state is ProductsLoading) {
+Widget _getListOfProducts(
+    ProductCategoryState state, ProductCategory category) {
+  if (state is ProductCategoryLoading) {
     return const Center(child: CircularProgressIndicator());
   }
-  if (state is ProductsLoaded) {
-    return _TabBarViewChild(
-        headers: Header.headers,
-        products: state.products
-            .where((product) => product.category == category)
-            .toList());
+  if (state is ProductCategoryLoaded) {
+    List<Product> products;
+    switch (category) {
+      case ProductCategory.coffee:
+        products = state.coffee;
+        break;
+      case ProductCategory.milktea:
+        products = state.milktea;
+        break;
+      case ProductCategory.dimsum:
+        products = state.dimsum;
+        break;
+    }
+    return _TabBarViewChild(headers: Header.headers, products: products);
   }
   return const Center(child: Text("Something went wrong"));
 }

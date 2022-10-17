@@ -54,7 +54,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       DeductProductQuantity event, Emitter<ProductState> emit) async {
     if (state is ProductsLoaded) {
       try {
-        await _productRepository.deductProductQuantity(event.product);
+        await _productRepository.editProductDetails(event.product);
         //List<Product> productList = List.of((state as ProductsLoaded).products);
         //productList.contains(event.product)
         //  ? productList[productList

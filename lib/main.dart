@@ -22,24 +22,45 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
+    return MultiRepositoryProvider(
       providers: [
-        BlocProvider(
-          create: (context) =>
-              ProductBloc(productRepository: ProductRepository())
-                ..add(LoadProducts()),
+        RepositoryProvider(
+          create: (context) => AuthRepository(),
         ),
+        RepositoryProvider(
+          create: (context) => UserRepository(),
+        ),
+        RepositoryProvider(create: (context) => ProductRepository())
       ],
-      child: MaterialApp(
-        title: 'Flutter Demo',
-        theme: theme(),
-        initialRoute: "/dashboard",
-        routes: {
-          DashboardScreen.routeName: (context) => const DashboardScreen(),
-          LoginScreen.routeName: (context) => const LoginScreen(),
-          InventoryScreen.routeName: (context) => const InventoryScreen(),
-          OrderScreen.routeName: (context) => const OrderScreen()
-        },
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => ProductBloc(
+                productRepository: context.read<ProductRepository>())
+              ..add(LoadProducts()),
+          ),
+          BlocProvider(
+              create: (context) => ProductCategoryBloc(
+                  productBloc: BlocProvider.of<ProductBloc>(context))
+                ..add(const UpdateProductCategory())),
+          BlocProvider(
+            create: (context) => AuthBloc(
+              authRepository: context.read<AuthRepository>(),
+              userRepository: context.read<UserRepository>(),
+            ),
+          ),
+        ],
+        child: MaterialApp(
+          title: 'Flutter Demo',
+          theme: theme(),
+          initialRoute: "/dashboard",
+          routes: {
+            DashboardScreen.routeName: (context) => const DashboardScreen(),
+            LoginScreen.routeName: (context) => const LoginScreen(),
+            InventoryScreen.routeName: (context) => const InventoryScreen(),
+            OrderScreen.routeName: (context) => const OrderScreen()
+          },
+        ),
       ),
     );
   }

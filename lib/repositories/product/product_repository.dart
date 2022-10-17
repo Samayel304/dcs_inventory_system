@@ -16,14 +16,6 @@ class ProductRepository extends BaseProductRepository {
   }
 
   @override
-  Future<void> deductProductQuantity(Product product) async {
-    await _firebaseFirestore
-        .collection("products")
-        .doc(product.productId)
-        .update(product.toDocument());
-  }
-
-  @override
   Future<void> editProductDetails(Product product) async {
     await _firebaseFirestore
         .collection("products")

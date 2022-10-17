@@ -37,6 +37,12 @@ class _DeductQuantityModalState extends State<DeductQuantityModal> {
   }
 
   @override
+  void dispose() {
+    productQuantityController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       padding:

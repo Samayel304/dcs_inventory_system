@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import '../../../utils/constant.dart';
+
 class AddProductModal extends StatefulWidget {
   const AddProductModal({
     Key? key,
@@ -23,6 +25,13 @@ class _AddProductModalState extends State<AddProductModal> {
   TextEditingController productNameController = TextEditingController();
   TextEditingController productPriceController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    productNameController.dispose();
+    productPriceController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -102,15 +111,15 @@ class _AddProductModalState extends State<AddProductModal> {
                     if (_formKey.currentState!.validate()) {
                       switch (widget.category) {
                         case 0: //coffee
-                          addProduct('Coffee');
+                          addProduct(ProductCategory.coffee.toString());
                           success();
                           break;
                         case 1: //milktea
-                          addProduct('Milktea');
+                          addProduct(ProductCategory.coffee.toString());
                           success();
                           break;
                         case 2: //dimsum
-                          addProduct('Dimsum');
+                          addProduct(ProductCategory.coffee.toString());
                           success();
                           break;
                       }
