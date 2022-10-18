@@ -1,5 +1,6 @@
 import 'package:dcs_inventory_system/views/screens/screens.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class BottomNavBar extends StatelessWidget {
   const BottomNavBar({
@@ -23,7 +24,7 @@ class BottomNavBar extends StatelessWidget {
             margin: const EdgeInsets.only(left: 50),
             child: IconButton(
               onPressed: () {
-                Navigator.pushNamed(context, DashboardScreen.routeName);
+                GoRouter.of(context).go('/');
               },
               icon: const Icon(Icons.dashboard_rounded),
             ),
@@ -33,7 +34,7 @@ class BottomNavBar extends StatelessWidget {
         BottomNavigationBarItem(
           icon: IconButton(
             onPressed: () {
-              Navigator.pushNamed(context, InventoryScreen.routeName);
+              GoRouter.of(context).go('/inventory');
             },
             icon: const Icon(Icons.inventory),
           ),
@@ -44,7 +45,7 @@ class BottomNavBar extends StatelessWidget {
             margin: const EdgeInsets.only(right: 50),
             child: IconButton(
               onPressed: () {
-                Navigator.pushNamed(context, OrderScreen.routeName);
+                GoRouter.of(context).go('/order');
               },
               icon: const Icon(Icons.shopping_cart),
             ),

@@ -1,14 +1,72 @@
+import 'dart:async';
+
+import 'package:dcs_inventory_system/bloc/auth/auth_bloc.dart';
+import 'package:dcs_inventory_system/views/screens/dashboard_screen.dart';
+import 'package:dcs_inventory_system/views/screens/inventory_screen.dart';
 import 'package:dcs_inventory_system/views/screens/login_screen.dart';
+import 'package:dcs_inventory_system/views/screens/order_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class AppRouter {
-  final GoRouter router = GoRouter(debugLogDiagnostics: true, routes: <GoRoute>[
-    GoRoute(
-      path: "/",
-      builder: (BuildContext context, GoRouterState state) {
-        return const LoginScreen();
-      },
-    )
-  ]);
+  final AuthBloc authBloc;
+  AppRouter(this.authBloc);
+
+  late final GoRouter router = GoRouter(
+    debugLogDiagnostics: true,
+    routes: <GoRoute>[
+      GoRoute(
+        path: '/',
+        builder: (BuildContext context, GoRouterState state) {
+          return const DashboardScreen();
+        },
+      ),
+      GoRoute(
+          path: '/login',
+          builder: (BuildContext context, GoRouterState state) {
+            return const LoginScreen();
+          }),
+      GoRoute(
+          path: '/inventory',
+          builder: (BuildContext context, GoRouterState state) {
+            return const InventoryScreen();
+          }),
+      GoRoute(
+          path: '/order',
+          builder: (BuildContext context, GoRouterState state) {
+            return const OrderScreen();
+          })
+    ],
+    redirect: (BuildContext context, GoRouterState state) {
+      final bool loggedIn = authBloc.state.status == AuthStatus.authenticated;
+      final bool loggingIn = state.subloc == '/login';
+
+      if (!loggedIn) {
+        return loggingIn ? null : '/login';
+      }
+      if (loggingIn) {
+        return '/';
+      }
+      return null;
+    },
+    initialLocation: '/',
+    refreshListenable: GoRouterRefreshStream(authBloc.stream),
+  );
+}
+
+class GoRouterRefreshStream extends ChangeNotifier {
+  GoRouterRefreshStream(Stream<dynamic> stream) {
+    notifyListeners();
+    _subscription = stream.asBroadcastStream().listen(
+          (dynamic _) => notifyListeners(),
+        );
+  }
+
+  late final StreamSubscription<dynamic> _subscription;
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
+  }
 }

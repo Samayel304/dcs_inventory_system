@@ -1,4 +1,3 @@
-import 'package:dcs_inventory_system/bloc/product/product_bloc.dart';
 import 'package:dcs_inventory_system/bloc/product_category/product_category_bloc.dart';
 import 'package:dcs_inventory_system/models/header_model.dart';
 import 'package:dcs_inventory_system/models/product_model.dart';
@@ -8,7 +7,6 @@ import 'package:dcs_inventory_system/views/widgets/bottom_navbar.dart';
 import 'package:dcs_inventory_system/views/widgets/modal_child/add_product_modal.dart';
 import 'package:dcs_inventory_system/views/widgets/modal_child/deduct_quantity_modal.dart';
 import 'package:dcs_inventory_system/views/widgets/custom_textfield.dart';
-import 'package:flutter/foundation.dart';
 
 import "package:flutter/material.dart";
 import 'package:flutter_bloc/flutter_bloc.dart';

@@ -43,7 +43,7 @@ class User extends Equatable {
   factory User.fromSnapshot(DocumentSnapshot snap) {
     return User(
       id: snap.id,
-      firstName: snap['fullName'],
+      firstName: snap['firstName'],
       middleName: snap['middleName'],
       lastName: snap['lastName'],
       email: snap['email'],

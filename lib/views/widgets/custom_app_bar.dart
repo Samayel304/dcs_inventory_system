@@ -1,4 +1,6 @@
+import 'package:dcs_inventory_system/bloc/auth/auth_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   const CustomAppBar({
@@ -11,7 +13,9 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
       backgroundColor: Colors.transparent,
       elevation: 0,
       leading: IconButton(
-        onPressed: () {},
+        onPressed: () {
+          BlocProvider.of<AuthBloc>(context).add(AuthLogoutRequested());
+        },
         icon: const Icon(
           Icons.menu,
           color: Colors.black,
