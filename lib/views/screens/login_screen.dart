@@ -1,4 +1,3 @@
-import 'package:dcs_inventory_system/config/errors/auth_errors.dart';
 import 'package:dcs_inventory_system/cubits/login/login_cubit.dart';
 import 'package:dcs_inventory_system/views/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
@@ -22,10 +21,8 @@ class _LoginScreenState extends State<LoginScreen> {
     return BlocListener<LoginCubit, LoginState>(
         listener: (context, state) {
           if (state.status == LoginStatus.error) {
-            showErrorDialog(
-                context,
-                AuthExceptionHandler.generateExceptionMessage(
-                    state.errorMessage));
+            print("error");
+            showErrorDialog(context, state.errorMessage);
           }
         },
         child: Scaffold(

@@ -50,20 +50,22 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAyBln0w3OReOsk2ToNcSdWo9SeJWPbNps',
-    appId: '1:271847881624:android:6cecfbf17b5088fb9789ed',
-    messagingSenderId: '271847881624',
-    projectId: 'dcs-inventory-system',
-    storageBucket: 'dcs-inventory-system.appspot.com',
+    apiKey: 'AIzaSyD27pQ4eHAOGoQqiCVLdVmsKu07YP1QkQs',
+    appId: '1:689601691854:android:eb9c45ba041c0e3df8109f',
+    messagingSenderId: '689601691854',
+    projectId: 'dcsims-2772c',
+    databaseURL: 'https://dcsims-2772c-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'dcsims-2772c.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAit81P7VmDraTATqEIROBkAsd2MLfOeqg',
-    appId: '1:271847881624:ios:9051d376b69102e19789ed',
-    messagingSenderId: '271847881624',
-    projectId: 'dcs-inventory-system',
-    storageBucket: 'dcs-inventory-system.appspot.com',
-    iosClientId: '271847881624-a4ab9jsq5mgldjt8pm298e9cp25umdsu.apps.googleusercontent.com',
+    apiKey: 'AIzaSyAx41_Q6TTgSqpTisboOtWIqkfnvJInjdk',
+    appId: '1:689601691854:ios:1dfd7998326a2fb1f8109f',
+    messagingSenderId: '689601691854',
+    projectId: 'dcsims-2772c',
+    databaseURL: 'https://dcsims-2772c-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'dcsims-2772c.appspot.com',
+    iosClientId: '689601691854-0tvl3se5in420sc158pm13c26r5tr6js.apps.googleusercontent.com',
     iosBundleId: 'com.example.dcsInventorySystem',
   );
 }

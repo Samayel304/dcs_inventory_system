@@ -1,33 +1,34 @@
 {
   "project_info": {
-    "project_number": "271847881624",
-    "project_id": "dcs-inventory-system",
-    "storage_bucket": "dcs-inventory-system.appspot.com"
+    "project_number": "689601691854",
+    "firebase_url": "https://dcsims-2772c-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "dcsims-2772c",
+    "storage_bucket": "dcsims-2772c.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:271847881624:android:6cecfbf17b5088fb9789ed",
+        "mobilesdk_app_id": "1:689601691854:android:eb9c45ba041c0e3df8109f",
         "android_client_info": {
           "package_name": "com.example.dcs_inventory_system"
         }
       },
       "oauth_client": [
         {
-          "client_id": "271847881624-40vrc85r8t7qjhg6gveve2arhgklduok.apps.googleusercontent.com",
+          "client_id": "689601691854-hmpl869tdilj77vlh9b7ijr5fqpmgh10.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAyBln0w3OReOsk2ToNcSdWo9SeJWPbNps"
+          "current_key": "AIzaSyD27pQ4eHAOGoQqiCVLdVmsKu07YP1QkQs"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "271847881624-40vrc85r8t7qjhg6gveve2arhgklduok.apps.googleusercontent.com",
+              "client_id": "689601691854-hmpl869tdilj77vlh9b7ijr5fqpmgh10.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

@@ -4,8 +4,8 @@ import 'package:dcs_inventory_system/models/product_model.dart';
 import 'package:dcs_inventory_system/utils/constant.dart';
 
 import 'package:dcs_inventory_system/views/widgets/bottom_navbar.dart';
-import 'package:dcs_inventory_system/views/widgets/modal_child/add_product_modal.dart';
-import 'package:dcs_inventory_system/views/widgets/modal_child/deduct_quantity_modal.dart';
+import 'package:dcs_inventory_system/views/widgets/inventory_modals/add_product_modal.dart';
+import 'package:dcs_inventory_system/views/widgets/inventory_modals/deduct_quantity_modal.dart';
 import 'package:dcs_inventory_system/views/widgets/custom_textfield.dart';
 
 import "package:flutter/material.dart";
@@ -15,7 +15,8 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import '../../utils/helper.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/custom_tab_bar.dart';
-import '../widgets/modal_child/edit_product_modal.dart';
+import '../widgets/inventory_modals/edit_product_modal.dart';
+import '../widgets/show_modal.dart';
 
 class InventoryScreen extends StatefulWidget {
   const InventoryScreen({super.key});
@@ -221,16 +222,6 @@ class _TabBarViewChild extends StatelessWidget {
       ],
     );
   }
-}
-
-Future<dynamic> showBottomModal(BuildContext context, Widget child) {
-  return showModalBottomSheet(
-      isScrollControlled: true,
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (context) {
-        return child;
-      });
 }
 
 class _FloatingActionButton extends StatelessWidget {

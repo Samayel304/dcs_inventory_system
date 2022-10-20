@@ -10,11 +10,11 @@ String formatCurrency(double value) {
 
 Color statusFormatColor(String status) {
   switch (status) {
-    case "Pending":
+    case "pending":
       return Colors.orange.shade400;
-    case "Received":
+    case "received":
       return Colors.green.shade300;
-    case "Cancelled":
+    case "cancelled":
       return Colors.red.shade600;
   }
   return Colors.black;

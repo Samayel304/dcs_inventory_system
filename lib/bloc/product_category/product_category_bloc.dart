@@ -29,16 +29,13 @@ class ProductCategoryBloc
   _onUpdateProductCategory(
       UpdateProductCategory event, Emitter<ProductCategoryState> emit) {
     List<Product> coffee = event.products
-        .where(
-            (product) => product.category == ProductCategory.coffee.toString())
+        .where((product) => product.category == ProductCategory.coffee.name)
         .toList();
     List<Product> milktea = event.products
-        .where(
-            (product) => product.category == ProductCategory.milktea.toString())
+        .where((product) => product.category == ProductCategory.milktea.name)
         .toList();
     List<Product> dimsum = event.products
-        .where(
-            (product) => product.category == ProductCategory.dimsum.toString())
+        .where((product) => product.category == ProductCategory.dimsum.name)
         .toList();
 
     emit(ProductCategoryLoaded(

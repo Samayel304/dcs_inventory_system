@@ -44,8 +44,31 @@ class Product {
     );
   }
 
+  factory Product.fromOrderSnapshot(Map<String, dynamic> snap) {
+    return Product(
+      productId: snap['productId'],
+      productName: snap['productName'],
+      quantity: snap['quantity'],
+      category: snap['category'],
+      unitPrice: double.parse(snap['unitPrice'].toString()),
+      dateCreated: DateTime.parse(
+          ((snap['dateCreated']) as Timestamp).toDate().toString()),
+    );
+  }
+
   Map<String, Object> toDocument() {
     return {
+      'productName': productName,
+      'quantity': quantity,
+      'category': category,
+      'unitPrice': unitPrice,
+      'dateCreated': dateCreated
+    };
+  }
+
+  Map<String, Object> toOrderDocument() {
+    return {
+      'productId': productId.toString(),
       'productName': productName,
       'quantity': quantity,
       'category': category,

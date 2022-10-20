@@ -1,7 +1,7 @@
 {
   "file_generated_by": "FlutterFire CLI",
   "purpose": "FirebaseAppID & ProjectID for this Firebase app in this directory",
-  "GOOGLE_APP_ID": "1:271847881624:ios:9051d376b69102e19789ed",
-  "FIREBASE_PROJECT_ID": "dcs-inventory-system",
-  "GCM_SENDER_ID": "271847881624"
+  "GOOGLE_APP_ID": "1:689601691854:ios:1dfd7998326a2fb1f8109f",
+  "FIREBASE_PROJECT_ID": "dcsims-2772c",
+  "GCM_SENDER_ID": "689601691854"
 }
