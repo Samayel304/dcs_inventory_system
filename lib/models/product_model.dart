@@ -1,19 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:equatable/equatable.dart';
 
-class Product {
+class Product extends Equatable {
   final String? productId;
-  late String productName;
+  final String productName;
   final int quantity;
   final String category;
-  final double unitPrice;
   final DateTime dateCreated;
 
-  Product(
+  const Product(
       {this.productId,
       this.productName = "",
       this.quantity = 0,
       this.category = "",
-      this.unitPrice = 0,
       required this.dateCreated});
 
   Product copyWith(
@@ -28,7 +27,6 @@ class Product {
         productName: productName ?? this.productName,
         quantity: quantity ?? this.quantity,
         category: category ?? this.category,
-        unitPrice: unitPrice ?? this.unitPrice,
         dateCreated: dateCreated ?? this.dateCreated);
   }
 
@@ -38,7 +36,6 @@ class Product {
       productName: snap['productName'],
       quantity: snap['quantity'],
       category: snap['category'],
-      unitPrice: double.parse(snap['unitPrice'].toString()),
       dateCreated: DateTime.parse(
           ((snap['dateCreated']) as Timestamp).toDate().toString()),
     );
@@ -50,7 +47,6 @@ class Product {
       productName: snap['productName'],
       quantity: snap['quantity'],
       category: snap['category'],
-      unitPrice: double.parse(snap['unitPrice'].toString()),
       dateCreated: DateTime.parse(
           ((snap['dateCreated']) as Timestamp).toDate().toString()),
     );
@@ -61,7 +57,6 @@ class Product {
       'productName': productName,
       'quantity': quantity,
       'category': category,
-      'unitPrice': unitPrice,
       'dateCreated': dateCreated
     };
   }
@@ -72,8 +67,11 @@ class Product {
       'productName': productName,
       'quantity': quantity,
       'category': category,
-      'unitPrice': unitPrice,
       'dateCreated': dateCreated
     };
   }
+
+  @override
+  List<Object?> get props =>
+      [productId, productName, quantity, category, dateCreated];
 }

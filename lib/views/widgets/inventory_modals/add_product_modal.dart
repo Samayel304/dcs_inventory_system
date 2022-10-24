@@ -23,13 +23,13 @@ class AddProductModal extends StatefulWidget {
 
 class _AddProductModalState extends State<AddProductModal> {
   TextEditingController productNameController = TextEditingController();
-  TextEditingController productPriceController = TextEditingController();
+
   final _formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
     productNameController.dispose();
-    productPriceController.dispose();
+
     super.dispose();
   }
 
@@ -37,7 +37,7 @@ class _AddProductModalState extends State<AddProductModal> {
   Widget build(BuildContext context) {
     void success() {
       productNameController.clear();
-      productPriceController.clear();
+
       Fluttertoast.showToast(
           msg: "Success",
           toastLength: Toast.LENGTH_SHORT,
@@ -55,7 +55,6 @@ class _AddProductModalState extends State<AddProductModal> {
           productName: productNameController.text,
           category: category,
           quantity: quantity,
-          unitPrice: double.parse(productPriceController.text),
           dateCreated: Timestamp.now().toDate());
 
       BlocProvider.of<ProductBloc>(context).add(AddProduct(product));
@@ -86,18 +85,6 @@ class _AddProductModalState extends State<AddProductModal> {
                 },
                 controller: productNameController,
                 hintText: "Product Name",
-              ),
-              const SizedBox(height: 15),
-              CustomTextField(
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Enter Product Price";
-                  }
-                  return null;
-                },
-                controller: productPriceController,
-                hintText: "Price",
-                textInputType: TextInputType.number,
               ),
               const SizedBox(height: 15),
               SizedBox(

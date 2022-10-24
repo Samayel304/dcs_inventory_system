@@ -1,12 +1,10 @@
 import 'dart:async';
 
-import 'package:dcs_inventory_system/bloc/auth/auth_bloc.dart';
-import 'package:dcs_inventory_system/views/screens/dashboard_screen.dart';
-import 'package:dcs_inventory_system/views/screens/inventory_screen.dart';
-import 'package:dcs_inventory_system/views/screens/login_screen.dart';
-import 'package:dcs_inventory_system/views/screens/order_screen.dart';
+import 'package:dcs_inventory_system/views/screens/screens.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
+import '../bloc/bloc.dart';
 
 class AppRouter {
   final AuthBloc authBloc;
@@ -35,10 +33,15 @@ class AppRouter {
           path: '/order',
           builder: (BuildContext context, GoRouterState state) {
             return const OrderScreen();
+          }),
+      GoRoute(
+          path: '/supplier',
+          builder: (BuildContext context, GoRouterState state) {
+            return const SupplierScreen();
           })
     ],
     redirect: (BuildContext context, GoRouterState state) {
-      final bool loggedIn = authBloc.state.status == AuthStatus.authenticated;
+      /* final bool loggedIn = authBloc.state.status == AuthStatus.authenticated;
       final bool loggingIn = state.subloc == '/login';
 
       if (!loggedIn) {
@@ -47,7 +50,7 @@ class AppRouter {
       if (loggingIn) {
         return '/';
       }
-      return null;
+      return null; */
     },
     initialLocation: '/',
     refreshListenable: GoRouterRefreshStream(authBloc.stream),

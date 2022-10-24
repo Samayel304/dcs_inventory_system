@@ -1,4 +1,5 @@
 import 'package:dcs_inventory_system/bloc/bloc.dart';
+import 'package:dcs_inventory_system/bloc/supplier/supplier_bloc.dart';
 import 'package:dcs_inventory_system/cubits/login/login_cubit.dart';
 
 import 'package:dcs_inventory_system/config/theme.dart';
@@ -65,7 +66,8 @@ class MyApp extends StatelessWidget {
           create: (context) => UserRepository(),
         ),
         RepositoryProvider(create: (context) => ProductRepository()),
-        RepositoryProvider(create: (context) => OrderRepository())
+        RepositoryProvider(create: (context) => OrderRepository()),
+        RepositoryProvider(create: (context) => SupplierRepository())
       ],
       child: MultiBlocProvider(
         providers: [
@@ -95,6 +97,10 @@ class MyApp extends StatelessWidget {
               create: (context) => OrderStatusBloc(
                   orderBloc: BlocProvider.of<OrderBloc>(context))
                 ..add(const UpdateOrdersStatus())),
+          BlocProvider(
+              create: (context) => SupplierBloc(
+                  supplierRepository: context.read<SupplierRepository>())
+                ..add(LoadSuppliers()))
         ],
         child: Builder(builder: (context) {
           return MaterialApp.router(

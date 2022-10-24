@@ -21,20 +21,19 @@ class EditProductModal extends StatefulWidget {
 
 class _EditProductModalState extends State<EditProductModal> {
   TextEditingController productNameController = TextEditingController();
-  TextEditingController productPriceController = TextEditingController();
+
   final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
     productNameController.text = widget.selectedProduct.productName;
-    productPriceController.text = widget.selectedProduct.unitPrice.toString();
   }
 
   @override
   void dispose() {
     productNameController.dispose();
-    productPriceController.dispose();
+
     super.dispose();
   }
 
@@ -42,7 +41,7 @@ class _EditProductModalState extends State<EditProductModal> {
   Widget build(BuildContext context) {
     void success() {
       productNameController.clear();
-      productPriceController.clear();
+
       Fluttertoast.showToast(
           msg: "Success",
           toastLength: Toast.LENGTH_SHORT,
@@ -71,27 +70,6 @@ class _EditProductModalState extends State<EditProductModal> {
               Text("Edit Product",
                   style: Theme.of(context).textTheme.headline4),
               const SizedBox(height: 20),
-              CustomTextField(
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Enter Product Name";
-                    }
-                    return null;
-                  },
-                  hintText: "Product Name",
-                  controller: productNameController),
-              const SizedBox(height: 15),
-              CustomTextField(
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Enter Product Price";
-                    }
-                    return null;
-                  },
-                  hintText: "Product Price",
-                  textInputType: TextInputType.number,
-                  controller: productPriceController),
-              const SizedBox(height: 15),
               SizedBox(
                 width: double.infinity,
                 height: 50,
@@ -101,13 +79,10 @@ class _EditProductModalState extends State<EditProductModal> {
                   text: "Save",
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      Product editedProduct = widget.selectedProduct.copyWith(
-                          productName: productNameController.text,
-                          unitPrice: double.parse(productPriceController.text));
+                      Product editedProduct = widget.selectedProduct
+                          .copyWith(productName: productNameController.text);
                       if (widget.selectedProduct.productName ==
-                              productNameController.text &&
-                          widget.selectedProduct.unitPrice ==
-                              double.parse(productPriceController.text)) {
+                          productNameController.text) {
                         success();
                       } else {
                         BlocProvider.of<ProductBloc>(context)

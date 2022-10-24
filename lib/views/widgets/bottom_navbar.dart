@@ -1,4 +1,3 @@
-import 'package:dcs_inventory_system/views/screens/screens.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -13,21 +12,19 @@ class BottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
+      type: BottomNavigationBarType.fixed,
       currentIndex: index,
-      showSelectedLabels: false,
-      showUnselectedLabels: false,
+      showSelectedLabels: true,
+      showUnselectedLabels: true,
       selectedItemColor: Colors.black,
       unselectedItemColor: Colors.black.withAlpha(100),
       items: [
         BottomNavigationBarItem(
-          icon: Container(
-            margin: const EdgeInsets.only(left: 50),
-            child: IconButton(
-              onPressed: () {
-                GoRouter.of(context).go('/');
-              },
-              icon: const Icon(Icons.dashboard_rounded),
-            ),
+          icon: IconButton(
+            onPressed: () {
+              GoRouter.of(context).go('/');
+            },
+            icon: const Icon(Icons.dashboard_rounded),
           ),
           label: 'Dashboard',
         ),
@@ -41,16 +38,22 @@ class BottomNavBar extends StatelessWidget {
           label: 'Inventory',
         ),
         BottomNavigationBarItem(
-          icon: Container(
-            margin: const EdgeInsets.only(right: 50),
-            child: IconButton(
-              onPressed: () {
-                GoRouter.of(context).go('/order');
-              },
-              icon: const Icon(Icons.shopping_cart),
-            ),
+          icon: IconButton(
+            onPressed: () {
+              GoRouter.of(context).go('/order');
+            },
+            icon: const Icon(Icons.shopping_cart),
           ),
           label: 'Orders',
+        ),
+        BottomNavigationBarItem(
+          icon: IconButton(
+            onPressed: () {
+              GoRouter.of(context).go('/supplier');
+            },
+            icon: const Icon(Icons.local_shipping),
+          ),
+          label: 'Suppliers',
         ),
       ],
     );

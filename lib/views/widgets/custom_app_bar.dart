@@ -1,12 +1,11 @@
-import 'package:dcs_inventory_system/bloc/auth/auth_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   const CustomAppBar({
     Key? key,
+    required this.scaffoldKey,
   }) : super(key: key);
-
+  final GlobalKey<ScaffoldState> scaffoldKey;
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -14,7 +13,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
       elevation: 0,
       leading: IconButton(
         onPressed: () {
-          BlocProvider.of<AuthBloc>(context).add(AuthLogoutRequested());
+          scaffoldKey.currentState!.openDrawer();
         },
         icon: const Icon(
           Icons.menu,

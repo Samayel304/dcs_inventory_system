@@ -20,7 +20,6 @@ import '../widgets/show_modal.dart';
 
 class InventoryScreen extends StatefulWidget {
   const InventoryScreen({super.key});
-  static const routeName = '/inventory';
 
   @override
   State<InventoryScreen> createState() => _InventoryScreenState();
@@ -54,50 +53,51 @@ class _InventoryScreenState extends State<InventoryScreen>
   @override
   Widget build(BuildContext context) {
     List<String> tabs = ['Coffee', 'Milktea', 'Dimsum'];
-
+    final GlobalKey<ScaffoldState> key = GlobalKey();
     return DefaultTabController(
         initialIndex: 0,
         length: tabs.length,
         child: Scaffold(
-            resizeToAvoidBottomInset: false,
-            appBar: const CustomAppBar(),
-            bottomNavigationBar: const BottomNavBar(index: 1),
-            body: BlocBuilder<ProductCategoryBloc, ProductCategoryState>(
-                builder: (context, state) {
-              return Container(
-                padding: const EdgeInsets.only(left: 15, right: 15),
-                child: Column(
-                  children: [
-                    const CustomTextField(
-                      hintText: "Search",
-                      prefixIcon: Icon(
-                        Icons.search,
-                        color: Colors.grey,
-                      ),
+          resizeToAvoidBottomInset: false,
+          appBar: CustomAppBar(scaffoldKey: key),
+          body: BlocBuilder<ProductCategoryBloc, ProductCategoryState>(
+              builder: (context, state) {
+            return Container(
+              padding: const EdgeInsets.only(left: 15, right: 15),
+              child: Column(
+                children: [
+                  const CustomTextField(
+                    hintText: "Search",
+                    prefixIcon: Icon(
+                      Icons.search,
+                      color: Colors.grey,
                     ),
-                    Expanded(
-                      child: CustomTabBar(
-                          tabs: tabs,
-                          tabBarController: _tabController,
-                          tabBarViewChild: [
-                            SizedBox(
-                                child: _getListOfProducts(
-                                    state, ProductCategory.coffee)),
-                            SizedBox(
-                                child: _getListOfProducts(
-                                    state, ProductCategory.milktea)),
-                            SizedBox(
-                                child: _getListOfProducts(
-                                    state, ProductCategory.dimsum)),
-                          ]),
-                    ),
-                  ],
-                ),
-              );
-            }),
-            floatingActionButton: _FloatingActionButton(
-              category: _currentTabIndex,
-            )));
+                  ),
+                  Expanded(
+                    child: CustomTabBar(
+                        tabs: tabs,
+                        tabBarController: _tabController,
+                        tabBarViewChild: [
+                          SizedBox(
+                              child: _getListOfProducts(
+                                  state, ProductCategory.coffee)),
+                          SizedBox(
+                              child: _getListOfProducts(
+                                  state, ProductCategory.milktea)),
+                          SizedBox(
+                              child: _getListOfProducts(
+                                  state, ProductCategory.dimsum)),
+                        ]),
+                  ),
+                ],
+              ),
+            );
+          }),
+          floatingActionButton: _FloatingActionButton(
+            category: _currentTabIndex,
+          ),
+          bottomNavigationBar: const BottomNavBar(index: 1),
+        ));
   }
 }
 
@@ -171,12 +171,8 @@ class _TabBarViewChild extends StatelessWidget {
                       child: Text((index + 1).toString(),
                           style: Theme.of(context).textTheme.headline3)),
                   Expanded(
-                      flex: 3,
+                      flex: 4,
                       child: Text(products[index].productName,
-                          style: Theme.of(context).textTheme.headline3)),
-                  Expanded(
-                      flex: 2,
-                      child: Text(formatCurrency(products[index].unitPrice),
                           style: Theme.of(context).textTheme.headline3)),
                   Expanded(
                       flex: 2,
@@ -203,7 +199,7 @@ class _TabBarViewChild extends StatelessWidget {
                                 break;
                             }
                           },
-                          icon: const Icon(Icons.more_horiz),
+                          icon: const Icon(Icons.more_vert),
                           itemBuilder: (context) => [
                                 const PopupMenuItem(
                                   value: 0,

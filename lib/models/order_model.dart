@@ -1,21 +1,24 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dcs_inventory_system/models/model.dart';
+import 'package:equatable/equatable.dart';
 
-class Order {
+class Order extends Equatable {
   final String? orderId;
   final DateTime dateReceived;
   final Product product;
   final DateTime orderedDate;
   final int quantity;
   final String status;
+  final Supplier supplier;
 
-  Order(
+  const Order(
       {this.orderId,
       required this.dateReceived,
       required this.product,
       required this.orderedDate,
       this.quantity = 0,
-      required this.status});
+      required this.status,
+      required this.supplier});
 
   Order copyWith(
       {String? orderId,
@@ -23,14 +26,16 @@ class Order {
       int? quantity,
       String? status,
       DateTime? orderedDate,
-      DateTime? dateReceived}) {
+      DateTime? dateReceived,
+      Supplier? supplier}) {
     return Order(
         orderId: orderId ?? this.orderId,
         product: product ?? this.product,
         quantity: quantity ?? this.quantity,
         status: status ?? this.status,
         orderedDate: orderedDate ?? this.orderedDate,
-        dateReceived: dateReceived ?? this.dateReceived);
+        dateReceived: dateReceived ?? this.dateReceived,
+        supplier: supplier ?? this.supplier);
   }
 
   factory Order.fromSnapshot(DocumentSnapshot snap) {
@@ -43,6 +48,7 @@ class Order {
           ((snap['orderedDate']) as Timestamp).toDate().toString()),
       dateReceived: DateTime.parse(
           ((snap['dateReceived']) as Timestamp).toDate().toString()),
+      supplier: Supplier.fromOrderSnapshot(snap['supplier']),
     );
   }
 
@@ -52,7 +58,12 @@ class Order {
       'quantity': quantity,
       'status': status,
       'orderedDate': orderedDate,
-      'dateReceived': dateReceived
+      'dateReceived': dateReceived,
+      'supplier': supplier.toOrderDocument()
     };
   }
+
+  @override
+  List<Object?> get props =>
+      [orderId, product, quantity, status, orderedDate, dateReceived];
 }

@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dcs_inventory_system/bloc/bloc.dart';
-import 'package:dcs_inventory_system/bloc/order/order_bloc.dart';
 import 'package:dcs_inventory_system/models/order_model.dart';
 import 'package:dcs_inventory_system/utils/constant.dart';
 import 'package:dcs_inventory_system/utils/helper.dart';
@@ -45,7 +44,7 @@ class _OrderScreenState extends State<OrderScreen>
   @override
   Widget build(BuildContext context) {
     List<String> tabs = ["All", "Pending", "Received", "Cancelled"];
-
+    final GlobalKey<ScaffoldState> key = GlobalKey();
     return BlocBuilder<OrderStatusBloc, OrderStatusState>(
       builder: (context, state) {
         return DefaultTabController(
@@ -53,7 +52,7 @@ class _OrderScreenState extends State<OrderScreen>
           length: tabs.length,
           child: Scaffold(
               resizeToAvoidBottomInset: false,
-              appBar: const CustomAppBar(),
+              appBar: CustomAppBar(scaffoldKey: key),
               bottomNavigationBar: const BottomNavBar(index: 2),
               body: Container(
                 padding: const EdgeInsets.only(left: 15, right: 15),
@@ -91,31 +90,10 @@ class _OrderScreenState extends State<OrderScreen>
                   child: const Icon(Icons.add),
                   label: "Add",
                   onTap: () =>
-                      {showBottomModal(context, const ModalAddOrder())},
+                      {showBottomModal(context, const AddOrderModal())},
                 )
               ])),
         );
-      },
-    );
-  }
-}
-
-class ModalAddOrder extends StatelessWidget {
-  const ModalAddOrder({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<ProductBloc, ProductState>(
-      builder: (context, state) {
-        if (state is ProductsLoaded) {
-          return AddOrderModal(
-            products: state.products,
-          );
-        } else {
-          return const Text("Something went wrong.");
-        }
       },
     );
   }
