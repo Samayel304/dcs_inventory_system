@@ -1,3 +1,4 @@
+import 'package:dcs_inventory_system/views/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
 class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
@@ -20,6 +21,9 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
           color: Colors.black,
         ),
       ),
+      actions: const [
+        NotificationBadge(text: "Notification", iconData: Icons.notifications)
+      ],
     );
   }
 

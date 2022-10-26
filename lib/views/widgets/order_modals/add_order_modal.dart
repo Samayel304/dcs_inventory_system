@@ -7,7 +7,6 @@ import 'package:dcs_inventory_system/utils/constant.dart';
 import 'package:dcs_inventory_system/views/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class AddOrderModal extends StatefulWidget {
   const AddOrderModal({
@@ -36,14 +35,6 @@ class _AddOrderModalState extends State<AddOrderModal> {
     void success() {
       productQuantityController.clear();
 
-      Fluttertoast.showToast(
-          msg: "Success",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 5,
-          backgroundColor: Colors.grey.shade200,
-          textColor: Colors.black,
-          fontSize: 12.0);
       Navigator.pop(context);
     }
 
@@ -69,8 +60,6 @@ class _AddOrderModalState extends State<AddOrderModal> {
                     return const CustomCircularProgress();
                   }
                   if (state is ProductsLoaded) {
-                    selectedProduct = state.products.first;
-
                     return CustomDropdown(
                       value: selectedProduct,
                       hint: const Text("Select product."),
@@ -82,7 +71,7 @@ class _AddOrderModalState extends State<AddOrderModal> {
                       },
                       onChange: (value) {
                         setState(() {
-                          selectedProduct = value!;
+                          selectedProduct = value;
                         });
                       },
                       listItem: state.products
@@ -105,10 +94,8 @@ class _AddOrderModalState extends State<AddOrderModal> {
                     return const CustomCircularProgress();
                   }
                   if (state is SupplierLoaded) {
-                    selectedSupplier = state.suppliers.first;
-
                     return CustomDropdown(
-                      value: selectedProduct,
+                      value: selectedSupplier,
                       hint: const Text("Select supplier."),
                       validator: (value) {
                         if (value == null) {
@@ -118,7 +105,7 @@ class _AddOrderModalState extends State<AddOrderModal> {
                       },
                       onChange: (value) {
                         setState(() {
-                          selectedSupplier = value!;
+                          selectedSupplier = value;
                         });
                       },
                       listItem: state.suppliers
@@ -158,6 +145,7 @@ class _AddOrderModalState extends State<AddOrderModal> {
                     if (_formKey.currentState!.validate()) {
                       Order order = Order(
                           dateReceived: Timestamp.now().toDate(),
+                          dateCancelled: Timestamp.now().toDate(),
                           product: selectedProduct!,
                           orderedDate: Timestamp.now().toDate(),
                           quantity: int.parse(productQuantityController.text),

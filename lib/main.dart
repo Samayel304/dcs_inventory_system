@@ -77,10 +77,6 @@ class MyApp extends StatelessWidget {
               ..add(LoadProducts()),
           ),
           BlocProvider(
-              create: (context) => ProductCategoryBloc(
-                  productBloc: BlocProvider.of<ProductBloc>(context))
-                ..add(const UpdateProductCategory())),
-          BlocProvider(
             create: (context) => AuthBloc(
               authRepository: context.read<AuthRepository>(),
               userRepository: context.read<UserRepository>(),
@@ -93,10 +89,6 @@ class MyApp extends StatelessWidget {
                   orderRepository: context.read<OrderRepository>(),
                   productRepository: context.read<ProductRepository>())
                 ..add(LoadOrders())),
-          BlocProvider(
-              create: (context) => OrderStatusBloc(
-                  orderBloc: BlocProvider.of<OrderBloc>(context))
-                ..add(const UpdateOrdersStatus())),
           BlocProvider(
               create: (context) => SupplierBloc(
                   supplierRepository: context.read<SupplierRepository>())

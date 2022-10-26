@@ -10,7 +10,7 @@ ThemeData theme() {
     scaffoldBackgroundColor: Colors.white,
     backgroundColor: const Color(0xFFF4F4F4),
 
-    fontFamily: 'Optima',
+    fontFamily: 'Roboto',
     textTheme: const TextTheme(
       headline1: TextStyle(
         color: Colors.black,

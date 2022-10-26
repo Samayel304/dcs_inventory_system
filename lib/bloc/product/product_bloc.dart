@@ -1,10 +1,13 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:excel/excel.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../../models/product_model.dart';
-import '../../repositories/product/product_repository.dart';
+import '../../repositories/repository.dart';
 
 part 'product_event.dart';
 part 'product_state.dart';
@@ -21,6 +24,8 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     on<AddProduct>(_onAddProduct);
     on<DeductProductQuantity>(_onDeductProductQuantity);
     on<EditProduct>(_onEditProduct);
+    on<SearchProducts>(_onSearchProducts);
+    on<ExportToExcel>(_onExportToExcel);
   }
 
   void _onLoadProducts(
@@ -33,19 +38,12 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
             UpdateProducts(products: products),
           ),
         );
-
-    //emit(ProductsLoaded(products: products));
   }
 
   void _onAddProduct(AddProduct event, Emitter<ProductState> emit) async {
     if (state is ProductsLoaded) {
       try {
         await _productRepository.createProduct(event.product);
-
-        //       emit(ProductsLoaded(
-        //       products: List.from((state as ProductsLoaded).products)
-        //       ..add(event.product),
-        //  ));
       } catch (_) {}
     }
   }
@@ -55,14 +53,6 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     if (state is ProductsLoaded) {
       try {
         await _productRepository.editProductDetails(event.product);
-        //List<Product> productList = List.of((state as ProductsLoaded).products);
-        //productList.contains(event.product)
-        //  ? productList[productList
-        //        .indexWhere((product) => product == event.product)]
-        //  .copyWith(quantity: event.product.quantity)
-        //: productList;
-
-        // emit(ProductsLoaded(products: productList));
       } catch (_) {}
     }
   }
@@ -75,8 +65,51 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     }
   }
 
+  void _onSearchProducts(SearchProducts event, Emitter<ProductState> emit) {
+    final state = this.state;
+    if (state is ProductsLoaded) {
+      if (event.keyword.isEmpty) {
+        add(LoadProducts());
+      } else {
+        emit(ProductsLoaded(
+            products: state.products
+                .where((product) => product.productName
+                    .toLowerCase()
+                    .contains(event.keyword.toLowerCase()))
+                .toList()));
+      }
+    }
+  }
+
   void _onUpdateProducts(UpdateProducts event, Emitter<ProductState> emit) {
-    emit(ProductsLoaded(products: event.products));
+    emit(ProductsLoaded(products: event.products.reversed.toList()));
+  }
+
+  void _onExportToExcel(ExportToExcel event, Emitter<ProductState> emit) async {
+    final state = this.state;
+    if (state is ProductsLoaded) {
+      final excel = Excel.createExcel();
+      final sheet = excel.sheets[excel.getDefaultSheet() as String];
+      sheet!.setColWidth(2, 50);
+      sheet.setColAutoFit(3);
+
+      sheet
+          .cell(CellIndex.indexByColumnRow(columnIndex: 2, rowIndex: 3))
+          .value = 'Text string';
+
+      sheet
+              .cell(CellIndex.indexByColumnRow(columnIndex: 3, rowIndex: 4))
+              .value =
+          'Text string Text string Text string Text string Text string Text string Text string Text string';
+
+      var fileBytes = excel.save();
+      var directory = await getApplicationDocumentsDirectory();
+
+      File(("$directory/output_file_name.xlsx"))
+        ..createSync(recursive: true)
+        ..writeAsBytesSync(fileBytes!);
+      print("Saved");
+    }
   }
 
   @override

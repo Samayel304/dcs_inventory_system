@@ -30,6 +30,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
         hint: widget.hint,
         value: widget.value,
         buttonPadding: const EdgeInsets.only(left: 10),
+
         //icon: const Icon(Icons.arrow_downward),
         //elevation: 10,
         buttonHeight: 60,

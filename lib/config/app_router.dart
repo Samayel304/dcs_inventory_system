@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dcs_inventory_system/views/screens/profile/edit_password_screen.dart';
 import 'package:dcs_inventory_system/views/screens/screens.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -38,7 +39,29 @@ class AppRouter {
           path: '/supplier',
           builder: (BuildContext context, GoRouterState state) {
             return const SupplierScreen();
-          })
+          }),
+      GoRoute(
+          path: '/profile',
+          builder: (BuildContext context, GoRouterState state) {
+            return const ProfileScreen();
+          },
+          routes: [
+            GoRoute(
+                path: 'edit_fullname',
+                builder: (context, state) {
+                  return const EditFullNameScreen();
+                }),
+            GoRoute(
+                path: 'edit_email',
+                builder: (context, state) {
+                  return const EditEmailScreen();
+                }),
+            GoRoute(
+                path: 'edit_password',
+                builder: (context, state) {
+                  return const EditPasswordScreen();
+                })
+          ])
     ],
     redirect: (BuildContext context, GoRouterState state) {
       /* final bool loggedIn = authBloc.state.status == AuthStatus.authenticated;
@@ -52,7 +75,7 @@ class AppRouter {
       }
       return null; */
     },
-    initialLocation: '/',
+    initialLocation: '/inventory',
     refreshListenable: GoRouterRefreshStream(authBloc.stream),
   );
 }

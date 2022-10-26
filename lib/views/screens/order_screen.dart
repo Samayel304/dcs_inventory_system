@@ -3,19 +3,13 @@ import 'package:dcs_inventory_system/bloc/bloc.dart';
 import 'package:dcs_inventory_system/models/order_model.dart';
 import 'package:dcs_inventory_system/utils/constant.dart';
 import 'package:dcs_inventory_system/utils/helper.dart';
-import 'package:dcs_inventory_system/views/widgets/bottom_navbar.dart';
-import 'package:dcs_inventory_system/views/widgets/custom_app_bar.dart';
-import 'package:dcs_inventory_system/views/widgets/custom_elevated_button.dart';
-import 'package:dcs_inventory_system/views/widgets/custom_floating_action_button.dart';
-import 'package:dcs_inventory_system/views/widgets/custom_textfield.dart';
 import 'package:dcs_inventory_system/views/widgets/order_modals/add_order_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-
 import '../../models/product_model.dart';
-import '../widgets/custom_tab_bar.dart';
-import '../widgets/show_modal.dart';
+import '../../utils/methods.dart';
+import '../widgets/widgets.dart';
 
 class OrderScreen extends StatefulWidget {
   const OrderScreen({super.key});
@@ -28,204 +22,214 @@ class OrderScreen extends StatefulWidget {
 class _OrderScreenState extends State<OrderScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  late ScrollController _scrollController;
+  bool _onTop = true;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
+    _tabController.addListener(() {
+      setState(() {
+        _onTop = true;
+      });
+    });
+    _scrollController = ScrollController();
+    _scrollController.addListener(() {
+      // if (_scrollController.position.atEdge) {
+      setState(() {
+        _onTop = _scrollController.position.pixels == 0;
+      });
+      //}
+    });
   }
 
   @override
   void dispose() {
-    _tabController.dispose();
     super.dispose();
+    _tabController.dispose();
+    _scrollController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     List<String> tabs = ["All", "Pending", "Received", "Cancelled"];
-    final GlobalKey<ScaffoldState> key = GlobalKey();
-    return BlocBuilder<OrderStatusBloc, OrderStatusState>(
-      builder: (context, state) {
-        return DefaultTabController(
-          initialIndex: 0,
-          length: tabs.length,
-          child: Scaffold(
-              resizeToAvoidBottomInset: false,
-              appBar: CustomAppBar(scaffoldKey: key),
-              bottomNavigationBar: const BottomNavBar(index: 2),
-              body: Container(
-                padding: const EdgeInsets.only(left: 15, right: 15),
-                child: Column(
-                  children: [
-                    const CustomTextField(
-                      hintText: "Search",
-                      prefixIcon: Icon(
-                        Icons.search,
-                        color: Colors.grey,
-                      ),
-                    ),
-                    Expanded(
-                      child: CustomTabBar(
-                        tabs: tabs,
-                        tabBarController: _tabController,
-                        tabBarViewChild: [
-                          _getOrderList(state, OrderStatus.all),
-                          _getOrderList(state, OrderStatus.pending),
-                          _getOrderList(state, OrderStatus.received),
-                          _getOrderList(state, OrderStatus.cancelled)
-                        ],
-                      ),
-                    )
-                  ],
+    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
+    return DefaultTabController(
+      initialIndex: 0,
+      length: tabs.length,
+      child: Scaffold(
+          key: scaffoldKey,
+          resizeToAvoidBottomInset: false,
+          appBar: CustomAppBar(scaffoldKey: scaffoldKey),
+          drawer: const SafeArea(child: CustomNavigationDrawer()),
+          bottomNavigationBar: const BottomNavBar(index: 2),
+          body: Container(
+            padding: const EdgeInsets.only(left: 15, right: 15),
+            child: Column(
+              children: [
+                const CustomTextField(
+                  hintText: "Search",
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: Colors.grey,
+                  ),
                 ),
-              ),
-              floatingActionButton: CustomFloatingActionButton(children: [
-                SpeedDialChild(
-                  child: const Icon(Icons.file_download),
-                  label: "Export",
-                  onTap: () => {},
-                ),
-                SpeedDialChild(
-                  child: const Icon(Icons.add),
-                  label: "Add",
-                  onTap: () =>
-                      {showBottomModal(context, const AddOrderModal())},
+                Expanded(
+                  child: CustomTabBar(
+                    tabs: tabs,
+                    tabBarController: _tabController,
+                    tabBarViewChild: [
+                      _TabBarViewChild(
+                          orderStatus: OrderStatus.all,
+                          scrollController: _scrollController),
+                      _TabBarViewChild(
+                          orderStatus: OrderStatus.pending,
+                          scrollController: _scrollController),
+                      _TabBarViewChild(
+                          orderStatus: OrderStatus.received,
+                          scrollController: _scrollController),
+                      _TabBarViewChild(
+                          orderStatus: OrderStatus.cancelled,
+                          scrollController: _scrollController)
+                    ],
+                  ),
                 )
-              ])),
-        );
-      },
+              ],
+            ),
+          ),
+          floatingActionButton: Visibility(
+            visible: _onTop,
+            child: CustomFloatingActionButton(children: [
+              SpeedDialChild(
+                child: const Icon(Icons.file_download),
+                label: "Export",
+                onTap: () => {},
+              ),
+              SpeedDialChild(
+                child: const Icon(Icons.add),
+                label: "Add",
+                onTap: () => {showBottomModal(context, const AddOrderModal())},
+              )
+            ]),
+          )),
     );
   }
 }
 
-Widget _getOrderList(OrderStatusState state, OrderStatus status) {
-  if (state is OrderStatusLoading) {
-    return const Center(child: CircularProgressIndicator());
-  }
-  if (state is OrderStatusLoaded) {
-    List<Order> orders;
-    switch (status) {
-      case OrderStatus.all:
-        orders = state.all;
-        break;
-      case OrderStatus.pending:
-        orders = state.pendingOrders;
-        break;
-      case OrderStatus.received:
-        orders = state.receivedOrders;
-        break;
-      case OrderStatus.cancelled:
-        orders = state.cancelledOrders;
-        break;
-    }
-    return _TabBarViewChild(orders: orders);
-  }
-  return const Center(child: Text("Something went wrong"));
-}
-
 class _TabBarViewChild extends StatelessWidget {
-  const _TabBarViewChild({Key? key, required this.orders}) : super(key: key);
-  final List<Order> orders;
+  const _TabBarViewChild({
+    Key? key,
+    required this.orderStatus,
+    required this.scrollController,
+  }) : super(key: key);
+  final OrderStatus orderStatus;
+  final ScrollController scrollController;
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ProductBloc, ProductState>(
+    return BlocBuilder<OrderBloc, OrderState>(
       builder: (context, state) {
-        if (state is ProductsLoading) {
+        if (state is OrdersLoading) {
           return const Center(child: CircularProgressIndicator());
         }
-        if (state is ProductsLoaded) {
+        if (state is OrdersLoaded) {
+          List<Order> orders = orderStatus == OrderStatus.all
+              ? state.orders
+              : state.orders
+                  .where((order) => order.status == orderStatus.name)
+                  .toList();
           return Padding(
             padding: const EdgeInsets.only(top: 10),
             child: ListView.builder(
+                controller: scrollController,
                 itemCount: orders.length,
-                itemBuilder: (context, index) => Container(
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(15)),
-                        color: Color(0xEEEBE6E6),
-                      ),
-                      padding: const EdgeInsets.all(15.0),
-                      margin: const EdgeInsets.only(bottom: 10),
-                      child: Column(
-                        children: [
-                          _OrderDetailContainer(
-                              title: "ID",
-                              text: orders[index].orderId.toString()),
-                          _OrderDetailContainer(
-                              title: "Product Name",
-                              text: orders[index].product.productName),
-                          _OrderDetailContainer(
-                              title: "Quantity",
-                              text: orders[index].quantity.toString()),
-                          _OrderDetailContainer(
-                              title: "Ordered Date",
-                              text: formatDateTime(orders[index].orderedDate)),
-                          orders[index].status == OrderStatus.received.name
-                              ? _OrderDetailContainer(
-                                  title: "Date Received",
-                                  text: formatDateTime(
-                                      orders[index].dateReceived))
-                              : const SizedBox.shrink(),
-                          _OrderDetailContainer(
-                            title: "Status",
-                            text: orders[index].status,
-                            color: statusFormatColor(orders[index].status),
-                          ),
-                          const SizedBox(height: 10),
-                          orders[index].status == OrderStatus.pending.name
-                              ? Row(
-                                  children: [
-                                    Expanded(
+                itemBuilder: (context, index) {
+                  Order order = orders[index];
+                  return Container(
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(15)),
+                      color: Color(0xEEEBE6E6),
+                    ),
+                    padding: const EdgeInsets.all(15.0),
+                    margin: const EdgeInsets.only(bottom: 10),
+                    child: Column(
+                      children: [
+                        _OrderDetailContainer(
+                            title: "ID", text: order.orderId.toString()),
+                        _OrderDetailContainer(
+                            title: "Product Name",
+                            text: order.product.productName),
+                        _OrderDetailContainer(
+                            title: "Quantity", text: order.quantity.toString()),
+                        _OrderDetailContainer(
+                            title: "Ordered Date",
+                            text: formatDateTime(order.orderedDate)),
+                        order.status == OrderStatus.received.name
+                            ? _OrderDetailContainer(
+                                title: "Date Received",
+                                text: formatDateTime(order.dateReceived))
+                            : const SizedBox.shrink(),
+                        order.status == OrderStatus.cancelled.name
+                            ? _OrderDetailContainer(
+                                title: "Date Cancelled",
+                                text: formatDateTime(order.dateCancelled))
+                            : const SizedBox.shrink(),
+                        _OrderDetailContainer(
+                          title: "Status",
+                          text: order.status.toTitleCase(),
+                          color: statusFormatColor(order.status),
+                        ),
+                        const SizedBox(height: 10),
+                        order.status == OrderStatus.pending.name
+                            ? Row(
+                                children: [
+                                  Expanded(
+                                    child: CustomElevatedButton(
+                                        text: "Receive",
+                                        fontColor: Colors.white,
+                                        backgroundColor: Colors.black,
+                                        onPressed: () {
+                                          Order editedOrder = order.copyWith(
+                                              dateReceived:
+                                                  Timestamp.now().toDate(),
+                                              status:
+                                                  OrderStatus.received.name);
+                                          int addedQuantity = order.quantity;
+                                          Product product = order.product
+                                              .copyWith(
+                                                  quantity:
+                                                      order.product.quantity +
+                                                          addedQuantity);
+
+                                          BlocProvider.of<OrderBloc>(context)
+                                              .add(ReceiveOrder(
+                                                  product, editedOrder));
+                                        }),
+                                  ),
+                                  const SizedBox(width: 5),
+                                  Expanded(
                                       child: CustomElevatedButton(
-                                          text: "Receive",
-                                          fontColor: Colors.white,
-                                          backgroundColor: Colors.black,
+                                          text: "Cancel",
+                                          backgroundColor: Colors.white,
                                           onPressed: () {
                                             Order order = orders[index]
                                                 .copyWith(
-                                                    dateReceived:
-                                                        Timestamp.now()
-                                                            .toDate(),
                                                     status: OrderStatus
-                                                        .received.name);
-                                            int addedQuantity =
-                                                orders[index].quantity;
-                                            Product product = state.products
-                                                .firstWhere((product) =>
-                                                    product.productId ==
-                                                    orders[index]
-                                                        .product
-                                                        .productId);
-                                            Product editedProduct =
-                                                product.copyWith(
-                                                    quantity: product.quantity +
-                                                        addedQuantity);
+                                                        .cancelled.name,
+                                                    dateCancelled:
+                                                        Timestamp.now()
+                                                            .toDate());
                                             BlocProvider.of<OrderBloc>(context)
-                                                .add(ReceiveOrder(
-                                                    editedProduct, order));
-                                          }),
-                                    ),
-                                    const SizedBox(width: 5),
-                                    Expanded(
-                                        child: CustomElevatedButton(
-                                            text: "Cancel",
-                                            backgroundColor: Colors.white,
-                                            onPressed: () {
-                                              Order order = orders[index]
-                                                  .copyWith(
-                                                      status: OrderStatus
-                                                          .cancelled.name);
-                                              BlocProvider.of<OrderBloc>(
-                                                      context)
-                                                  .add(CancelOrder(order));
-                                            }))
-                                  ],
-                                )
-                              : const SizedBox()
-                        ],
-                      ),
-                    )),
+                                                .add(CancelOrder(order));
+                                          }))
+                                ],
+                              )
+                            : const SizedBox()
+                      ],
+                    ),
+                  );
+                }),
           );
         } else {
           return const Text("Something went wrong.");

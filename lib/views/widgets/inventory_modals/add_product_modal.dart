@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dcs_inventory_system/bloc/bloc.dart';
 import 'package:dcs_inventory_system/models/model.dart';
+import 'package:dcs_inventory_system/utils/methods.dart';
 import 'package:dcs_inventory_system/views/widgets/custom_elevated_button.dart';
 import 'package:dcs_inventory_system/views/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../../utils/constant.dart';
 
@@ -35,18 +35,10 @@ class _AddProductModalState extends State<AddProductModal> {
 
   @override
   Widget build(BuildContext context) {
-    void success() {
+    void onSuccess() {
       productNameController.clear();
-
-      Fluttertoast.showToast(
-          msg: "Success",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 5,
-          backgroundColor: Colors.grey.shade200,
-          textColor: Colors.black,
-          fontSize: 12.0);
       Navigator.pop(context);
+      showSuccessSnackBar(context);
     }
 
     void addProduct(String category) {
@@ -99,15 +91,15 @@ class _AddProductModalState extends State<AddProductModal> {
                       switch (widget.category) {
                         case 0: //coffee
                           addProduct(ProductCategory.coffee.name);
-                          success();
+                          onSuccess();
                           break;
                         case 1: //milktea
                           addProduct(ProductCategory.milktea.name);
-                          success();
+                          onSuccess();
                           break;
                         case 2: //dimsum
                           addProduct(ProductCategory.dimsum.name);
-                          success();
+                          onSuccess();
                           break;
                       }
                     }

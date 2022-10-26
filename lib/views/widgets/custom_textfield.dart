@@ -8,7 +8,7 @@ class CustomTextField extends StatelessWidget {
       this.isObscureText = false,
       this.isAutoCorrect = false,
       this.isEnableSuggestion = false,
-      this.fillColor = const Color(0xFFD9D9D9),
+      this.fillColor = Colors.white,
       this.style,
       this.borderColor = const Color(0xFFD9D9D9),
       this.suffixIcon,
@@ -43,6 +43,7 @@ class CustomTextField extends StatelessWidget {
       autocorrect: isAutoCorrect,
       keyboardType: textInputType,
       decoration: InputDecoration(
+          contentPadding: const EdgeInsets.all(10),
           hintText: hintText,
           hintStyle: style,
           suffixIcon: suffixIcon,
@@ -50,10 +51,10 @@ class CustomTextField extends StatelessWidget {
           fillColor: fillColor,
           filled: true,
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20.0),
+            borderRadius: BorderRadius.circular(15.0),
           ),
           enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20.0),
+              borderRadius: BorderRadius.circular(15.0),
               borderSide: BorderSide(color: borderColor, width: 2.0))),
     );
   }

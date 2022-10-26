@@ -7,10 +7,10 @@ class DashboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<ScaffoldState> key = GlobalKey();
+    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
     return Scaffold(
-      key: key,
-      appBar: CustomAppBar(scaffoldKey: key),
+      key: scaffoldKey,
+      appBar: CustomAppBar(scaffoldKey: scaffoldKey),
       drawer: const SafeArea(child: CustomNavigationDrawer()),
       bottomNavigationBar: const BottomNavBar(index: 0),
     );

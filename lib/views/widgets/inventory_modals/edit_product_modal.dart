@@ -5,7 +5,6 @@ import 'package:dcs_inventory_system/views/widgets/widgets.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class EditProductModal extends StatefulWidget {
   const EditProductModal({
@@ -42,14 +41,6 @@ class _EditProductModalState extends State<EditProductModal> {
     void success() {
       productNameController.clear();
 
-      Fluttertoast.showToast(
-          msg: "Success",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 5,
-          backgroundColor: Colors.grey.shade200,
-          textColor: Colors.black,
-          fontSize: 12.0);
       Navigator.pop(context);
     }
 
@@ -70,6 +61,16 @@ class _EditProductModalState extends State<EditProductModal> {
               Text("Edit Product",
                   style: Theme.of(context).textTheme.headline4),
               const SizedBox(height: 20),
+              CustomTextField(
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Enter Product Name";
+                    }
+                    return null;
+                  },
+                  hintText: "Product Name",
+                  controller: productNameController),
+              const SizedBox(height: 15),
               SizedBox(
                 width: double.infinity,
                 height: 50,

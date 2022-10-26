@@ -50,3 +50,14 @@ class EditProduct extends ProductEvent {
   @override
   List<Object> get props => [product];
 }
+
+class SearchProducts extends ProductEvent {
+  final String keyword;
+
+  const SearchProducts(this.keyword);
+
+  @override
+  List<Object> get props => [keyword];
+}
+
+class ExportToExcel extends ProductEvent {}

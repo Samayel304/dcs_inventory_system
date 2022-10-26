@@ -3,7 +3,6 @@ import 'package:dcs_inventory_system/views/widgets/custom_elevated_button.dart';
 import 'package:dcs_inventory_system/views/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../../models/model.dart';
 
@@ -25,14 +24,6 @@ class _DeductQuantityModalState extends State<DeductQuantityModal> {
   void success() {
     productQuantityController.clear();
 
-    Fluttertoast.showToast(
-        msg: "Success",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 5,
-        backgroundColor: Colors.grey.shade200,
-        textColor: Colors.black,
-        fontSize: 12.0);
     Navigator.pop(context);
   }
 

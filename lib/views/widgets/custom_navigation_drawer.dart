@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class CustomNavigationDrawer extends StatelessWidget {
   const CustomNavigationDrawer({Key? key}) : super(key: key);
@@ -12,26 +13,32 @@ class CustomNavigationDrawer extends StatelessWidget {
         children: [
           SizedBox(
             width: double.infinity,
-            child: DrawerHeader(
-              decoration: const BoxDecoration(
-                color: Colors.black,
-              ),
-              margin: const EdgeInsets.all(0.0),
-              child: Center(
-                child: Column(
-                  children: [
-                    const CircleAvatar(),
-                    Text("Samayel Ponce",
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyText1!
-                            .copyWith(color: Colors.white)),
-                    Text("admin@gmail.com",
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyText1!
-                            .copyWith(color: Colors.white)),
-                  ],
+            child: InkWell(
+              onTap: () {
+                Navigator.pop(context);
+                GoRouter.of(context).push('/profile');
+              },
+              child: DrawerHeader(
+                decoration: const BoxDecoration(
+                  color: Colors.black,
+                ),
+                margin: const EdgeInsets.all(0.0),
+                child: Center(
+                  child: Column(
+                    children: [
+                      const CircleAvatar(),
+                      Text("Samayel Ponce",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText1!
+                              .copyWith(color: Colors.white)),
+                      Text("admin@gmail.com",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText1!
+                              .copyWith(color: Colors.white)),
+                    ],
+                  ),
                 ),
               ),
             ),

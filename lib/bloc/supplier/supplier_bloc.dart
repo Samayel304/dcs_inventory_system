@@ -31,7 +31,7 @@ class SupplierBloc extends Bloc<SupplierEvent, SupplierState> {
   }
 
   void _onUpdateSuppliers(UpdateSuppliers event, Emitter<SupplierState> emit) {
-    emit(SupplierLoaded(suppliers: event.suppliers));
+    emit(SupplierLoaded(suppliers: event.suppliers.reversed.toList()));
   }
 
   void _onAddSupplier(AddSupplier event, Emitter<SupplierState> emit) async {

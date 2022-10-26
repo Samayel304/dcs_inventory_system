@@ -13,7 +13,7 @@ Color statusFormatColor(String status) {
     case "pending":
       return Colors.orange.shade400;
     case "received":
-      return Colors.green.shade300;
+      return Colors.green;
     case "cancelled":
       return Colors.red.shade600;
   }
@@ -23,4 +23,10 @@ Color statusFormatColor(String status) {
 String formatDateTime(DateTime dateTime) {
   String formatedDateTime = DateFormat("MMM dd, yyyy").format(dateTime);
   return formatedDateTime;
+}
+
+extension StringExtension on String {
+  String toTitleCase() {
+    return "${this[0].toUpperCase()}${this.substring(1).toLowerCase()}";
+  }
 }

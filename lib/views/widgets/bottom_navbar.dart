@@ -42,7 +42,7 @@ class BottomNavBar extends StatelessWidget {
             onPressed: () {
               GoRouter.of(context).go('/order');
             },
-            icon: const Icon(Icons.shopping_cart),
+            icon: const Icon(Icons.pending_actions),
           ),
           label: 'Orders',
         ),

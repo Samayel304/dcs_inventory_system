@@ -7,6 +7,7 @@ class Order extends Equatable {
   final DateTime dateReceived;
   final Product product;
   final DateTime orderedDate;
+  final DateTime dateCancelled;
   final int quantity;
   final String status;
   final Supplier supplier;
@@ -18,7 +19,8 @@ class Order extends Equatable {
       required this.orderedDate,
       this.quantity = 0,
       required this.status,
-      required this.supplier});
+      required this.supplier,
+      required this.dateCancelled});
 
   Order copyWith(
       {String? orderId,
@@ -27,7 +29,8 @@ class Order extends Equatable {
       String? status,
       DateTime? orderedDate,
       DateTime? dateReceived,
-      Supplier? supplier}) {
+      Supplier? supplier,
+      DateTime? dateCancelled}) {
     return Order(
         orderId: orderId ?? this.orderId,
         product: product ?? this.product,
@@ -35,7 +38,8 @@ class Order extends Equatable {
         status: status ?? this.status,
         orderedDate: orderedDate ?? this.orderedDate,
         dateReceived: dateReceived ?? this.dateReceived,
-        supplier: supplier ?? this.supplier);
+        supplier: supplier ?? this.supplier,
+        dateCancelled: dateCancelled ?? this.dateCancelled);
   }
 
   factory Order.fromSnapshot(DocumentSnapshot snap) {
@@ -48,6 +52,8 @@ class Order extends Equatable {
           ((snap['orderedDate']) as Timestamp).toDate().toString()),
       dateReceived: DateTime.parse(
           ((snap['dateReceived']) as Timestamp).toDate().toString()),
+      dateCancelled: DateTime.parse(
+          ((snap['dateCancelled']) as Timestamp).toDate().toString()),
       supplier: Supplier.fromOrderSnapshot(snap['supplier']),
     );
   }
@@ -59,6 +65,7 @@ class Order extends Equatable {
       'status': status,
       'orderedDate': orderedDate,
       'dateReceived': dateReceived,
+      'dateCancelled': dateCancelled,
       'supplier': supplier.toOrderDocument()
     };
   }

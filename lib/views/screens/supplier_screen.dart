@@ -5,37 +5,75 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import '../../models/model.dart';
+import '../../utils/methods.dart';
 import '../widgets/widgets.dart';
 
-class SupplierScreen extends StatelessWidget {
+class SupplierScreen extends StatefulWidget {
   const SupplierScreen({super.key});
 
   @override
+  State<SupplierScreen> createState() => _SupplierScreenState();
+}
+
+class _SupplierScreenState extends State<SupplierScreen> {
+  late ScrollController _scrollController;
+  bool _onTop = true;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _scrollController = ScrollController();
+    _scrollController.addListener(() {
+      // if (_scrollController.position.atEdge) {
+      setState(() {
+        _onTop = _scrollController.position.pixels == 0;
+      });
+      //}
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final GlobalKey<ScaffoldState> key = GlobalKey();
+    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        key: key,
-        appBar: CustomAppBar(scaffoldKey: key),
+        key: scaffoldKey,
+        appBar: CustomAppBar(scaffoldKey: scaffoldKey),
         drawer: const SafeArea(child: CustomNavigationDrawer()),
         bottomNavigationBar: const BottomNavBar(index: 3),
-        floatingActionButton: CustomFloatingActionButton(children: [
-          SpeedDialChild(
-            child: const Icon(Icons.file_download),
-            label: "Export",
-            onTap: () => {},
-          ),
-          SpeedDialChild(
-            child: const Icon(Icons.add),
-            label: "Add",
-            onTap: () => {showBottomModal(context, const AddSupplierModal())},
-          )
-        ]),
+        floatingActionButton: Visibility(
+          visible: _onTop,
+          child: CustomFloatingActionButton(children: [
+            SpeedDialChild(
+              child: const Icon(Icons.file_download),
+              label: "Export",
+              onTap: () => {},
+            ),
+            SpeedDialChild(
+              child: const Icon(Icons.add),
+              label: "Add",
+              onTap: () => {showBottomModal(context, const AddSupplierModal())},
+            )
+          ]),
+        ),
         body: Container(
             padding: const EdgeInsets.only(left: 15, right: 15),
             child: Column(
               children: [
-                const CustomTextField(hintText: "Search"),
+                const CustomTextField(
+                  hintText: "Search",
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: Colors.grey,
+                  ),
+                ),
                 const SizedBox(height: 15),
                 Expanded(
                   child: BlocBuilder<SupplierBloc, SupplierState>(
@@ -45,6 +83,8 @@ class SupplierScreen extends StatelessWidget {
                       }
                       if (state is SupplierLoaded) {
                         return ListView.builder(
+                            controller: _scrollController,
+                            shrinkWrap: true,
                             itemCount: state.suppliers.length,
                             itemBuilder: ((context, index) {
                               Supplier supplier = state.suppliers[index];
@@ -62,16 +102,16 @@ class SupplierScreen extends StatelessWidget {
                                         children: [
                                           _DetailText(
                                               text: supplier.supplierName,
-                                              title: "Supplier Name:"),
+                                              title: "Supplier Name"),
                                           _DetailText(
                                               text: supplier.contactPerson,
-                                              title: "Contact Person:"),
+                                              title: "Contact Person"),
                                           _DetailText(
                                               text: supplier.address,
-                                              title: "Address:"),
+                                              title: "Address"),
                                           _DetailText(
                                               text: supplier.contactNumber,
-                                              title: "Contact Number:")
+                                              title: "Contact Number")
                                         ],
                                       ),
                                     ),

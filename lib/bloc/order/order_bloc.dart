@@ -41,7 +41,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
   }
 
   void _onUpdateOrders(UpdateOrders event, Emitter<OrderState> emit) {
-    emit(OrdersLoaded(orders: event.orders));
+    emit(OrdersLoaded(orders: event.orders.reversed.toList()));
   }
 
   void _onAddOrder(AddOrder event, Emitter<OrderState> emit) async {
