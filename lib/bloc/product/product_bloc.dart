@@ -41,9 +41,22 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   }
 
   void _onAddProduct(AddProduct event, Emitter<ProductState> emit) async {
+    final state = this.state;
     if (state is ProductsLoaded) {
       try {
-        await _productRepository.createProduct(event.product);
+        emit(ProductsLoading());
+        if (state.products
+            .where((product) =>
+                product.productName.toLowerCase() ==
+                event.product.productName.toLowerCase())
+            .isNotEmpty) {
+          emit(const Error(
+              errorMessage: "The product with the same name already exist."));
+          emit(ProductsLoaded(products: state.products));
+        } else {
+          emit(const Success(successMessage: "Successfully Added"));
+          await _productRepository.createProduct(event.product);
+        }
       } catch (_) {}
     }
   }
@@ -52,6 +65,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       DeductProductQuantity event, Emitter<ProductState> emit) async {
     if (state is ProductsLoaded) {
       try {
+        emit(const Success(successMessage: "Success"));
         await _productRepository.editProductDetails(event.product);
       } catch (_) {}
     }
@@ -60,6 +74,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   void _onEditProduct(EditProduct event, Emitter<ProductState> emit) async {
     if (state is ProductsLoaded) {
       try {
+        emit(const Success(successMessage: "Edited Successfully"));
         await _productRepository.editProductDetails(event.product);
       } catch (_) {}
     }
@@ -105,10 +120,10 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       var fileBytes = excel.save();
       var directory = await getApplicationDocumentsDirectory();
 
-      File(("$directory/output_file_name.xlsx"))
+      /* File(("$directory/output_file_name.xlsx"))
         ..createSync(recursive: true)
-        ..writeAsBytesSync(fileBytes!);
-      print("Saved");
+        ..writeAsBytesSync(fileBytes!); */
+      print(directory);
     }
   }
 

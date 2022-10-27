@@ -5,6 +5,7 @@ import 'package:dcs_inventory_system/models/model.dart';
 import 'package:dcs_inventory_system/utils/constant.dart';
 
 import 'package:dcs_inventory_system/views/widgets/widgets.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -61,26 +62,23 @@ class _AddOrderModalState extends State<AddOrderModal> {
                   }
                   if (state is ProductsLoaded) {
                     return CustomDropdown(
-                      value: selectedProduct,
-                      hint: const Text("Select product."),
                       validator: (value) {
                         if (value == null) {
-                          return "Please Select product.";
+                          return "Select Product";
                         }
                         return null;
                       },
-                      onChange: (value) {
+                      hint: "Select Product",
+                      itemAsString: (product) {
+                        return product.productName;
+                      },
+                      items: state.products,
+                      onChanged: (value) {
                         setState(() {
                           selectedProduct = value;
                         });
                       },
-                      listItem: state.products
-                          .map<DropdownMenuItem<Product>>((Product value) {
-                        return DropdownMenuItem<Product>(
-                          value: value,
-                          child: Text(value.productName),
-                        );
-                      }).toList(),
+                      selectedItem: selectedProduct,
                     );
                   } else {
                     return const Center(child: Text("Something went wrong."));
@@ -95,26 +93,23 @@ class _AddOrderModalState extends State<AddOrderModal> {
                   }
                   if (state is SupplierLoaded) {
                     return CustomDropdown(
-                      value: selectedSupplier,
-                      hint: const Text("Select supplier."),
                       validator: (value) {
                         if (value == null) {
-                          return "Please Select supplier.";
+                          return "Select Supplier";
                         }
                         return null;
                       },
-                      onChange: (value) {
+                      hint: "Select Supplier",
+                      itemAsString: (supplier) {
+                        return supplier.supplierName;
+                      },
+                      items: state.suppliers,
+                      onChanged: (value) {
                         setState(() {
                           selectedSupplier = value;
                         });
                       },
-                      listItem: state.suppliers
-                          .map<DropdownMenuItem<Supplier>>((Supplier value) {
-                        return DropdownMenuItem<Supplier>(
-                          value: value,
-                          child: Text(value.supplierName),
-                        );
-                      }).toList(),
+                      selectedItem: selectedSupplier,
                     );
                   } else {
                     return const Center(child: Text("Something went wrong."));

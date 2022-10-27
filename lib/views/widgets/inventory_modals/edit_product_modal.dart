@@ -38,12 +38,6 @@ class _EditProductModalState extends State<EditProductModal> {
 
   @override
   Widget build(BuildContext context) {
-    void success() {
-      productNameController.clear();
-
-      Navigator.pop(context);
-    }
-
     return Container(
       padding:
           EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -84,11 +78,13 @@ class _EditProductModalState extends State<EditProductModal> {
                           .copyWith(productName: productNameController.text);
                       if (widget.selectedProduct.productName ==
                           productNameController.text) {
-                        success();
+                        productNameController.clear();
+                        Navigator.pop(context);
                       } else {
                         BlocProvider.of<ProductBloc>(context)
                             .add(EditProduct(editedProduct));
-                        success();
+                        productNameController.clear();
+                        Navigator.pop(context);
                       }
                     }
                   },

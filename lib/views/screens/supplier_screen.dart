@@ -41,11 +41,9 @@ class _SupplierScreenState extends State<SupplierScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        key: scaffoldKey,
-        appBar: CustomAppBar(scaffoldKey: scaffoldKey),
+        appBar: const CustomAppBar(),
         drawer: const SafeArea(child: CustomNavigationDrawer()),
         bottomNavigationBar: const BottomNavBar(index: 3),
         floatingActionButton: Visibility(
@@ -166,15 +164,15 @@ class _DetailText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text("$title :", style: Theme.of(context).textTheme.headline3),
+        Text("$title :", style: Theme.of(context).textTheme.headline5),
         const SizedBox(
           width: 5,
         ),
         Text(text,
             style: Theme.of(context)
                 .textTheme
-                .headline6!
-                .copyWith(color: Colors.black))
+                .headline5!
+                .copyWith(color: Colors.black, fontWeight: FontWeight.normal))
       ],
     );
   }

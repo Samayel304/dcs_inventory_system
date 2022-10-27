@@ -21,11 +21,6 @@ class DeductQuantityModal extends StatefulWidget {
 class _DeductQuantityModalState extends State<DeductQuantityModal> {
   TextEditingController productQuantityController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  void success() {
-    productQuantityController.clear();
-
-    Navigator.pop(context);
-  }
 
   @override
   void dispose() {
@@ -83,7 +78,8 @@ class _DeductQuantityModalState extends State<DeductQuantityModal> {
                           DeductProductQuantity(widget.selectedProduct
                               .copyWith(quantity: newQuantity)));
 
-                      success();
+                      productQuantityController.clear();
+                      Navigator.pop(context);
                     }
                   },
                 ),

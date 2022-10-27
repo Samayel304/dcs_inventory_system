@@ -10,11 +10,11 @@ Future<dynamic> showBottomModal(BuildContext context, Widget child) {
       });
 }
 
-void showErrorSnackBar(BuildContext context) {
-  const snackBar = SnackBar(
-    content: Text("Error", textAlign: TextAlign.center),
+void showErrorSnackBar(BuildContext context, String errorMessage) {
+  final snackBar = SnackBar(
+    content: Text(errorMessage, textAlign: TextAlign.center),
     behavior: SnackBarBehavior.floating,
-    duration: Duration(seconds: 3),
+    duration: const Duration(seconds: 3),
     backgroundColor: Colors.red,
   );
   ScaffoldMessenger.of(context)
@@ -22,11 +22,11 @@ void showErrorSnackBar(BuildContext context) {
     ..showSnackBar(snackBar);
 }
 
-void showSuccessSnackBar(BuildContext context) {
-  const snackBar = SnackBar(
-    content: Text("Success", textAlign: TextAlign.center),
+void showSuccessSnackBar(BuildContext context, String message) {
+  final snackBar = SnackBar(
+    content: Text(message, textAlign: TextAlign.center),
     behavior: SnackBarBehavior.floating,
-    duration: Duration(seconds: 3),
+    duration: const Duration(seconds: 3),
     backgroundColor: Colors.green,
   );
   ScaffoldMessenger.of(context)

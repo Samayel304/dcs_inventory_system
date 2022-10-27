@@ -1,51 +1,68 @@
-import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 
 class CustomDropdown extends StatefulWidget {
-  const CustomDropdown(
-      {Key? key,
-      required this.onChange,
-      required this.listItem,
-      required this.hint,
-      this.validator,
-      this.value})
-      : super(key: key);
+  const CustomDropdown({
+    Key? key,
+    this.itemAsString,
+    required this.items,
+    this.onChanged,
+    this.selectedItem,
+    required this.hint,
+    this.validator,
+  }) : super(key: key);
 
-  final void Function(dynamic) onChange;
-  final List<DropdownMenuItem> listItem;
-  final Widget hint;
+  final String Function(dynamic)? itemAsString;
+  final List<dynamic> items;
+  final void Function(dynamic)? onChanged;
+  final dynamic selectedItem;
+  final String hint;
   final String? Function(dynamic)? validator;
-  final dynamic value;
   @override
   State<CustomDropdown> createState() => _CustomDropdownState();
 }
 
 class _CustomDropdownState extends State<CustomDropdown> {
+  final TextEditingController searchController = TextEditingController();
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return DropdownButtonFormField2(
-        validator: widget.validator,
-        dropdownMaxHeight: 150,
-        isExpanded: true,
-        hint: widget.hint,
-        value: widget.value,
-        buttonPadding: const EdgeInsets.only(left: 10),
-
-        //icon: const Icon(Icons.arrow_downward),
-        //elevation: 10,
-        buttonHeight: 60,
-        decoration: InputDecoration(
-          //Add isDense true and zero Padding.
-          //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
-          isDense: true,
-          contentPadding: EdgeInsets.zero,
+    return DropdownSearch(
+      validator: widget.validator,
+      popupProps: PopupProps.menu(
+          showSearchBox: true,
+          menuProps: const MenuProps(
+              borderRadius: BorderRadius.all(Radius.circular(15))),
+          searchFieldProps: TextFieldProps(
+              decoration: InputDecoration(
+                  hintText: "Search",
+                  contentPadding: const EdgeInsets.all(10),
+                  filled: true,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                      borderSide: const BorderSide(
+                          color: Color(0xFFD9D9D9), width: 2.0))))),
+      itemAsString: widget.itemAsString,
+      items: widget.items,
+      dropdownDecoratorProps: DropDownDecoratorProps(
+        dropdownSearchDecoration: InputDecoration(
+          contentPadding: const EdgeInsets.all(10),
+          hintText: widget.hint,
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(15),
           ),
-          //Add more decoration as you want here
-          //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
         ),
-        onChanged: widget.onChange,
-        items: widget.listItem);
+      ),
+      onChanged: widget.onChanged,
+      selectedItem: widget.selectedItem,
+    );
   }
 }

@@ -23,21 +23,21 @@ class ProfileScreen extends StatelessWidget {
                         title: "FullName",
                         value: "Samayel Ponce",
                         onTap: () {
-                          GoRouter.of(context).go('/profile/edit_fullname');
+                          GoRouter.of(context).push('/profile/edit_fullname');
                         },
                       ),
                       _UserInfo(
                         title: "Email",
                         value: "samayel@gmail.com",
                         onTap: () {
-                          GoRouter.of(context).go('/profile/edit_email');
+                          GoRouter.of(context).push('/profile/edit_email');
                         },
                       ),
                       _UserInfo(
                         title: "Password",
                         value: "",
                         onTap: () {
-                          GoRouter.of(context).go('/profile/edit_password');
+                          GoRouter.of(context).push('/profile/edit_password');
                         },
                       ),
                     ],

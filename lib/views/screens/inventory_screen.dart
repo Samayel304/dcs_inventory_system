@@ -55,14 +55,13 @@ class _InventoryScreenState extends State<InventoryScreen>
   @override
   Widget build(BuildContext context) {
     List<String> tabs = ['Coffee', 'Milktea', 'Dimsum'];
-    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
+
     return DefaultTabController(
         initialIndex: 0,
         length: tabs.length,
         child: Scaffold(
-          key: scaffoldKey,
           resizeToAvoidBottomInset: false,
-          appBar: CustomAppBar(scaffoldKey: scaffoldKey),
+          appBar: const CustomAppBar(),
           drawer: const SafeArea(child: CustomNavigationDrawer()),
           body: Container(
             padding: const EdgeInsets.only(left: 15, right: 15),
@@ -164,82 +163,96 @@ class _TabBarViewChild extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: BlocBuilder<ProductBloc, ProductState>(
-            builder: (context, state) {
-              if (state is ProductsLoading) {
-                return const CustomCircularProgress();
+          child: BlocListener<ProductBloc, ProductState>(
+            listener: (context, state) {
+              if (state is Success) {
+                showSuccessSnackBar(context, state.successMessage);
               }
-              if (state is ProductsLoaded) {
-                List<Product> products = state.products
-                    .where(
-                        (product) => product.category == productCategory.name)
-                    .toList();
-                return ListView.builder(
-                  controller: scrollController,
-                  shrinkWrap: true,
-                  itemCount: products.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    Product product = products[index];
-                    return Container(
-                      margin: const EdgeInsets.only(bottom: 7),
-                      padding: const EdgeInsets.all(15.0),
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(15)),
-                        color: Color(0xEEEBE6E6),
-                      ),
-                      child: Row(children: [
-                        Expanded(
-                            flex: 1,
-                            child: Text((index + 1).toString(),
-                                style: Theme.of(context).textTheme.headline3)),
-                        Expanded(
-                            flex: 4,
-                            child: Text(product.productName,
-                                style: Theme.of(context).textTheme.headline3)),
-                        Expanded(
-                            flex: 2,
-                            child: Text(product.quantity.toString(),
-                                style: Theme.of(context).textTheme.headline3)),
-                        Expanded(
-                            flex: 1,
-                            child: PopupMenuButton(
-                                onSelected: (value) {
-                                  switch (value) {
-                                    case 0:
-                                      showBottomModal(
-                                          context,
-                                          EditProductModal(
-                                            selectedProduct: product,
-                                          ));
-                                      break;
-                                    default:
-                                      showBottomModal(
-                                          context,
-                                          DeductQuantityModal(
-                                            selectedProduct: product,
-                                          ));
-                                      break;
-                                  }
-                                },
-                                icon: const Icon(Icons.more_vert),
-                                itemBuilder: (context) => [
-                                      const PopupMenuItem(
-                                        value: 0,
-                                        child: Text("Edit"),
-                                      ),
-                                      const PopupMenuItem(
-                                        value: 1,
-                                        child: Text("Deduct"),
-                                      )
-                                    ])),
-                      ]),
-                    );
-                  },
-                );
-              } else {
-                return const Center(child: Text("Something went wrong."));
+              if (state is Error) {
+                showErrorSnackBar(context, state.errorMessage);
               }
             },
+            child: BlocBuilder<ProductBloc, ProductState>(
+              builder: (context, state) {
+                if (state is ProductsLoading) {
+                  return const CustomCircularProgress();
+                }
+                if (state is ProductsLoaded) {
+                  List<Product> products = state.products
+                      .where(
+                          (product) => product.category == productCategory.name)
+                      .toList();
+                  return ListView.builder(
+                    controller: scrollController,
+                    shrinkWrap: true,
+                    itemCount: products.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      Product product = products[index];
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 7),
+                        padding: const EdgeInsets.only(
+                            right: 15.0, left: 15, bottom: 10, top: 10),
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(15)),
+                          color: Color(0xEEEBE6E6),
+                        ),
+                        child: Row(children: [
+                          Expanded(
+                              flex: 1,
+                              child: Text((index + 1).toString(),
+                                  style:
+                                      Theme.of(context).textTheme.headline5)),
+                          Expanded(
+                              flex: 4,
+                              child: Text(product.productName,
+                                  style:
+                                      Theme.of(context).textTheme.headline5)),
+                          Expanded(
+                              flex: 2,
+                              child: Text(product.quantity.toString(),
+                                  style:
+                                      Theme.of(context).textTheme.headline5)),
+                          Expanded(
+                              flex: 1,
+                              child: PopupMenuButton(
+                                  onSelected: (value) {
+                                    switch (value) {
+                                      case 0:
+                                        showBottomModal(
+                                            context,
+                                            EditProductModal(
+                                              selectedProduct: product,
+                                            ));
+                                        break;
+                                      default:
+                                        showBottomModal(
+                                            context,
+                                            DeductQuantityModal(
+                                              selectedProduct: product,
+                                            ));
+                                        break;
+                                    }
+                                  },
+                                  icon: const Icon(Icons.more_vert),
+                                  itemBuilder: (context) => [
+                                        const PopupMenuItem(
+                                          value: 0,
+                                          child: Text("Edit"),
+                                        ),
+                                        const PopupMenuItem(
+                                          value: 1,
+                                          child: Text("Deduct"),
+                                        )
+                                      ])),
+                        ]),
+                      );
+                    },
+                  );
+                } else {
+                  return const Center(child: Text("Something went wrong."));
+                }
+              },
+            ),
           ),
         )
       ],

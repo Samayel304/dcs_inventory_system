@@ -1,4 +1,5 @@
 import 'package:dcs_inventory_system/cubits/login/login_cubit.dart';
+import 'package:dcs_inventory_system/utils/methods.dart';
 import 'package:dcs_inventory_system/views/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,8 +22,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return BlocListener<LoginCubit, LoginState>(
         listener: (context, state) {
           if (state.status == LoginStatus.error) {
-            print("error");
-            showErrorDialog(context, state.errorMessage);
+            showErrorSnackBar(context, state.errorMessage);
           }
         },
         child: Scaffold(
@@ -50,23 +50,6 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
         ));
-  }
-
-  Future<dynamic> showErrorDialog(BuildContext context, String erroMessage) {
-    return showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text("Error"),
-            content: Text(erroMessage),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context, 'OK'),
-                child: const Text('OK'),
-              ),
-            ],
-          );
-        });
   }
 }
 

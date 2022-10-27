@@ -4,9 +4,8 @@ import 'package:flutter/material.dart';
 class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   const CustomAppBar({
     Key? key,
-    required this.scaffoldKey,
   }) : super(key: key);
-  final GlobalKey<ScaffoldState> scaffoldKey;
+
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -14,7 +13,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
       elevation: 0,
       leading: IconButton(
         onPressed: () {
-          scaffoldKey.currentState!.openDrawer();
+          Scaffold.of(context).openDrawer();
         },
         icon: const Icon(
           Icons.menu,

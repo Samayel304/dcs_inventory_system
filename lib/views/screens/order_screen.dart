@@ -54,14 +54,13 @@ class _OrderScreenState extends State<OrderScreen>
   @override
   Widget build(BuildContext context) {
     List<String> tabs = ["All", "Pending", "Received", "Cancelled"];
-    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
+
     return DefaultTabController(
       initialIndex: 0,
       length: tabs.length,
       child: Scaffold(
-          key: scaffoldKey,
           resizeToAvoidBottomInset: false,
-          appBar: CustomAppBar(scaffoldKey: scaffoldKey),
+          appBar: const CustomAppBar(),
           drawer: const SafeArea(child: CustomNavigationDrawer()),
           bottomNavigationBar: const BottomNavBar(index: 2),
           body: Container(
@@ -163,6 +162,9 @@ class _TabBarViewChild extends StatelessWidget {
                         _OrderDetailContainer(
                             title: "Quantity", text: order.quantity.toString()),
                         _OrderDetailContainer(
+                            text: order.supplier.supplierName,
+                            title: "SupplierName"),
+                        _OrderDetailContainer(
                             title: "Ordered Date",
                             text: formatDateTime(order.orderedDate)),
                         order.status == OrderStatus.received.name
@@ -180,50 +182,53 @@ class _TabBarViewChild extends StatelessWidget {
                           text: order.status.toTitleCase(),
                           color: statusFormatColor(order.status),
                         ),
-                        const SizedBox(height: 10),
                         order.status == OrderStatus.pending.name
-                            ? Row(
-                                children: [
-                                  Expanded(
-                                    child: CustomElevatedButton(
-                                        text: "Receive",
-                                        fontColor: Colors.white,
-                                        backgroundColor: Colors.black,
-                                        onPressed: () {
-                                          Order editedOrder = order.copyWith(
-                                              dateReceived:
-                                                  Timestamp.now().toDate(),
-                                              status:
-                                                  OrderStatus.received.name);
-                                          int addedQuantity = order.quantity;
-                                          Product product = order.product
-                                              .copyWith(
-                                                  quantity:
-                                                      order.product.quantity +
-                                                          addedQuantity);
-
-                                          BlocProvider.of<OrderBloc>(context)
-                                              .add(ReceiveOrder(
-                                                  product, editedOrder));
-                                        }),
-                                  ),
-                                  const SizedBox(width: 5),
-                                  Expanded(
+                            ? Container(
+                                margin: const EdgeInsets.only(top: 10),
+                                child: Row(
+                                  children: [
+                                    Expanded(
                                       child: CustomElevatedButton(
-                                          text: "Cancel",
-                                          backgroundColor: Colors.white,
+                                          text: "Receive",
+                                          fontColor: Colors.white,
+                                          backgroundColor: Colors.black,
                                           onPressed: () {
-                                            Order order = orders[index]
+                                            Order editedOrder = order.copyWith(
+                                                dateReceived:
+                                                    Timestamp.now().toDate(),
+                                                status:
+                                                    OrderStatus.received.name);
+                                            int addedQuantity = order.quantity;
+                                            Product product = order.product
                                                 .copyWith(
-                                                    status: OrderStatus
-                                                        .cancelled.name,
-                                                    dateCancelled:
-                                                        Timestamp.now()
-                                                            .toDate());
+                                                    quantity:
+                                                        order.product.quantity +
+                                                            addedQuantity);
+
                                             BlocProvider.of<OrderBloc>(context)
-                                                .add(CancelOrder(order));
-                                          }))
-                                ],
+                                                .add(ReceiveOrder(
+                                                    product, editedOrder));
+                                          }),
+                                    ),
+                                    const SizedBox(width: 5),
+                                    Expanded(
+                                        child: CustomElevatedButton(
+                                            text: "Cancel",
+                                            backgroundColor: Colors.white,
+                                            onPressed: () {
+                                              Order order = orders[index]
+                                                  .copyWith(
+                                                      status: OrderStatus
+                                                          .cancelled.name,
+                                                      dateCancelled:
+                                                          Timestamp.now()
+                                                              .toDate());
+                                              BlocProvider.of<OrderBloc>(
+                                                      context)
+                                                  .add(CancelOrder(order));
+                                            }))
+                                  ],
+                                ),
                               )
                             : const SizedBox()
                       ],
@@ -254,13 +259,15 @@ class _OrderDetailContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text("$title :", style: Theme.of(context).textTheme.headline3),
+        Text("$title :", style: Theme.of(context).textTheme.headline5),
         const SizedBox(
           width: 5,
         ),
         Text(text,
-            style:
-                Theme.of(context).textTheme.headline6!.copyWith(color: color))
+            style: Theme.of(context)
+                .textTheme
+                .headline5!
+                .copyWith(color: color, fontWeight: FontWeight.normal))
       ],
     );
   }

@@ -35,12 +35,6 @@ class _AddProductModalState extends State<AddProductModal> {
 
   @override
   Widget build(BuildContext context) {
-    void onSuccess() {
-      productNameController.clear();
-      Navigator.pop(context);
-      showSuccessSnackBar(context);
-    }
-
     void addProduct(String category) {
       int quantity = 0;
       Product product = Product(
@@ -50,6 +44,8 @@ class _AddProductModalState extends State<AddProductModal> {
           dateCreated: Timestamp.now().toDate());
 
       BlocProvider.of<ProductBloc>(context).add(AddProduct(product));
+      productNameController.clear();
+      Navigator.pop(context);
     }
 
     return Container(
@@ -80,32 +76,32 @@ class _AddProductModalState extends State<AddProductModal> {
               ),
               const SizedBox(height: 15),
               SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: CustomElevatedButton(
-                  text: "Save",
-                  fontColor: Colors.white,
-                  backgroundColor: Colors.black,
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      switch (widget.category) {
-                        case 0: //coffee
-                          addProduct(ProductCategory.coffee.name);
-                          onSuccess();
-                          break;
-                        case 1: //milktea
-                          addProduct(ProductCategory.milktea.name);
-                          onSuccess();
-                          break;
-                        case 2: //dimsum
-                          addProduct(ProductCategory.dimsum.name);
-                          onSuccess();
-                          break;
+                  width: double.infinity,
+                  height: 50,
+                  child: CustomElevatedButton(
+                    text: "Save",
+                    fontColor: Colors.white,
+                    backgroundColor: Colors.black,
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        switch (widget.category) {
+                          case 0: //coffee
+
+                            addProduct(ProductCategory.coffee.name);
+
+                            break;
+                          case 1: //milktea
+                            addProduct(ProductCategory.milktea.name);
+
+                            break;
+                          case 2: //dimsum
+                            addProduct(ProductCategory.dimsum.name);
+
+                            break;
+                        }
                       }
-                    }
-                  },
-                ),
-              )
+                    },
+                  )),
             ],
           ),
         ),

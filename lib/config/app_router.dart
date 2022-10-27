@@ -75,7 +75,7 @@ class AppRouter {
       }
       return null; */
     },
-    initialLocation: '/inventory',
+    initialLocation: '/order',
     refreshListenable: GoRouterRefreshStream(authBloc.stream),
   );
 }
