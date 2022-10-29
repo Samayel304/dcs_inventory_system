@@ -52,8 +52,32 @@ class User extends Equatable {
     );
   }
 
+  factory User.fromActiviyLogSnapshot(Map<String, dynamic> snap) {
+    return User(
+      id: snap['id'],
+      firstName: snap['firstName'],
+      middleName: snap['middleName'],
+      lastName: snap['lastName'],
+      email: snap['email'],
+      role: snap['role'],
+      avatarUrl: snap['avatarUrl'],
+    );
+  }
+
   Map<String, Object> toDocument() {
     return {
+      'firstName': firstName,
+      'middleName': middleName,
+      'lastName': lastName,
+      'email': email,
+      'role': role,
+      'avatarUrl': avatarUrl,
+    };
+  }
+
+  Map<String, Object> toActiviyLogDocument() {
+    return {
+      'id': id.toString(),
       'firstName': firstName,
       'middleName': middleName,
       'lastName': lastName,

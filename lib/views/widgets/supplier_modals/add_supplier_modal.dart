@@ -1,5 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dcs_inventory_system/models/model.dart';
 import 'package:dcs_inventory_system/views/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
+
+import '../../../bloc/supplier/supplier_bloc.dart';
 
 class AddSupplierModal extends StatefulWidget {
   const AddSupplierModal({super.key});
@@ -9,7 +15,21 @@ class AddSupplierModal extends StatefulWidget {
 }
 
 class _AddSupplierModalState extends State<AddSupplierModal> {
+  final TextEditingController supplierNameController = TextEditingController();
+  final TextEditingController contactPersonController = TextEditingController();
+  final TextEditingController contactNumberController = TextEditingController();
+  final TextEditingController addressController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    super.dispose();
+    supplierNameController.dispose();
+    contactNumberController.dispose();
+    contactPersonController.dispose();
+    addressController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -32,6 +52,7 @@ class _AddSupplierModalState extends State<AddSupplierModal> {
                         style: Theme.of(context).textTheme.headline4),
                     const SizedBox(height: 20),
                     CustomTextField(
+                      controller: supplierNameController,
                       hintText: "Supplier Name",
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -42,6 +63,7 @@ class _AddSupplierModalState extends State<AddSupplierModal> {
                     ),
                     const SizedBox(height: 12),
                     CustomTextField(
+                      controller: contactPersonController,
                       hintText: "Contact Person",
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -52,6 +74,7 @@ class _AddSupplierModalState extends State<AddSupplierModal> {
                     ),
                     const SizedBox(height: 12),
                     CustomTextField(
+                      controller: contactNumberController,
                       hintText: "Contact Number",
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -62,6 +85,7 @@ class _AddSupplierModalState extends State<AddSupplierModal> {
                     ),
                     const SizedBox(height: 12),
                     CustomTextField(
+                      controller: addressController,
                       hintText: "Address",
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -79,7 +103,16 @@ class _AddSupplierModalState extends State<AddSupplierModal> {
                           text: "Save",
                           backgroundColor: Colors.black,
                           onPressed: () {
-                            if (_formKey.currentState!.validate()) {}
+                            if (_formKey.currentState!.validate()) {
+                              Supplier supplier = Supplier(
+                                  supplierName: supplierNameController.text,
+                                  contactPerson: contactPersonController.text,
+                                  address: addressController.text,
+                                  contactNumber: contactNumberController.text,
+                                  dateCreated: Timestamp.now().toDate());
+                              BlocProvider.of<SupplierBloc>(context)
+                                  .add(AddSupplier(supplier));
+                            }
                           }),
                     )
                   ],

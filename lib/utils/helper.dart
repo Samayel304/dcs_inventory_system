@@ -20,13 +20,26 @@ Color statusFormatColor(String status) {
   return Colors.black;
 }
 
-String formatDateTime(DateTime dateTime) {
-  String formatedDateTime = DateFormat("MMM dd, yyyy").format(dateTime);
-  return formatedDateTime;
+const String dateFormatter = 'MMMM dd, y';
+
+extension DateHelper on DateTime {
+  String formatDate() {
+    final formatter = DateFormat(dateFormatter);
+    return formatter.format(this);
+  }
+
+  bool isSameDate(DateTime other) {
+    return year == other.year && month == other.month && day == other.day;
+  }
+
+  int getDifferenceInDaysWithNow() {
+    final now = DateTime.now();
+    return now.difference(this).inDays;
+  }
 }
 
 extension StringExtension on String {
   String toTitleCase() {
-    return "${this[0].toUpperCase()}${this.substring(1).toLowerCase()}";
+    return "${this[0].toUpperCase()}${substring(1).toLowerCase()}";
   }
 }

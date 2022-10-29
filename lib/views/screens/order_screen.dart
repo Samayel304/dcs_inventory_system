@@ -166,16 +166,16 @@ class _TabBarViewChild extends StatelessWidget {
                             title: "SupplierName"),
                         _OrderDetailContainer(
                             title: "Ordered Date",
-                            text: formatDateTime(order.orderedDate)),
+                            text: order.orderedDate.formatDate()),
                         order.status == OrderStatus.received.name
                             ? _OrderDetailContainer(
                                 title: "Date Received",
-                                text: formatDateTime(order.dateReceived))
+                                text: order.dateReceived.formatDate())
                             : const SizedBox.shrink(),
                         order.status == OrderStatus.cancelled.name
                             ? _OrderDetailContainer(
                                 title: "Date Cancelled",
-                                text: formatDateTime(order.dateCancelled))
+                                text: order.dateCancelled.formatDate())
                             : const SizedBox.shrink(),
                         _OrderDetailContainer(
                           title: "Status",

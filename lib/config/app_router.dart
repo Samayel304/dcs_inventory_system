@@ -41,6 +41,18 @@ class AppRouter {
             return const SupplierScreen();
           }),
       GoRoute(
+        path: '/manage_account',
+        builder: (context, state) {
+          return const ManageAccountScreen();
+        },
+      ),
+      GoRoute(
+        path: '/activity_log',
+        builder: (context, state) {
+          return const ActivityLogScreen();
+        },
+      ),
+      GoRoute(
           path: '/profile',
           builder: (BuildContext context, GoRouterState state) {
             return const ProfileScreen();
@@ -75,7 +87,7 @@ class AppRouter {
       }
       return null; */
     },
-    initialLocation: '/order',
+    initialLocation: '/activity_log',
     refreshListenable: GoRouterRefreshStream(authBloc.stream),
   );
 }

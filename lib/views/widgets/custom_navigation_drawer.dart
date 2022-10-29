@@ -43,9 +43,13 @@ class CustomNavigationDrawer extends StatelessWidget {
               ),
             ),
           ),
-          const CustomListTile(
-              title: "Account Management",
-              icon: Icons.manage_accounts_outlined),
+          CustomListTile(
+            title: "Account Management",
+            icon: Icons.manage_accounts_outlined,
+            onTap: () {
+              GoRouter.of(context).push('/manage_account');
+            },
+          ),
           const CustomListTile(title: "Logs", icon: Icons.note_alt_outlined),
           const Expanded(
             child: Align(

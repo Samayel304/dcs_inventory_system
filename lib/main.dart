@@ -1,5 +1,4 @@
 import 'package:dcs_inventory_system/bloc/bloc.dart';
-import 'package:dcs_inventory_system/bloc/supplier/supplier_bloc.dart';
 import 'package:dcs_inventory_system/cubits/login/login_cubit.dart';
 
 import 'package:dcs_inventory_system/config/theme.dart';
@@ -8,6 +7,7 @@ import 'package:dcs_inventory_system/repositories/repository.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'config/app_router.dart';
 import 'firebase_options.dart';
@@ -22,6 +22,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 }
 
 void main() async {
+  //debugRepaintRainbowEnabled = true;
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
