@@ -5,7 +5,7 @@ import 'package:dcs_inventory_system/repositories/activity_log/base_activity_log
 class ActivityLogRepository extends BaseActivityLogRepository {
   final FirebaseFirestore _firebaseFirestore;
 
-  ActivityLogRepository(FirebaseFirestore? firebaseFirestore)
+  ActivityLogRepository({FirebaseFirestore? firebaseFirestore})
       : _firebaseFirestore = firebaseFirestore ?? FirebaseFirestore.instance;
 
   @override

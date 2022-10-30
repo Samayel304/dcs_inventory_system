@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 class BackAppBar extends StatelessWidget with PreferredSizeWidget {
   const BackAppBar({
     Key? key,
+    this.actions,
   }) : super(key: key);
+  final List<Widget>? actions;
 
   @override
   Widget build(BuildContext context) {
@@ -13,6 +15,7 @@ class BackAppBar extends StatelessWidget with PreferredSizeWidget {
       ),
       backgroundColor: Colors.transparent,
       elevation: 0,
+      actions: actions,
     );
   }
 

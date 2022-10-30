@@ -68,7 +68,8 @@ class MyApp extends StatelessWidget {
         ),
         RepositoryProvider(create: (context) => ProductRepository()),
         RepositoryProvider(create: (context) => OrderRepository()),
-        RepositoryProvider(create: (context) => SupplierRepository())
+        RepositoryProvider(create: (context) => SupplierRepository()),
+        RepositoryProvider(create: (context) => ActivityLogRepository())
       ],
       child: MultiBlocProvider(
         providers: [
@@ -93,7 +94,11 @@ class MyApp extends StatelessWidget {
           BlocProvider(
               create: (context) => SupplierBloc(
                   supplierRepository: context.read<SupplierRepository>())
-                ..add(LoadSuppliers()))
+                ..add(LoadSuppliers())),
+          BlocProvider(
+              create: (context) => ActivityLogBloc(
+                  activityLogRepository: context.read<ActivityLogRepository>())
+                ..add(LoadActivityLogs()))
         ],
         child: Builder(builder: (context) {
           return MaterialApp.router(
