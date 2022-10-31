@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dcs_inventory_system/bloc/bloc.dart';
 import 'package:dcs_inventory_system/models/model.dart';
-import 'package:dcs_inventory_system/utils/methods.dart';
 import 'package:dcs_inventory_system/views/widgets/custom_elevated_button.dart';
 import 'package:dcs_inventory_system/views/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
@@ -42,8 +41,8 @@ class _AddProductModalState extends State<AddProductModal> {
           category: category,
           quantity: quantity,
           dateCreated: Timestamp.now().toDate());
-
       BlocProvider.of<ProductBloc>(context).add(AddProduct(product));
+
       productNameController.clear();
       Navigator.pop(context);
     }

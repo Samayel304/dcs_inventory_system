@@ -33,11 +33,12 @@ class AddProduct extends ProductEvent {
 
 class DeductProductQuantity extends ProductEvent {
   final Product product;
+  final int deductedQuantity;
 
-  const DeductProductQuantity(this.product);
+  const DeductProductQuantity(this.product, this.deductedQuantity);
 
   @override
-  List<Object> get props => [product];
+  List<Object> get props => [product, deductedQuantity];
 }
 
 class EditProduct extends ProductEvent {

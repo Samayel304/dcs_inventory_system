@@ -21,6 +21,14 @@ class AppRouter {
         },
       ),
       GoRoute(
+        path: '/splash',
+        builder: (context, state) {
+          return SplashScreen(
+            authBloc: authBloc,
+          );
+        },
+      ),
+      GoRoute(
           path: '/login',
           builder: (BuildContext context, GoRouterState state) {
             return const LoginScreen();
@@ -75,9 +83,9 @@ class AppRouter {
                 })
           ])
     ],
-    redirect: (BuildContext context, GoRouterState state) {
-      /* final bool loggedIn = authBloc.state.status == AuthStatus.authenticated;
-      final bool loggingIn = state.subloc == '/login';
+    /*  redirect: (BuildContext context, GoRouterState state) {
+       final bool loggedIn = authBloc.state.status == AuthStatus.authenticated;
+    
 
       if (!loggedIn) {
         return loggingIn ? null : '/login';
@@ -85,9 +93,9 @@ class AppRouter {
       if (loggingIn) {
         return '/';
       }
-      return null; */
-    },
-    initialLocation: '/activity_log',
+      return null; 
+    }, */
+    initialLocation: '/splash',
     refreshListenable: GoRouterRefreshStream(authBloc.stream),
   );
 }

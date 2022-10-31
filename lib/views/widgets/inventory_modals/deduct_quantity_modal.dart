@@ -71,12 +71,16 @@ class _DeductQuantityModalState extends State<DeductQuantityModal> {
                   backgroundColor: Colors.black,
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      int newQuantity = widget.selectedProduct.quantity -
+                      int deductedQuantity =
                           int.parse(productQuantityController.text);
+                      int newQuantity =
+                          widget.selectedProduct.quantity - deductedQuantity;
 
                       BlocProvider.of<ProductBloc>(context).add(
-                          DeductProductQuantity(widget.selectedProduct
-                              .copyWith(quantity: newQuantity)));
+                          DeductProductQuantity(
+                              widget.selectedProduct
+                                  .copyWith(quantity: newQuantity),
+                              deductedQuantity));
 
                       productQuantityController.clear();
                       Navigator.pop(context);

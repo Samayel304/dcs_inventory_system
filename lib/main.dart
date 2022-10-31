@@ -74,11 +74,6 @@ class MyApp extends StatelessWidget {
       child: MultiBlocProvider(
         providers: [
           BlocProvider(
-            create: (context) => ProductBloc(
-                productRepository: context.read<ProductRepository>())
-              ..add(LoadProducts()),
-          ),
-          BlocProvider(
             create: (context) => AuthBloc(
               authRepository: context.read<AuthRepository>(),
               userRepository: context.read<UserRepository>(),
@@ -86,6 +81,17 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider(
               create: (context) => LoginCubit(context.read<AuthRepository>())),
+          BlocProvider(
+              create: (context) => ActivityLogBloc(
+                  activityLogRepository: context.read<ActivityLogRepository>())
+                ..add(LoadActivityLogs())),
+          BlocProvider(
+            create: (context) => ProductBloc(
+                productRepository: context.read<ProductRepository>(),
+                activityLogBloc: context.read<ActivityLogBloc>(),
+                authBloc: context.read<AuthBloc>())
+              ..add(LoadProducts()),
+          ),
           BlocProvider(
               create: (context) => OrderBloc(
                   orderRepository: context.read<OrderRepository>(),
@@ -95,23 +101,12 @@ class MyApp extends StatelessWidget {
               create: (context) => SupplierBloc(
                   supplierRepository: context.read<SupplierRepository>())
                 ..add(LoadSuppliers())),
-          BlocProvider(
-              create: (context) => ActivityLogBloc(
-                  activityLogRepository: context.read<ActivityLogRepository>())
-                ..add(LoadActivityLogs()))
         ],
         child: Builder(builder: (context) {
           return MaterialApp.router(
             title: 'DCS Inventory System',
             theme: theme(),
             routerConfig: AppRouter(context.read<AuthBloc>()).router,
-            /* initialRoute: "/dashboard",
-              routes: {
-                DashboardScreen.routeName: (context) => const DashboardScreen(),
-                LoginScreen.routeName: (context) => const LoginScreen(),
-                InventoryScreen.routeName: (context) => const InventoryScreen(),
-                OrderScreen.routeName: (context) => const OrderScreen()
-              }, */
           );
         }),
       ),

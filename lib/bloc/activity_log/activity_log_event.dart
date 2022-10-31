@@ -15,3 +15,10 @@ class UpdateActivityLogs extends ActivityLogEvent {
   @override
   List<Object> get props => [activityLogs];
 }
+
+class AddActivityLog extends ActivityLogEvent {
+  final ActivityLog activityLog;
+  const AddActivityLog({required this.activityLog});
+  @override
+  List<Object> get props => [activityLog];
+}

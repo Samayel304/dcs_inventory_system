@@ -9,15 +9,10 @@ class ActivityLogRepository extends BaseActivityLogRepository {
       : _firebaseFirestore = firebaseFirestore ?? FirebaseFirestore.instance;
 
   @override
-  Future<void> addActivityLog(ActivityLog activityLog) {
-    // TODO: implement addActivityLog
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> ediActivityLog(ActivityLog activityLog) {
-    // TODO: implement ediActivityLog
-    throw UnimplementedError();
+  Future<void> addActivityLog(ActivityLog activityLog) async {
+    await _firebaseFirestore
+        .collection('activityLog')
+        .add(activityLog.toDocument());
   }
 
   @override

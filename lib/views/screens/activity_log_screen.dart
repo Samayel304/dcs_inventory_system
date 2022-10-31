@@ -1,5 +1,5 @@
 import 'package:dcs_inventory_system/bloc/activity_log/activity_log_bloc.dart';
-import 'package:dcs_inventory_system/models/model.dart';
+
 import 'package:dcs_inventory_system/utils/helper.dart';
 import 'package:dcs_inventory_system/views/widgets/back_app_bar.dart';
 import 'package:dcs_inventory_system/views/widgets/custom_circular_progress.dart';
@@ -15,7 +15,7 @@ class ActivityLogScreen extends StatelessWidget {
     return Scaffold(
         appBar: BackAppBar(
           actions: [
-            IconButton(onPressed: () {}, icon: const Icon(Icons.filter))
+            IconButton(onPressed: () {}, icon: const Icon(Icons.filter_alt))
           ],
         ),
         body: Column(

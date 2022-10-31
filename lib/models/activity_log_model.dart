@@ -26,7 +26,8 @@ class ActivityLog extends Equatable {
   factory ActivityLog.fromSnapshot(DocumentSnapshot snap) {
     return ActivityLog(
         activityLogId: snap.id,
-        dateCreated: snap['dateCreated'],
+        dateCreated: DateTime.parse(
+            ((snap['dateCreated']) as Timestamp).toDate().toString()),
         user: User.fromActiviyLogSnapshot(snap['user']),
         activity: snap['activity']);
   }

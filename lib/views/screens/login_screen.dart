@@ -3,6 +3,7 @@ import 'package:dcs_inventory_system/utils/methods.dart';
 import 'package:dcs_inventory_system/views/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import '../widgets/custom_elevated_button.dart';
 
@@ -23,6 +24,9 @@ class _LoginScreenState extends State<LoginScreen> {
         listener: (context, state) {
           if (state.status == LoginStatus.error) {
             showErrorSnackBar(context, state.errorMessage);
+          }
+          if (state.status == LoginStatus.success) {
+            GoRouter.of(context).go('/');
           }
         },
         child: Scaffold(
@@ -141,7 +145,7 @@ class _LoginButton extends StatelessWidget {
             ? const CircularProgressIndicator()
             : SizedBox(
                 width: double.infinity,
-                height: 60,
+                height: 50,
                 child: CustomElevatedButton(
                   text: "Login",
                   backgroundColor: Colors.white,

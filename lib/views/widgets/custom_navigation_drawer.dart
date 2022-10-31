@@ -1,4 +1,6 @@
+import 'package:dcs_inventory_system/bloc/auth/auth_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class CustomNavigationDrawer extends StatelessWidget {
@@ -50,12 +52,24 @@ class CustomNavigationDrawer extends StatelessWidget {
               GoRouter.of(context).push('/manage_account');
             },
           ),
-          const CustomListTile(title: "Logs", icon: Icons.note_alt_outlined),
-          const Expanded(
+          CustomListTile(
+            title: "Logs",
+            icon: Icons.note_alt_outlined,
+            onTap: () {
+              GoRouter.of(context).push('/activity_log');
+            },
+          ),
+          Expanded(
             child: Align(
               alignment: FractionalOffset.bottomCenter,
-              child:
-                  CustomListTile(title: "Logout", icon: Icons.logout_outlined),
+              child: CustomListTile(
+                title: "Logout",
+                icon: Icons.logout_outlined,
+                onTap: () {
+                  BlocProvider.of<AuthBloc>(context).add(AuthLogoutRequested());
+                  GoRouter.of(context).go('/login');
+                },
+              ),
             ),
           ),
         ],
