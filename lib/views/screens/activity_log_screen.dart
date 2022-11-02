@@ -1,4 +1,5 @@
 import 'package:dcs_inventory_system/bloc/activity_log/activity_log_bloc.dart';
+import 'package:dcs_inventory_system/models/activity_log_model.dart';
 
 import 'package:dcs_inventory_system/utils/helper.dart';
 import 'package:dcs_inventory_system/views/widgets/back_app_bar.dart';
@@ -32,9 +33,9 @@ class ActivityLogScreen extends StatelessWidget {
                     groupBy: (activity) => activity.dateCreated,
                     groupHeaderBuilder: (activity) =>
                         _Header(dateCreated: activity.dateCreated.formatDate()),
-                    itemBuilder: (context, activity) {
+                    itemBuilder: (context, activityLog) {
                       return _Item(
-                        text: activity.activity,
+                        activityLog: activityLog,
                       );
                     },
                     shrinkWrap: true,
@@ -74,12 +75,31 @@ class _Header extends StatelessWidget {
 class _Item extends StatelessWidget {
   const _Item({
     Key? key,
-    required this.text,
+    required this.activityLog,
   }) : super(key: key);
-  final String text;
+  final ActivityLog activityLog;
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(title: Text(text));
+    return Card(
+        child: Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Row(
+        children: [
+          Expanded(
+              child: CircleAvatar(
+                  radius: (20),
+                  backgroundColor: Colors.white,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.network(activityLog.user.avatarUrl),
+                  ))),
+          Expanded(
+              flex: 3,
+              child: Text(activityLog.activity,
+                  style: Theme.of(context).textTheme.headline6)),
+        ],
+      ),
+    ));
   }
 }

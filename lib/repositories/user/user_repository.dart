@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dcs_inventory_system/models/user_model.dart';
 import 'package:dcs_inventory_system/repositories/user/base_user_repository.dart';
+import 'package:dcs_inventory_system/utils/constant.dart';
 
 class UserRepository extends BaseUserRepository {
   final FirebaseFirestore _firebaseFirestore;
@@ -27,7 +28,11 @@ class UserRepository extends BaseUserRepository {
 
   @override
   Stream<List<User>> getAllUser() {
-    return _firebaseFirestore.collection("Users").snapshots().map((snapshot) {
+    return _firebaseFirestore
+        .collection("Users")
+        .where('role', isNotEqualTo: UserRole.admin.name)
+        .snapshots()
+        .map((snapshot) {
       return snapshot.docs.map((doc) => User.fromSnapshot(doc)).toList();
     });
   }

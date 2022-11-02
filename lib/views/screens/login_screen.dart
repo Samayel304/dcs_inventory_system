@@ -121,7 +121,7 @@ class _PasswordInputState extends State<_PasswordInput> {
           hintText: "Password",
           suffixIcon: IconButton(
               onPressed: _togglePasswordView,
-              icon: Icon(_isObscure ? Icons.visibility : Icons.visibility_off,
+              icon: Icon(_isObscure ? Icons.visibility_off : Icons.visibility,
                   color: Colors.grey.shade400)),
           borderColor: Colors.grey.shade400,
           fillColor: const Color(0xFF171515),

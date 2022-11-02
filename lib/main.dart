@@ -1,4 +1,5 @@
 import 'package:dcs_inventory_system/bloc/bloc.dart';
+import 'package:dcs_inventory_system/bloc/user/user_bloc.dart';
 import 'package:dcs_inventory_system/cubits/login/login_cubit.dart';
 
 import 'package:dcs_inventory_system/config/theme.dart';
@@ -81,6 +82,11 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider(
               create: (context) => LoginCubit(context.read<AuthRepository>())),
+          BlocProvider(
+              create: (context) => UserBloc(
+                  userRepository: context.read<UserRepository>(),
+                  authRepository: context.read<AuthRepository>())
+                ..add(LoadUsers())),
           BlocProvider(
               create: (context) => ActivityLogBloc(
                   activityLogRepository: context.read<ActivityLogRepository>())
