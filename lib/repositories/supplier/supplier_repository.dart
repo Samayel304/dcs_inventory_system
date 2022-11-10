@@ -30,4 +30,12 @@ class SupplierRepository extends BaseSupplierRepository {
       return snapshot.docs.map((doc) => Supplier.fromSnapshot(doc)).toList();
     });
   }
+
+  @override
+  Future<void> deleteSupplier(Supplier supplier) async {
+    await _firebaseFirestore
+        .collection('supplier')
+        .doc(supplier.supplierId)
+        .delete();
+  }
 }

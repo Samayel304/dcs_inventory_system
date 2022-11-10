@@ -33,15 +33,19 @@ class NotificationBadge extends StatelessWidget {
                 ),
               ],
             ),
-            Positioned(
-              top: 10,
-              right: 3,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
-                decoration: const BoxDecoration(
-                    shape: BoxShape.circle, color: Colors.red),
-                alignment: Alignment.center,
-                child: Text('$notificationCount'),
+            Visibility(
+              visible: notificationCount != 0,
+              child: Positioned(
+                top: 10,
+                right: 3,
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                  decoration: const BoxDecoration(
+                      shape: BoxShape.circle, color: Colors.red),
+                  alignment: Alignment.center,
+                  child: Text('$notificationCount'),
+                ),
               ),
             )
           ],

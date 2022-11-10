@@ -6,19 +6,29 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../bloc/supplier/supplier_bloc.dart';
 
-class AddSupplierModal extends StatefulWidget {
-  const AddSupplierModal({super.key});
+class EditSupplierModal extends StatefulWidget {
+  const EditSupplierModal({super.key, required this.selectedSupplier});
+  final Supplier selectedSupplier;
 
   @override
-  State<AddSupplierModal> createState() => _AddSupplierModalState();
+  State<EditSupplierModal> createState() => _EditSupplierModalState();
 }
 
-class _AddSupplierModalState extends State<AddSupplierModal> {
+class _EditSupplierModalState extends State<EditSupplierModal> {
   final TextEditingController supplierNameController = TextEditingController();
   final TextEditingController contactPersonController = TextEditingController();
   final TextEditingController contactNumberController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    supplierNameController.text = widget.selectedSupplier.supplierName;
+    contactPersonController.text = widget.selectedSupplier.contactPerson;
+    addressController.text = widget.selectedSupplier.address;
+    contactNumberController.text = widget.selectedSupplier.contactNumber;
+  }
 
   @override
   void dispose() {
@@ -47,7 +57,7 @@ class _AddSupplierModalState extends State<AddSupplierModal> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text("Add Supplier",
+                    Text("Edit Order",
                         style: Theme.of(context).textTheme.headline4),
                     const SizedBox(height: 20),
                     CustomTextField(
@@ -110,7 +120,7 @@ class _AddSupplierModalState extends State<AddSupplierModal> {
                                   contactNumber: contactNumberController.text,
                                   dateCreated: Timestamp.now().toDate());
                               BlocProvider.of<SupplierBloc>(context)
-                                  .add(AddSupplier(supplier));
+                                  .add(EditSupplier(supplier));
                             }
                           }),
                     )

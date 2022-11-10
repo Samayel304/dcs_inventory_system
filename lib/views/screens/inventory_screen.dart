@@ -224,12 +224,25 @@ class _TabBarViewChild extends StatelessWidget {
                                               selectedProduct: product,
                                             ));
                                         break;
-                                      default:
+                                      case 1:
                                         showBottomModal(
                                             context,
                                             DeductQuantityModal(
                                               selectedProduct: product,
                                             ));
+                                        break;
+                                      default:
+                                        showAlertDialog(
+                                            context: context,
+                                            title: "Delete Product",
+                                            content:
+                                                "Are you sure do you want to delete this product?",
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                              BlocProvider.of<ProductBloc>(
+                                                      context)
+                                                  .add(DeleteProduct(product));
+                                            });
                                         break;
                                     }
                                   },
@@ -242,6 +255,10 @@ class _TabBarViewChild extends StatelessWidget {
                                         const PopupMenuItem(
                                           value: 1,
                                           child: Text("Deduct"),
+                                        ),
+                                        const PopupMenuItem(
+                                          value: 2,
+                                          child: Text("Delete"),
                                         )
                                       ])),
                         ]),

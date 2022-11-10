@@ -33,4 +33,12 @@ class ProductRepository extends BaseProductRepository {
       return snapshot.docs.map((doc) => Product.fromSnapshot(doc)).toList();
     });
   }
+
+  @override
+  Future<void> deleteProduct(Product product) async {
+    await _firebaseFirestore
+        .collection('products')
+        .doc(product.productId)
+        .delete();
+  }
 }

@@ -52,6 +52,17 @@ class EditProduct extends ProductEvent {
   List<Object> get props => [product];
 }
 
+class DeleteProduct extends ProductEvent {
+  final Product product;
+
+  const DeleteProduct(
+    this.product,
+  );
+
+  @override
+  List<Object> get props => [product];
+}
+
 class SearchProducts extends ProductEvent {
   final String keyword;
 

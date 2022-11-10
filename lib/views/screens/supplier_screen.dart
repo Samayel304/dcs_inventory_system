@@ -1,5 +1,5 @@
 import 'package:dcs_inventory_system/bloc/bloc.dart';
-import 'package:dcs_inventory_system/views/widgets/supplier_modals/add_supplier_modal.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -87,6 +87,7 @@ class _SupplierScreenState extends State<SupplierScreen> {
                             itemBuilder: ((context, index) {
                               Supplier supplier = state.suppliers[index];
                               return Container(
+                                margin: const EdgeInsets.only(bottom: 10),
                                 decoration: const BoxDecoration(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(15)),
@@ -120,8 +121,26 @@ class _SupplierScreenState extends State<SupplierScreen> {
                                         onSelected: (value) {
                                           switch (value) {
                                             case 0:
+                                              showBottomModal(
+                                                  context,
+                                                  EditSupplierModal(
+                                                      selectedSupplier:
+                                                          supplier));
                                               break;
                                             case 1:
+                                              showAlertDialog(
+                                                  context: context,
+                                                  title: 'Delete Supplier',
+                                                  content:
+                                                      'Are you sure you to delete this supplier?',
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                    BlocProvider.of<
+                                                                SupplierBloc>(
+                                                            context)
+                                                        .add(DeleteSupplier(
+                                                            supplier));
+                                                  });
                                               break;
                                           }
                                         },
@@ -131,7 +150,7 @@ class _SupplierScreenState extends State<SupplierScreen> {
                                             const PopupMenuItem(
                                                 value: 0, child: Text("Edit")),
                                             const PopupMenuItem(
-                                                value: 0, child: Text("Delete"))
+                                                value: 1, child: Text("Delete"))
                                           ];
                                         },
                                       ),

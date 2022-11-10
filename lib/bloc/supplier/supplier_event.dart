@@ -22,3 +22,17 @@ class AddSupplier extends SupplierEvent {
   @override
   List<Object> get props => [supplier];
 }
+
+class EditSupplier extends SupplierEvent {
+  final Supplier supplier;
+  const EditSupplier(this.supplier);
+  @override
+  List<Object> get props => [supplier];
+}
+
+class DeleteSupplier extends SupplierEvent {
+  final Supplier supplier;
+  const DeleteSupplier(this.supplier);
+  @override
+  List<Object> get props => [supplier];
+}

@@ -35,6 +35,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     on<AddProduct>(_onAddProduct);
     on<DeductProductQuantity>(_onDeductProductQuantity);
     on<EditProduct>(_onEditProduct);
+    on<DeleteProduct>(_onDeleteProduct);
     on<SearchProducts>(_onSearchProducts);
     on<ExportToExcel>(_onExportToExcel);
   }
@@ -108,6 +109,18 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       try {
         emit(const Success(successMessage: "Edited Successfully"));
         await _productRepository.editProductDetails(event.product);
+      } catch (_) {}
+    }
+  }
+
+  void _onDeleteProduct(DeleteProduct event, Emitter<ProductState> emit) async {
+    final state = this.state;
+    if (state is ProductsLoaded) {
+      try {
+        emit(const Success(successMessage: "Deleted Successfully"));
+        await _productRepository.deleteProduct(event.product);
+        // emit(ProductsLoaded(products: state.products));
+        //add(LoadProducts());
       } catch (_) {}
     }
   }

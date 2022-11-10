@@ -30,7 +30,8 @@ class ActivityLogScreen extends StatelessWidget {
                 if (state is ActivityLogLoaded) {
                   return GroupedListView(
                     elements: state.activityLogs,
-                    groupBy: (activity) => activity.dateCreated,
+                    groupBy: (activity) => DateTime(activity.dateCreated.year,
+                        activity.dateCreated.month, activity.dateCreated.day),
                     groupHeaderBuilder: (activity) =>
                         _Header(dateCreated: activity.dateCreated.formatDate()),
                     itemBuilder: (context, activityLog) {

@@ -8,6 +8,8 @@ class CustomNavigationDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = context.select((AuthBloc auth) => auth.state.user!);
+    final fullName = '${user.firstName} ${user.middleName} ${user.lastName}';
     return Drawer(
       child: Column(
         // Important: Remove any padding from the ListView.
@@ -28,13 +30,19 @@ class CustomNavigationDrawer extends StatelessWidget {
                 child: Center(
                   child: Column(
                     children: [
-                      const CircleAvatar(),
-                      Text("Samayel Ponce",
+                      CircleAvatar(
+                          radius: (50),
+                          backgroundColor: Colors.white,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: Image.network(user.avatarUrl),
+                          )),
+                      Text(fullName,
                           style: Theme.of(context)
                               .textTheme
                               .bodyText1!
                               .copyWith(color: Colors.white)),
-                      Text("admin@gmail.com",
+                      Text(user.email,
                           style: Theme.of(context)
                               .textTheme
                               .bodyText1!

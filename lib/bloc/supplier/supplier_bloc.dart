@@ -18,6 +18,8 @@ class SupplierBloc extends Bloc<SupplierEvent, SupplierState> {
     on<LoadSuppliers>(_onLoadSuppliers);
     on<UpdateSuppliers>(_onUpdateSuppliers);
     on<AddSupplier>(_onAddSupplier);
+    on<EditSupplier>(_onEditSupplier);
+    on<DeleteSupplier>(_onDeleteSupplier);
   }
 
   void _onLoadSuppliers(LoadSuppliers event, Emitter<SupplierState> emit) {
@@ -37,6 +39,19 @@ class SupplierBloc extends Bloc<SupplierEvent, SupplierState> {
   void _onAddSupplier(AddSupplier event, Emitter<SupplierState> emit) async {
     try {
       await _supplierRepository.addSupplier(event.supplier);
+    } catch (_) {}
+  }
+
+  void _onEditSupplier(EditSupplier event, Emitter<SupplierState> emit) async {
+    try {
+      await _supplierRepository.editSupplier(event.supplier);
+    } catch (_) {}
+  }
+
+  void _onDeleteSupplier(
+      DeleteSupplier event, Emitter<SupplierState> emit) async {
+    try {
+      await _supplierRepository.deleteSupplier(event.supplier);
     } catch (_) {}
   }
 

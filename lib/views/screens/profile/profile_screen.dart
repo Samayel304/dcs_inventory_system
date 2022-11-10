@@ -1,6 +1,9 @@
+import 'package:dcs_inventory_system/bloc/auth/auth_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../models/model.dart';
 import '../../widgets/widgets.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -8,27 +11,31 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authUser = context.select((AuthBloc authBloc) => authBloc.state);
+    final String fullName =
+        '${authUser.user!.firstName} ${authUser.user!.middleName} ${authUser.user!.lastName}';
+    final String email = authUser.user!.email;
     return Scaffold(
       appBar: const BackAppBar(),
       body: SingleChildScrollView(
         child: Center(
           child: Column(
             children: [
-              const _ProfilePicture(),
+              _ProfilePicture(user: authUser.user!),
               Container(
                   padding: const EdgeInsets.only(top: 20),
                   child: Column(
                     children: [
                       _UserInfo(
                         title: "FullName",
-                        value: "Samayel Ponce",
+                        value: fullName,
                         onTap: () {
                           GoRouter.of(context).push('/profile/edit_fullname');
                         },
                       ),
                       _UserInfo(
                         title: "Email",
-                        value: "samayel@gmail.com",
+                        value: email,
                         onTap: () {
                           GoRouter.of(context).push('/profile/edit_email');
                         },
@@ -100,13 +107,21 @@ class _UserInfo extends StatelessWidget {
 class _ProfilePicture extends StatelessWidget {
   const _ProfilePicture({
     Key? key,
+    required this.user,
   }) : super(key: key);
+  final User user;
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        const CircleAvatar(radius: 70),
+        CircleAvatar(
+            radius: (70),
+            backgroundColor: Colors.white,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(70),
+              child: Image.network(user.avatarUrl),
+            )),
         Positioned(
             bottom: 0,
             right: 0,

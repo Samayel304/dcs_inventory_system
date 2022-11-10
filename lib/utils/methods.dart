@@ -33,3 +33,26 @@ void showSuccessSnackBar(BuildContext context, String message) {
     ..hideCurrentSnackBar()
     ..showSnackBar(snackBar);
 }
+
+Future<dynamic> showAlertDialog(
+    {required BuildContext context,
+    required String title,
+    required String content,
+    void Function()? onPressed}) {
+  return showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+            title: Text(title),
+            content: Text(content),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, 'No'),
+                child: const Text('No'),
+              ),
+              TextButton(
+                onPressed: onPressed,
+                child: const Text('Yes'),
+              ),
+            ],
+          ));
+}
