@@ -188,81 +188,111 @@ class _TabBarViewChild extends StatelessWidget {
                     itemCount: products.length,
                     itemBuilder: (BuildContext context, int index) {
                       Product product = products[index];
-                      return Container(
-                        margin: const EdgeInsets.only(bottom: 7),
-                        padding: const EdgeInsets.only(
-                            right: 15.0, left: 15, bottom: 10, top: 10),
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(15)),
-                          color: Color(0xEEEBE6E6),
+                      bool isOutOfStock =
+                          product.isNew == false && product.quantity == 0;
+                      bool isNew = product.isNew == true;
+                      return Stack(children: [
+                        Container(
+                          margin: const EdgeInsets.only(bottom: 7),
+                          padding: const EdgeInsets.only(
+                              right: 15.0, left: 15, bottom: 10, top: 10),
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(15)),
+                            color: Color(0xEEEBE6E6),
+                          ),
+                          child: Row(children: [
+                            Expanded(
+                                flex: 1,
+                                child: Text((index + 1).toString(),
+                                    style:
+                                        Theme.of(context).textTheme.headline5)),
+                            Expanded(
+                                flex: 4,
+                                child: Text(product.productName,
+                                    style:
+                                        Theme.of(context).textTheme.headline5)),
+                            Expanded(
+                                flex: 2,
+                                child: Text(product.quantity.toString(),
+                                    style:
+                                        Theme.of(context).textTheme.headline5)),
+                            Expanded(
+                                flex: 1,
+                                child: PopupMenuButton(
+                                    onSelected: (value) {
+                                      switch (value) {
+                                        case 0:
+                                          showBottomModal(
+                                              context,
+                                              EditProductModal(
+                                                selectedProduct: product,
+                                              ));
+                                          break;
+                                        case 1:
+                                          showBottomModal(
+                                              context,
+                                              DeductQuantityModal(
+                                                selectedProduct: product,
+                                              ));
+                                          break;
+                                        default:
+                                          showAlertDialog(
+                                              context: context,
+                                              title: "Delete Product",
+                                              content:
+                                                  "Are you sure do you want to delete this product?",
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                                BlocProvider.of<ProductBloc>(
+                                                        context)
+                                                    .add(
+                                                        DeleteProduct(product));
+                                              });
+                                          break;
+                                      }
+                                    },
+                                    icon: const Icon(Icons.more_vert),
+                                    itemBuilder: (context) => [
+                                          const PopupMenuItem(
+                                            value: 0,
+                                            child: Text("Edit"),
+                                          ),
+                                          const PopupMenuItem(
+                                            value: 1,
+                                            child: Text("Deduct"),
+                                          ),
+                                          const PopupMenuItem(
+                                            value: 2,
+                                            child: Text("Delete"),
+                                          )
+                                        ])),
+                          ]),
                         ),
-                        child: Row(children: [
-                          Expanded(
-                              flex: 1,
-                              child: Text((index + 1).toString(),
-                                  style:
-                                      Theme.of(context).textTheme.headline5)),
-                          Expanded(
-                              flex: 4,
-                              child: Text(product.productName,
-                                  style:
-                                      Theme.of(context).textTheme.headline5)),
-                          Expanded(
-                              flex: 2,
-                              child: Text(product.quantity.toString(),
-                                  style:
-                                      Theme.of(context).textTheme.headline5)),
-                          Expanded(
-                              flex: 1,
-                              child: PopupMenuButton(
-                                  onSelected: (value) {
-                                    switch (value) {
-                                      case 0:
-                                        showBottomModal(
-                                            context,
-                                            EditProductModal(
-                                              selectedProduct: product,
-                                            ));
-                                        break;
-                                      case 1:
-                                        showBottomModal(
-                                            context,
-                                            DeductQuantityModal(
-                                              selectedProduct: product,
-                                            ));
-                                        break;
-                                      default:
-                                        showAlertDialog(
-                                            context: context,
-                                            title: "Delete Product",
-                                            content:
-                                                "Are you sure do you want to delete this product?",
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                              BlocProvider.of<ProductBloc>(
-                                                      context)
-                                                  .add(DeleteProduct(product));
-                                            });
-                                        break;
-                                    }
-                                  },
-                                  icon: const Icon(Icons.more_vert),
-                                  itemBuilder: (context) => [
-                                        const PopupMenuItem(
-                                          value: 0,
-                                          child: Text("Edit"),
-                                        ),
-                                        const PopupMenuItem(
-                                          value: 1,
-                                          child: Text("Deduct"),
-                                        ),
-                                        const PopupMenuItem(
-                                          value: 2,
-                                          child: Text("Delete"),
-                                        )
-                                      ])),
-                        ]),
-                      );
+                        Visibility(
+                          visible: isNew || isOutOfStock,
+                          child: Positioned(
+                              top: -1,
+                              left: 0,
+                              child: Container(
+                                padding: const EdgeInsets.all(5),
+                                decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(20)),
+                                  color: isOutOfStock
+                                      ? Colors.orange
+                                      : Colors.green,
+                                ),
+                                child: Text(
+                                    isOutOfStock ? 'Out of Stock' : 'New',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyText2!
+                                        .copyWith(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold)),
+                              )),
+                        ),
+                      ]);
                     },
                   );
                 } else {

@@ -35,7 +35,7 @@ class BottomNavBar extends StatelessWidget {
             },
             icon: const Icon(Icons.inventory),
           ),
-          label: 'Inventory',
+          label: 'Supplies',
         ),
         BottomNavigationBarItem(
           icon: IconButton(
@@ -44,7 +44,7 @@ class BottomNavBar extends StatelessWidget {
             },
             icon: const Icon(Icons.pending_actions),
           ),
-          label: 'Orders',
+          label: 'Requested Orders',
         ),
       ],
     );
