@@ -15,7 +15,7 @@ class Product extends Equatable {
       this.quantity = 0,
       this.category = "",
       required this.dateCreated,
-      this.isNew = false});
+      this.isNew = true});
 
   Product copyWith(
       {String? productId,
