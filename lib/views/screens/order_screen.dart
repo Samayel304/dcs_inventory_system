@@ -203,7 +203,8 @@ class _TabBarViewChild extends StatelessWidget {
                                                 .copyWith(
                                                     quantity:
                                                         order.product.quantity +
-                                                            addedQuantity);
+                                                            addedQuantity,
+                                                    isNew: false);
 
                                             BlocProvider.of<OrderBloc>(context)
                                                 .add(ReceiveOrder(

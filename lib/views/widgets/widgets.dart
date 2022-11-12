@@ -18,3 +18,5 @@ export 'notification_badge.dart';
 export 'back_app_bar.dart';
 export 'labeled_textfield.dart';
 export 'password_field.dart';
+
+export 'error_screen.dart';

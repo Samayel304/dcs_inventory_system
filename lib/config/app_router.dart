@@ -86,9 +86,9 @@ class AppRouter {
                 })
           ])
     ],
-    /*  redirect: (BuildContext context, GoRouterState state) {
-       final bool loggedIn = authBloc.state.status == AuthStatus.authenticated;
-      
+    redirect: (BuildContext context, GoRouterState state) {
+      final bool loggedIn = authBloc.state.status == AuthStatus.authenticated;
+      final bool loggingIn = state.subloc == '/login';
 
       if (!loggedIn) {
         return loggingIn ? null : '/login';
@@ -96,8 +96,8 @@ class AppRouter {
       if (loggingIn) {
         return '/';
       }
-      return null; 
-    }, */
+      return null;
+    },
     initialLocation: '/splash',
     refreshListenable: GoRouterRefreshStream(authBloc.stream),
   );

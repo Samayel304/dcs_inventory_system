@@ -6,8 +6,6 @@ import 'package:dcs_inventory_system/repositories/order/order_repository.dart';
 import 'package:dcs_inventory_system/repositories/product/product_repository.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../models/order_model.dart';
-
 part 'order_event.dart';
 part 'order_state.dart';
 

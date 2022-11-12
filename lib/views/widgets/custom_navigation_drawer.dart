@@ -1,4 +1,5 @@
 import 'package:dcs_inventory_system/bloc/auth/auth_bloc.dart';
+import 'package:dcs_inventory_system/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -15,55 +16,28 @@ class CustomNavigationDrawer extends StatelessWidget {
         // Important: Remove any padding from the ListView.
         //padding: EdgeInsets.zero,
         children: [
-          SizedBox(
-            width: double.infinity,
-            child: InkWell(
-              onTap: () {
-                Navigator.pop(context);
-                GoRouter.of(context).push('/profile');
-              },
-              child: DrawerHeader(
-                decoration: const BoxDecoration(
-                  color: Colors.black,
-                ),
-                margin: const EdgeInsets.all(0.0),
-                child: Center(
-                  child: Column(
-                    children: [
-                      CircleAvatar(
-                          radius: (50),
-                          backgroundColor: Colors.white,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(50),
-                            child: Image.network(user.avatarUrl),
-                          )),
-                      Text(fullName,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyText1!
-                              .copyWith(color: Colors.white)),
-                      Text(user.email,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyText1!
-                              .copyWith(color: Colors.white)),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
+          _Header(user: user, fullName: fullName),
           CustomListTile(
             title: "Account Management",
             icon: Icons.manage_accounts_outlined,
             onTap: () {
+              Navigator.pop(context);
               GoRouter.of(context).push('/manage_account');
+            },
+          ),
+          CustomListTile(
+            title: "Supplier",
+            icon: Icons.local_shipping_outlined,
+            onTap: () {
+              Navigator.pop(context);
+              GoRouter.of(context).push('/supplier');
             },
           ),
           CustomListTile(
             title: "Logs",
             icon: Icons.note_alt_outlined,
             onTap: () {
+              Navigator.pop(context);
               GoRouter.of(context).push('/activity_log');
             },
           ),
@@ -81,6 +55,59 @@ class CustomNavigationDrawer extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _Header extends StatelessWidget {
+  const _Header({
+    Key? key,
+    required this.user,
+    required this.fullName,
+  }) : super(key: key);
+
+  final User user;
+  final String fullName;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: InkWell(
+        onTap: () {
+          Navigator.pop(context);
+          GoRouter.of(context).push('/profile');
+        },
+        child: DrawerHeader(
+          decoration: const BoxDecoration(
+            color: Colors.black,
+          ),
+          margin: const EdgeInsets.all(0.0),
+          child: Center(
+            child: Column(
+              children: [
+                CircleAvatar(
+                    radius: (50),
+                    backgroundColor: Colors.white,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(50),
+                      child: Image.network(user.avatarUrl),
+                    )),
+                Text(fullName,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText1!
+                        .copyWith(color: Colors.white)),
+                Text(user.email,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyText1!
+                        .copyWith(color: Colors.white)),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

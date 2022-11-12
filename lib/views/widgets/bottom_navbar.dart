@@ -46,15 +46,6 @@ class BottomNavBar extends StatelessWidget {
           ),
           label: 'Orders',
         ),
-        BottomNavigationBarItem(
-          icon: IconButton(
-            onPressed: () {
-              GoRouter.of(context).go('/supplier');
-            },
-            icon: const Icon(Icons.local_shipping),
-          ),
-          label: 'Suppliers',
-        ),
       ],
     );
   }

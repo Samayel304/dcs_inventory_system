@@ -7,13 +7,15 @@ class Product extends Equatable {
   final int quantity;
   final String category;
   final DateTime dateCreated;
+  final bool isNew;
 
   const Product(
       {this.productId,
       this.productName = "",
       this.quantity = 0,
       this.category = "",
-      required this.dateCreated});
+      required this.dateCreated,
+      this.isNew = false});
 
   Product copyWith(
       {String? productId,
@@ -21,35 +23,37 @@ class Product extends Equatable {
       int? quantity,
       String? category,
       double? unitPrice,
-      DateTime? dateCreated}) {
+      DateTime? dateCreated,
+      bool? isNew}) {
     return Product(
         productId: productId ?? this.productId,
         productName: productName ?? this.productName,
         quantity: quantity ?? this.quantity,
         category: category ?? this.category,
-        dateCreated: dateCreated ?? this.dateCreated);
+        dateCreated: dateCreated ?? this.dateCreated,
+        isNew: isNew ?? this.isNew);
   }
 
   factory Product.fromSnapshot(DocumentSnapshot snap) {
     return Product(
-      productId: snap.id,
-      productName: snap['productName'],
-      quantity: snap['quantity'],
-      category: snap['category'],
-      dateCreated: DateTime.parse(
-          ((snap['dateCreated']) as Timestamp).toDate().toString()),
-    );
+        productId: snap.id,
+        productName: snap['productName'],
+        quantity: snap['quantity'],
+        category: snap['category'],
+        dateCreated: DateTime.parse(
+            ((snap['dateCreated']) as Timestamp).toDate().toString()),
+        isNew: snap['isNew']);
   }
 
   factory Product.fromOrderSnapshot(Map<String, dynamic> snap) {
     return Product(
-      productId: snap['productId'],
-      productName: snap['productName'],
-      quantity: snap['quantity'],
-      category: snap['category'],
-      dateCreated: DateTime.parse(
-          ((snap['dateCreated']) as Timestamp).toDate().toString()),
-    );
+        productId: snap['productId'],
+        productName: snap['productName'],
+        quantity: snap['quantity'],
+        category: snap['category'],
+        dateCreated: DateTime.parse(
+            ((snap['dateCreated']) as Timestamp).toDate().toString()),
+        isNew: snap['isNew']);
   }
 
   Map<String, Object> toDocument() {
@@ -57,7 +61,8 @@ class Product extends Equatable {
       'productName': productName,
       'quantity': quantity,
       'category': category,
-      'dateCreated': dateCreated
+      'dateCreated': dateCreated,
+      'isNew': isNew
     };
   }
 
@@ -67,11 +72,12 @@ class Product extends Equatable {
       'productName': productName,
       'quantity': quantity,
       'category': category,
-      'dateCreated': dateCreated
+      'dateCreated': dateCreated,
+      'isNew': isNew
     };
   }
 
   @override
   List<Object?> get props =>
-      [productId, productName, quantity, category, dateCreated];
+      [productId, productName, quantity, category, dateCreated, isNew];
 }

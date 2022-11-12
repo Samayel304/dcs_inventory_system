@@ -69,7 +69,7 @@ class Supplier extends Equatable {
     return {
       'supplierId': supplierId.toString(),
       'supplierName': supplierName,
-      'contactPerson': contactNumber,
+      'contactPerson': contactPerson,
       'contactNumber': contactNumber,
       'address': address,
       'dateCreated': dateCreated

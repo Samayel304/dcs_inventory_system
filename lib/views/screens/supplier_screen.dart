@@ -43,9 +43,7 @@ class _SupplierScreenState extends State<SupplierScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: const CustomAppBar(),
-        drawer: const SafeArea(child: CustomNavigationDrawer()),
-        bottomNavigationBar: const BottomNavBar(index: 3),
+        appBar: const BackAppBar(),
         floatingActionButton: Visibility(
           visible: _onTop,
           child: CustomFloatingActionButton(children: [
