@@ -94,7 +94,7 @@ class AppRouter {
         return loggingIn ? null : '/login';
       }
       if (loggingIn) {
-        return '/inventory';
+        return '/';
       }
       return null;
     },

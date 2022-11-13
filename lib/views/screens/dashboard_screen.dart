@@ -14,7 +14,7 @@ class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     DateTime currentDate = DateTime.now();
-    final user = context.select((AuthBloc authBloc) => authBloc.state.user);
+    final user = context.select((AuthBloc authBloc) => authBloc.state);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: const CustomAppBar(),
@@ -26,7 +26,9 @@ class DashboardScreen extends StatelessWidget {
           children: [
             Greetings(
               currentDate: currentDate,
-              userFirstName: user!.firstName,
+              userFirstName: user.status == AuthStatus.authenticated
+                  ? user.user!.firstName.toTitleCase()
+                  : '',
             ),
             const _Cards(),
             const _TodaysOrderListView()
@@ -308,7 +310,7 @@ class Greetings extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Hello ${userFirstName.toTitleCase()}',
+          'Hello $userFirstName',
           style: Theme.of(context).textTheme.headline3,
         ),
         Text(

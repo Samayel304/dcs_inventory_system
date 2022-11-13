@@ -9,14 +9,16 @@ class CustomNavigationDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = context.select((AuthBloc auth) => auth.state.user!);
-    final fullName = '${user.firstName} ${user.middleName} ${user.lastName}';
+    final auth = context.select((AuthBloc auth) => auth.state);
+    final fullName = auth.status == AuthStatus.authenticated
+        ? '${auth.user!.firstName} ${auth.user!.middleName} ${auth.user!.lastName}'
+        : '';
     return Drawer(
       child: Column(
         // Important: Remove any padding from the ListView.
         //padding: EdgeInsets.zero,
         children: [
-          _Header(user: user, fullName: fullName),
+          _Header(user: auth.user, fullName: fullName),
           CustomListTile(
             title: "Account Management",
             icon: Icons.manage_accounts_outlined,
@@ -49,7 +51,7 @@ class CustomNavigationDrawer extends StatelessWidget {
                 icon: Icons.logout_outlined,
                 onTap: () {
                   BlocProvider.of<AuthBloc>(context).add(AuthLogoutRequested());
-                  GoRouter.of(context).go('/login');
+                  //GoRouter.of(context).go('/login');
                 },
               ),
             ),
@@ -63,11 +65,11 @@ class CustomNavigationDrawer extends StatelessWidget {
 class _Header extends StatelessWidget {
   const _Header({
     Key? key,
-    required this.user,
+    this.user,
     required this.fullName,
   }) : super(key: key);
 
-  final User user;
+  final User? user;
   final String fullName;
 
   @override
@@ -92,14 +94,15 @@ class _Header extends StatelessWidget {
                     backgroundColor: Colors.white,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(50),
-                      child: Image.network(user.avatarUrl),
+                      child: Image.network(user?.avatarUrl ??
+                          'https://firebasestorage.googleapis.com/v0/b/dcsims-2772c.appspot.com/o/default_profile.png?alt=media&token=9c83c05f-2d6b-4def-8c08-cf212738605d'),
                     )),
                 Text(fullName,
                     style: Theme.of(context)
                         .textTheme
                         .bodyText1!
                         .copyWith(color: Colors.white)),
-                Text(user.email,
+                Text(user?.email ?? '',
                     style: Theme.of(context)
                         .textTheme
                         .bodyText1!
