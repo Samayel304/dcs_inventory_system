@@ -44,7 +44,7 @@ class BottomNavBar extends StatelessWidget {
             },
             icon: const Icon(Icons.pending_actions),
           ),
-          label: 'Requested Orders',
+          label: 'Requested Supplies',
         ),
       ],
     );

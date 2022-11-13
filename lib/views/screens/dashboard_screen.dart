@@ -14,6 +14,7 @@ class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     DateTime currentDate = DateTime.now();
+    final user = context.select((AuthBloc authBloc) => authBloc.state.user);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: const CustomAppBar(),
@@ -25,7 +26,7 @@ class DashboardScreen extends StatelessWidget {
           children: [
             Greetings(
               currentDate: currentDate,
-              userFirstName: 'Samayel',
+              userFirstName: user!.firstName,
             ),
             const _Cards(),
             const _TodaysOrderListView()
@@ -146,40 +147,60 @@ class _Cards extends StatelessWidget {
               BlocBuilder<ProductBloc, ProductState>(
                 builder: (context, state) {
                   if (state is ProductsLoading) {
-                    return const CustomCircularProgress();
+                    return _generateCard(
+                      context,
+                      'Number of Products',
+                      const CustomCircularProgress(),
+                    );
                   }
                   if (state is ProductsLoaded) {
                     final String totalProductCount =
                         state.products.length.toString();
                     return _generateCard(
-                        context, 'Number of Products', totalProductCount);
+                        context,
+                        'Number of Products',
+                        Text(
+                          totalProductCount,
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline1!
+                              .copyWith(color: Colors.white),
+                        ));
                   } else {
-                    return const Center(
-                      child: Text('Something went wrong'),
-                    );
-                  }
-                },
-              ),
-              BlocBuilder<ProductBloc, ProductState>(
-                builder: (context, state) {
-                  if (state is ProductsLoading) {
-                    return const CustomCircularProgress();
-                  }
-                  if (state is ProductsLoaded) {
-                    final String outOfStockProduct = state.products
-                        .where((product) =>
-                            product.quantity == 0 && product.isNew == false)
-                        .length
-                        .toString();
                     return _generateCard(
-                        context, 'Out of Stock Products', outOfStockProduct);
-                  } else {
-                    return const Center(
-                      child: Text('Something went wrong'),
+                      context,
+                      'Number of Products',
+                      const ErrorScreen(),
                     );
                   }
                 },
               ),
+              BlocBuilder<ProductBloc, ProductState>(builder: (context, state) {
+                if (state is ProductsLoading) {
+                  return _generateCard(context, 'Out of Stock Products',
+                      const CustomCircularProgress());
+                }
+                if (state is ProductsLoaded) {
+                  final String outOfStockProduct = state.products
+                      .where((product) =>
+                          product.quantity == 0 && product.isNew == false)
+                      .length
+                      .toString();
+                  return _generateCard(
+                      context,
+                      'Out of Stock Products',
+                      Text(
+                        outOfStockProduct,
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline1!
+                            .copyWith(color: Colors.white),
+                      ));
+                } else {
+                  return _generateCard(
+                      context, 'Out of Stock Products', const ErrorScreen());
+                }
+              }),
             ],
           ),
           Row(
@@ -187,32 +208,52 @@ class _Cards extends StatelessWidget {
               BlocBuilder<SupplierBloc, SupplierState>(
                 builder: (context, state) {
                   if (state is SupplierLoading) {
-                    return const CustomCircularProgress();
+                    return _generateCard(context, 'Number of Suppliers',
+                        const CustomCircularProgress());
                   }
                   if (state is SupplierLoaded) {
                     final String totalSupplier =
                         state.suppliers.length.toString();
                     return _generateCard(
-                        context, 'Number of Suppliers', totalSupplier);
+                        context,
+                        'Number of Suppliers',
+                        Text(
+                          totalSupplier,
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline1!
+                              .copyWith(color: Colors.white),
+                        ));
                   } else {
-                    return const Center(
-                      child: Text('Something went wrong'),
-                    );
+                    return _generateCard(
+                        context, 'Number of Suppliers', const ErrorScreen());
                   }
                 },
               ),
               BlocBuilder<UserBloc, UserState>(
                 builder: (context, state) {
                   if (state is UserLoading) {
-                    return const CustomCircularProgress();
+                    return _generateCard(
+                      context,
+                      'Number of Users',
+                      const CustomCircularProgress(),
+                    );
                   }
                   if (state is UserLoaded) {
                     final String totalUser = state.users.length.toString();
-                    return _generateCard(context, 'Number of Users', totalUser);
+                    return _generateCard(
+                        context,
+                        'Number of Users',
+                        Text(
+                          totalUser,
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline1!
+                              .copyWith(color: Colors.white),
+                        ));
                   } else {
-                    return const Center(
-                      child: Text('Something went wrong'),
-                    );
+                    return _generateCard(
+                        context, 'Number of Users', const ErrorScreen());
                   }
                 },
               ),
@@ -223,7 +264,7 @@ class _Cards extends StatelessWidget {
     );
   }
 
-  Card _generateCard(BuildContext context, String title, String value) {
+  Card _generateCard(BuildContext context, String title, Widget value) {
     double width = MediaQuery.of(context).size.width - 56;
     return Card(
       clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -235,13 +276,7 @@ class _Cards extends StatelessWidget {
         padding: const EdgeInsets.all(10),
         child: Column(
           children: [
-            Text(
-              value,
-              style: Theme.of(context)
-                  .textTheme
-                  .headline1!
-                  .copyWith(color: Colors.white),
-            ),
+            value,
             const SizedBox(height: 10),
             Text(title,
                 overflow: TextOverflow.ellipsis,
@@ -273,7 +308,7 @@ class Greetings extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Hello $userFirstName',
+          'Hello ${userFirstName.toTitleCase()}',
           style: Theme.of(context).textTheme.headline3,
         ),
         Text(

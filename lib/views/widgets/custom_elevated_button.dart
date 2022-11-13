@@ -1,3 +1,4 @@
+import 'package:dcs_inventory_system/views/widgets/custom_circular_progress.dart';
 import 'package:flutter/material.dart';
 
 class CustomElevatedButton extends StatelessWidget {
@@ -8,12 +9,14 @@ class CustomElevatedButton extends StatelessWidget {
     this.onPressed,
     this.fontColor = Colors.black,
     this.borderColor = Colors.black,
+    this.isLoading = false,
   }) : super(key: key);
   final String text;
   final Color backgroundColor;
   final void Function()? onPressed;
   final Color? fontColor;
   final Color? borderColor;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -24,11 +27,15 @@ class CustomElevatedButton extends StatelessWidget {
               borderRadius: BorderRadius.circular(30),
               side: BorderSide(color: borderColor!, width: 2.0))),
       onPressed: onPressed,
-      child: Text(
-        text,
-        style:
-            Theme.of(context).textTheme.headline3!.copyWith(color: fontColor),
-      ),
+      child: isLoading
+          ? const CustomCircularProgress()
+          : Text(
+              text,
+              style: Theme.of(context)
+                  .textTheme
+                  .headline3!
+                  .copyWith(color: fontColor),
+            ),
     );
   }
 }
