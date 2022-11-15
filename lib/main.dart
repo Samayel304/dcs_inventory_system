@@ -8,7 +8,7 @@ import 'package:dcs_inventory_system/repositories/repository.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'config/app_router.dart';
 import 'firebase_options.dart';

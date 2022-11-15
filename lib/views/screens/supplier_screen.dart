@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import '../../models/model.dart';
-import '../../utils/methods.dart';
+import '../../utils/utils.dart';
 import '../widgets/widgets.dart';
 
 class SupplierScreen extends StatefulWidget {

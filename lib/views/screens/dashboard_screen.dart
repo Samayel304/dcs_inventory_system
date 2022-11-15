@@ -1,6 +1,6 @@
 import 'package:dcs_inventory_system/bloc/bloc.dart';
 import 'package:dcs_inventory_system/bloc/user/user_bloc.dart';
-import 'package:dcs_inventory_system/utils/helper.dart';
+import 'package:dcs_inventory_system/utils/utils.dart';
 import 'package:dcs_inventory_system/views/widgets/widgets.dart';
 
 import 'package:flutter/material.dart';
@@ -70,7 +70,7 @@ class _TodaysOrderListView extends StatelessWidget {
                   return todaysOrders.isEmpty
                       ? Center(
                           child: Text(
-                          'No requested order today!',
+                          'No requested supply today!',
                           style: Theme.of(context).textTheme.headline5,
                         ))
                       : ListView.builder(

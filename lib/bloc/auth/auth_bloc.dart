@@ -30,10 +30,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       print('Auth user: $authUser');
       if (authUser != null) {
         _userRepository.getUser(authUser.uid).listen((user) {
-          add(AuthUserChanged(authUser: authUser, user: user));
+          add(AuthUserChanged(
+              authUser: authUser, user: user, isInialized: true));
         });
       } else {
-        add(AuthUserChanged(authUser: authUser));
+        add(AuthUserChanged(authUser: authUser, isInialized: true));
       }
     });
   }
@@ -41,11 +42,19 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   void _onAuthUserChanged(
     AuthUserChanged event,
     Emitter<AuthState> emit,
-  ) {
-    event.authUser != null
-        ? emit(AuthState.authenticated(
-            authUser: event.authUser!, user: event.user!))
-        : emit(const AuthState.unauthenticated());
+  ) async {
+    if (event.isInialized!) {
+      event.authUser != null
+          ? emit(AuthState.authenticated(
+              authUser: event.authUser!, user: event.user!))
+          : emit(const AuthState.unauthenticated());
+    } else {
+      await Future.delayed(const Duration(seconds: 2));
+      event.authUser != null
+          ? emit(AuthState.authenticated(
+              authUser: event.authUser!, user: event.user!))
+          : emit(const AuthState.unauthenticated());
+    }
   }
 
   void _onLogoutRequested(
