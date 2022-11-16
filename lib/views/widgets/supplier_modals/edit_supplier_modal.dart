@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dcs_inventory_system/models/model.dart';
 import 'package:dcs_inventory_system/views/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../bloc/supplier/supplier_bloc.dart';
@@ -93,7 +94,8 @@ class _EditSupplierModalState extends State<EditSupplierModal> {
                     ),
                     const SizedBox(height: 12),
                     CustomTextField(
-                      maxLength: 12,
+                      maxLength: 11,
+                      textInputType: TextInputType.number,
                       controller: contactNumberController,
                       hintText: "Contact Number",
                       validator: (value) {
