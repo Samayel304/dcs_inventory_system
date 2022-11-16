@@ -4,7 +4,9 @@ import 'package:bloc/bloc.dart';
 import 'package:dcs_inventory_system/models/model.dart';
 import 'package:dcs_inventory_system/repositories/order/order_repository.dart';
 import 'package:dcs_inventory_system/repositories/product/product_repository.dart';
+import 'package:dcs_inventory_system/utils/utils.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 
 part 'order_event.dart';
 part 'order_state.dart';
@@ -43,22 +45,33 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
   }
 
   void _onAddOrder(AddOrder event, Emitter<OrderState> emit) async {
-    try {
-      await _orderRepository.addOrder(event.order);
-    } catch (_) {}
+    final res = await _orderRepository.addOrder(event.order);
+    res.fold((l) {
+      showErrorSnackBar(event.context, l.message);
+      Navigator.of(event.context).pop();
+    }, (r) {
+      showSuccessSnackBar(event.context, 'Ordered successfully!');
+      Navigator.of(event.context).pop();
+    });
   }
 
   void _onReceiveOrder(ReceiveOrder event, Emitter<OrderState> emit) async {
-    try {
-      await _orderRepository.editOrderDetails(event.order);
-      await _productRepository.editProductDetails(event.product);
-    } catch (_) {}
+    final res = await _orderRepository.editOrderDetails(event.order);
+    res.fold((l) {
+      showErrorSnackBar(event.context, l.message);
+    }, (r) {
+      _productRepository.editProductDetails(event.product);
+      showSuccessSnackBar(event.context, 'Order recieved!');
+    });
   }
 
   void _onCancelOrder(CancelOrder event, Emitter<OrderState> emit) async {
-    try {
-      await _orderRepository.editOrderDetails(event.order);
-    } catch (_) {}
+    final res = await _orderRepository.editOrderDetails(event.order);
+    res.fold((l) {
+      showErrorSnackBar(event.context, l.message);
+    }, (r) {
+      showSuccessSnackBar(event.context, 'Order cancelled!');
+    });
   }
 
   @override

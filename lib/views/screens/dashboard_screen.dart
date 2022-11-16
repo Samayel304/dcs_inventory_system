@@ -18,7 +18,7 @@ class DashboardScreen extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: const CustomAppBar(),
-      drawer: const SafeArea(child: CustomNavigationDrawer()),
+      drawer: const SafeArea(child: NavigationDrawer()),
       body: Container(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -60,10 +60,10 @@ class _TodaysOrderListView extends StatelessWidget {
             child: BlocBuilder<OrderBloc, OrderState>(
               builder: (context, state) {
                 if (state is OrdersLoading) {
-                  return const CustomCircularProgress();
+                  return const Loader();
                 }
                 if (state is OrdersLoaded) {
-                  final List<Order> todaysOrders = state.orders
+                  final List<OrderModel> todaysOrders = state.orders
                       .where((order) =>
                           order.orderedDate.isSameDate(DateTime.now()))
                       .toList();
@@ -77,7 +77,7 @@ class _TodaysOrderListView extends StatelessWidget {
                           shrinkWrap: true,
                           itemCount: todaysOrders.length,
                           itemBuilder: (context, index) {
-                            final Order order = todaysOrders[index];
+                            final OrderModel order = todaysOrders[index];
                             return Container(
                               margin: const EdgeInsets.symmetric(vertical: 5),
                               padding: const EdgeInsets.only(
@@ -152,7 +152,7 @@ class _Cards extends StatelessWidget {
                     return _generateCard(
                       context,
                       'Number of Products',
-                      const CustomCircularProgress(),
+                      const Loader(),
                     );
                   }
                   if (state is ProductsLoaded) {
@@ -179,8 +179,8 @@ class _Cards extends StatelessWidget {
               ),
               BlocBuilder<ProductBloc, ProductState>(builder: (context, state) {
                 if (state is ProductsLoading) {
-                  return _generateCard(context, 'Out of Stock Products',
-                      const CustomCircularProgress());
+                  return _generateCard(
+                      context, 'Out of Stock Products', const Loader());
                 }
                 if (state is ProductsLoaded) {
                   final String outOfStockProduct = state.products
@@ -210,8 +210,8 @@ class _Cards extends StatelessWidget {
               BlocBuilder<SupplierBloc, SupplierState>(
                 builder: (context, state) {
                   if (state is SupplierLoading) {
-                    return _generateCard(context, 'Number of Suppliers',
-                        const CustomCircularProgress());
+                    return _generateCard(
+                        context, 'Number of Suppliers', const Loader());
                   }
                   if (state is SupplierLoaded) {
                     final String totalSupplier =
@@ -238,7 +238,7 @@ class _Cards extends StatelessWidget {
                     return _generateCard(
                       context,
                       'Number of Users',
-                      const CustomCircularProgress(),
+                      const Loader(),
                     );
                   }
                   if (state is UserLoaded) {

@@ -1,8 +1,9 @@
-import '../../models/product_model.dart';
+import 'package:dcs_inventory_system/models/product_model.dart';
+import 'package:dcs_inventory_system/utils/type_def.dart';
 
 abstract class BaseProductRepository {
   Stream<List<Product>> getAllProducts();
-  Future<void> createProduct(Product product);
-  Future<void> editProductDetails(Product product);
-  Future<void> deleteProduct(Product product);
+  FutureVoid createProduct(Product product);
+  FutureVoid editProductDetails(Product product);
+  FutureVoid deleteProduct(Product product);
 }

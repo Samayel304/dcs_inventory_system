@@ -75,7 +75,7 @@ class _SupplierScreenState extends State<SupplierScreen> {
                   child: BlocBuilder<SupplierBloc, SupplierState>(
                     builder: (context, state) {
                       if (state is SupplierLoading) {
-                        return const CustomCircularProgress();
+                        return const Loader();
                       }
                       if (state is SupplierLoaded) {
                         return ListView.builder(
@@ -137,7 +137,7 @@ class _SupplierScreenState extends State<SupplierScreen> {
                                                                 SupplierBloc>(
                                                             context)
                                                         .add(DeleteSupplier(
-                                                            supplier));
+                                                            supplier, context));
                                                   });
                                               break;
                                           }

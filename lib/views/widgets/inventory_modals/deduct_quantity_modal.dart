@@ -28,6 +28,16 @@ class _DeductQuantityModalState extends State<DeductQuantityModal> {
     super.dispose();
   }
 
+  void deductProductQuantity(BuildContext context) {
+    int deductedQuantity = int.parse(productQuantityController.text);
+    int newQuantity = widget.selectedProduct.quantity - deductedQuantity;
+
+    BlocProvider.of<ProductBloc>(context).add(DeductProductQuantity(
+        widget.selectedProduct.copyWith(quantity: newQuantity),
+        deductedQuantity,
+        context));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -71,19 +81,7 @@ class _DeductQuantityModalState extends State<DeductQuantityModal> {
                   backgroundColor: Colors.black,
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      int deductedQuantity =
-                          int.parse(productQuantityController.text);
-                      int newQuantity =
-                          widget.selectedProduct.quantity - deductedQuantity;
-
-                      BlocProvider.of<ProductBloc>(context).add(
-                          DeductProductQuantity(
-                              widget.selectedProduct
-                                  .copyWith(quantity: newQuantity),
-                              deductedQuantity));
-
-                      productQuantityController.clear();
-                      Navigator.pop(context);
+                      deductProductQuantity(context);
                     }
                   },
                 ),

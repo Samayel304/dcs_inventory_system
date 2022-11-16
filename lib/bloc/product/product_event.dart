@@ -22,45 +22,41 @@ class UpdateProducts extends ProductEvent {
 
 class AddProduct extends ProductEvent {
   final Product product;
+  final BuildContext context;
 
-  const AddProduct(
-    this.product,
-  );
+  const AddProduct(this.product, this.context);
 
   @override
-  List<Object> get props => [product];
+  List<Object> get props => [product, context];
 }
 
 class DeductProductQuantity extends ProductEvent {
   final Product product;
   final int deductedQuantity;
-
-  const DeductProductQuantity(this.product, this.deductedQuantity);
+  final BuildContext context;
+  const DeductProductQuantity(
+      this.product, this.deductedQuantity, this.context);
 
   @override
-  List<Object> get props => [product, deductedQuantity];
+  List<Object> get props => [product, deductedQuantity, context];
 }
 
 class EditProduct extends ProductEvent {
   final Product product;
-
-  const EditProduct(
-    this.product,
-  );
+  final BuildContext context;
+  const EditProduct(this.product, this.context);
 
   @override
-  List<Object> get props => [product];
+  List<Object> get props => [product, context];
 }
 
 class DeleteProduct extends ProductEvent {
   final Product product;
-
-  const DeleteProduct(
-    this.product,
-  );
+  final BuildContext context;
+  const DeleteProduct(this.product, this.context);
 
   @override
-  List<Object> get props => [product];
+  List<Object> get props => [product, context];
 }
 
 class SearchProducts extends ProductEvent {

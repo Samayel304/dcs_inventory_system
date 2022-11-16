@@ -1,7 +1,9 @@
-import '../../models/order_model.dart';
+import 'package:dcs_inventory_system/utils/type_def.dart';
+
+import 'package:dcs_inventory_system/models/order_model.dart';
 
 abstract class BaseOrderRepository {
-  Stream<List<Order>> getAllOrders();
-  Future<void> addOrder(Order order);
-  Future<void> editOrderDetails(Order order);
+  Stream<List<OrderModel>> getAllOrders();
+  FutureVoid addOrder(OrderModel order);
+  FutureVoid editOrderDetails(OrderModel order);
 }

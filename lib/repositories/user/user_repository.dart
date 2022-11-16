@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dcs_inventory_system/models/user_model.dart';
 import 'package:dcs_inventory_system/repositories/user/base_user_repository.dart';
-import 'package:dcs_inventory_system/utils/constant.dart';
+import 'package:dcs_inventory_system/utils/enums.dart';
 
 class UserRepository extends BaseUserRepository {
   final FirebaseFirestore _firebaseFirestore;

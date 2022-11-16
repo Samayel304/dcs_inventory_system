@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class CustomCircularProgress extends StatelessWidget {
-  const CustomCircularProgress({Key? key}) : super(key: key);
+class Loader extends StatelessWidget {
+  const Loader({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

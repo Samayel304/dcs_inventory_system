@@ -29,6 +29,16 @@ class _AddSupplierModalState extends State<AddSupplierModal> {
     addressController.dispose();
   }
 
+  void addSupplier(BuildContext context) {
+    Supplier supplier = Supplier(
+        supplierName: supplierNameController.text,
+        contactPerson: contactPersonController.text,
+        address: addressController.text,
+        contactNumber: contactNumberController.text,
+        dateCreated: Timestamp.now().toDate());
+    BlocProvider.of<SupplierBloc>(context).add(AddSupplier(supplier, context));
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -103,14 +113,7 @@ class _AddSupplierModalState extends State<AddSupplierModal> {
                           backgroundColor: Colors.black,
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
-                              Supplier supplier = Supplier(
-                                  supplierName: supplierNameController.text,
-                                  contactPerson: contactPersonController.text,
-                                  address: addressController.text,
-                                  contactNumber: contactNumberController.text,
-                                  dateCreated: Timestamp.now().toDate());
-                              BlocProvider.of<SupplierBloc>(context)
-                                  .add(AddSupplier(supplier));
+                              addSupplier(context);
                             }
                           }),
                     )

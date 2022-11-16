@@ -1,10 +1,11 @@
 import 'package:dcs_inventory_system/cubits/login/login_cubit.dart';
-import 'package:dcs_inventory_system/utils/methods.dart';
+import 'package:dcs_inventory_system/utils/utils.dart';
 import 'package:dcs_inventory_system/views/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../utils/constants.dart';
 import '../widgets/custom_elevated_button.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -20,40 +21,31 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<LoginCubit, LoginState>(
-        listener: (context, state) {
-          if (state.status == LoginStatus.error) {
-            showErrorSnackBar(context, state.errorMessage);
-          }
-          if (state.status == LoginStatus.success) {
-            GoRouter.of(context).go('/');
-          }
-        },
-        child: Scaffold(
-          resizeToAvoidBottomInset: true,
-          backgroundColor: Theme.of(context).primaryColor,
-          body: Center(
-            child: SingleChildScrollView(
-              child: Container(
-                padding: const EdgeInsets.all(30.0),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      Image.asset("assets/images/logo.png"),
-                      const SizedBox(height: 15),
-                      _EmailInput(),
-                      const SizedBox(height: 15),
-                      _PasswordInput(),
-                      const SizedBox(height: 15),
-                      _LoginButton(formKey: _formKey)
-                    ],
-                  ),
-                ),
+    return Scaffold(
+      resizeToAvoidBottomInset: true,
+      backgroundColor: Theme.of(context).primaryColor,
+      body: Center(
+        child: SingleChildScrollView(
+          child: Container(
+            padding: const EdgeInsets.all(30.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  Image.asset(Constant.whiteLogoPath),
+                  const SizedBox(height: 15),
+                  _EmailInput(),
+                  const SizedBox(height: 15),
+                  _PasswordInput(),
+                  const SizedBox(height: 15),
+                  _LoginButton(formKey: _formKey)
+                ],
               ),
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
 
@@ -150,7 +142,7 @@ class _LoginButton extends StatelessWidget {
               backgroundColor: Colors.white,
               onPressed: () {
                 if (formKey.currentState!.validate()) {
-                  context.read<LoginCubit>().logInWithCredentials();
+                  context.read<LoginCubit>().logInWithCredentials(context);
                 }
               },
             ));

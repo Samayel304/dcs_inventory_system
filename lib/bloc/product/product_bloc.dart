@@ -4,14 +4,16 @@ import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dcs_inventory_system/bloc/activity_log/activity_log_bloc.dart';
 import 'package:dcs_inventory_system/bloc/auth/auth_bloc.dart';
-import 'package:dcs_inventory_system/utils/constant.dart';
+import 'package:dcs_inventory_system/utils/enums.dart';
 import 'package:equatable/equatable.dart';
 import 'package:excel/excel.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../../models/model.dart';
 
 import '../../repositories/repository.dart';
+import '../../utils/utils.dart';
 
 part 'product_event.dart';
 part 'product_state.dart';
@@ -55,7 +57,16 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   void _onAddProduct(AddProduct event, Emitter<ProductState> emit) async {
     final state = this.state;
     if (state is ProductsLoaded) {
-      try {
+      final res = await _productRepository.createProduct(event.product);
+      res.fold((l) {
+        showErrorSnackBar(event.context, l.message);
+        Navigator.of(event.context).pop();
+      }, (r) {
+        showSuccessSnackBar(event.context, 'Product created successfully!');
+        Navigator.of(event.context).pop();
+      });
+
+      /* try {
         emit(ProductsLoading());
         if (state.products
             .where((product) =>
@@ -80,14 +91,22 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
                   : '$userFullname created a product named ${event.product.productName}');
           _activityLogBloc.add(AddActivityLog(activityLog: activityLog));
         }
-      } catch (_) {}
+      } catch (_) {} */
     }
   }
 
   void _onDeductProductQuantity(
       DeductProductQuantity event, Emitter<ProductState> emit) async {
     if (state is ProductsLoaded) {
-      try {
+      final res = await _productRepository.editProductDetails(event.product);
+      res.fold((l) {
+        showErrorSnackBar(event.context, l.message);
+        Navigator.of(event.context).pop();
+      }, (r) {
+        showSuccessSnackBar(event.context, 'Deducted successfully!');
+        Navigator.of(event.context).pop();
+      });
+      /* try {
         emit(const Success(successMessage: "Success"));
         await _productRepository.editProductDetails(event.product);
         User user = _authBloc.state.user!;
@@ -100,28 +119,44 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
                 ? 'You deducted ${event.product.productName}\'s quantity by ${event.deductedQuantity}'
                 : '$userFullname deducted ${event.product.productName}\'s quantity by ${event.deductedQuantity}');
         _activityLogBloc.add(AddActivityLog(activityLog: activityLog));
-      } catch (_) {}
+      } catch (_) {} */
     }
   }
 
   void _onEditProduct(EditProduct event, Emitter<ProductState> emit) async {
     if (state is ProductsLoaded) {
-      try {
+      final res = await _productRepository.editProductDetails(event.product);
+      res.fold((l) {
+        showErrorSnackBar(event.context, l.message);
+        Navigator.of(event.context).pop();
+      }, (r) {
+        showSuccessSnackBar(event.context, 'Edited successfully!');
+        Navigator.of(event.context).pop();
+      });
+      /*  try {
         emit(const Success(successMessage: "Edited Successfully"));
         await _productRepository.editProductDetails(event.product);
-      } catch (_) {}
+      } catch (_) {} */
     }
   }
 
   void _onDeleteProduct(DeleteProduct event, Emitter<ProductState> emit) async {
     final state = this.state;
     if (state is ProductsLoaded) {
-      try {
+      final res = await _productRepository.deleteProduct(event.product);
+      res.fold((l) {
+        showErrorSnackBar(event.context, l.message);
+        Navigator.of(event.context).pop();
+      }, (r) {
+        showSuccessSnackBar(event.context, 'Deleted successfully!');
+        Navigator.of(event.context).pop();
+      });
+      /*  try {
         emit(const Success(successMessage: "Deleted Successfully"));
         await _productRepository.deleteProduct(event.product);
         // emit(ProductsLoaded(products: state.products));
         //add(LoadProducts());
-      } catch (_) {}
+      } catch (_) {} */
     }
   }
 

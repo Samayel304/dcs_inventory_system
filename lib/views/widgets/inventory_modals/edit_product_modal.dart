@@ -78,13 +78,9 @@ class _EditProductModalState extends State<EditProductModal> {
                           .copyWith(productName: productNameController.text);
                       if (widget.selectedProduct.productName ==
                           productNameController.text) {
-                        productNameController.clear();
-                        Navigator.pop(context);
                       } else {
                         BlocProvider.of<ProductBloc>(context)
-                            .add(EditProduct(editedProduct));
-                        productNameController.clear();
-                        Navigator.pop(context);
+                            .add(EditProduct(editedProduct, context));
                       }
                     }
                   },

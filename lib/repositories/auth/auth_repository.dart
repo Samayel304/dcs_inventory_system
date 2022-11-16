@@ -1,6 +1,8 @@
+import 'package:dcs_inventory_system/utils/failure.dart';
+import 'package:dcs_inventory_system/utils/type_def.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:fpdart/fpdart.dart';
 
 import 'base_auth_repository.dart';
 
@@ -11,7 +13,7 @@ class AuthRepository extends BaseAuthRepository {
       : _firebaseAuth = firebaseAuth ?? auth.FirebaseAuth.instance;
 
   @override
-  Future<auth.User?> signUp({
+  FutureEither<auth.User?> signUp({
     required String email,
     required String password,
   }) async {
@@ -22,20 +24,30 @@ class AuthRepository extends BaseAuthRepository {
       );
 
       final user = credential.user;
-      return user;
-    } catch (_) {}
-    return null;
+      return right(user);
+    } on FirebaseException catch (e) {
+      throw e.message!;
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
   }
 
   @override
-  Future<void> logInWithEmailAndPassword({
+  FutureVoid logInWithEmailAndPassword({
     required String email,
     required String password,
   }) async {
-    await _firebaseAuth.signInWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
+    try {
+      // ignore: void_checks
+      return right(_firebaseAuth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      ));
+    } on FirebaseException catch (e) {
+      throw e.message!;
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
   }
 
   @override

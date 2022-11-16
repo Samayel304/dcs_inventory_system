@@ -6,7 +6,7 @@ import 'package:dcs_inventory_system/views/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../utils/constant.dart';
+import '../../../utils/enums.dart';
 
 class AddProductModal extends StatefulWidget {
   const AddProductModal({
@@ -34,17 +34,14 @@ class _AddProductModalState extends State<AddProductModal> {
 
   @override
   Widget build(BuildContext context) {
-    void addProduct(String category) {
+    void addProduct(String category, BuildContext context) {
       int quantity = 0;
       Product product = Product(
           productName: productNameController.text,
           category: category,
           quantity: quantity,
           dateCreated: Timestamp.now().toDate());
-      BlocProvider.of<ProductBloc>(context).add(AddProduct(product));
-
-      productNameController.clear();
-      Navigator.pop(context);
+      BlocProvider.of<ProductBloc>(context).add(AddProduct(product, context));
     }
 
     return Container(
@@ -86,15 +83,15 @@ class _AddProductModalState extends State<AddProductModal> {
                         switch (widget.category) {
                           case 0: //coffee
 
-                            addProduct(ProductCategory.coffee.name);
+                            addProduct(ProductCategory.coffee.name, context);
 
                             break;
                           case 1: //milktea
-                            addProduct(ProductCategory.milktea.name);
+                            addProduct(ProductCategory.milktea.name, context);
 
                             break;
                           case 2: //dimsum
-                            addProduct(ProductCategory.dimsum.name);
+                            addProduct(ProductCategory.dimsum.name, context);
 
                             break;
                         }

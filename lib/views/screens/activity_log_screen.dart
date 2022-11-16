@@ -1,9 +1,9 @@
 import 'package:dcs_inventory_system/bloc/activity_log/activity_log_bloc.dart';
 import 'package:dcs_inventory_system/models/activity_log_model.dart';
 
-import 'package:dcs_inventory_system/utils/helper.dart';
+import 'package:dcs_inventory_system/utils/utils.dart';
 import 'package:dcs_inventory_system/views/widgets/back_app_bar.dart';
-import 'package:dcs_inventory_system/views/widgets/custom_circular_progress.dart';
+import 'package:dcs_inventory_system/views/widgets/loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grouped_list/grouped_list.dart';
@@ -25,7 +25,7 @@ class ActivityLogScreen extends StatelessWidget {
               child: BlocBuilder<ActivityLogBloc, ActivityLogState>(
                   builder: (context, state) {
                 if (state is ActivityLogLoading) {
-                  return const CustomCircularProgress();
+                  return const Loader();
                 }
                 if (state is ActivityLogLoaded) {
                   return GroupedListView(

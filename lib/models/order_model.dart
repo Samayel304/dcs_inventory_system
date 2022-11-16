@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dcs_inventory_system/models/model.dart';
 import 'package:equatable/equatable.dart';
 
-class Order extends Equatable {
+class OrderModel extends Equatable {
   final String? orderId;
   final DateTime dateReceived;
   final Product product;
@@ -12,7 +12,7 @@ class Order extends Equatable {
   final String status;
   final Supplier supplier;
 
-  const Order(
+  const OrderModel(
       {this.orderId,
       required this.dateReceived,
       required this.product,
@@ -22,7 +22,7 @@ class Order extends Equatable {
       required this.supplier,
       required this.dateCancelled});
 
-  Order copyWith(
+  OrderModel copyWith(
       {String? orderId,
       Product? product,
       int? quantity,
@@ -31,7 +31,7 @@ class Order extends Equatable {
       DateTime? dateReceived,
       Supplier? supplier,
       DateTime? dateCancelled}) {
-    return Order(
+    return OrderModel(
         orderId: orderId ?? this.orderId,
         product: product ?? this.product,
         quantity: quantity ?? this.quantity,
@@ -42,8 +42,8 @@ class Order extends Equatable {
         dateCancelled: dateCancelled ?? this.dateCancelled);
   }
 
-  factory Order.fromSnapshot(DocumentSnapshot snap) {
-    return Order(
+  factory OrderModel.fromSnapshot(DocumentSnapshot snap) {
+    return OrderModel(
       orderId: snap.id,
       product: Product.fromOrderSnapshot(snap['product']),
       quantity: snap['quantity'],

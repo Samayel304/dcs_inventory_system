@@ -1,12 +1,13 @@
+import 'package:dcs_inventory_system/utils/type_def.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 
 abstract class BaseAuthRepository {
   Stream<auth.User?> get user;
-  Future<auth.User?> signUp({
+  FutureEither<auth.User?> signUp({
     required String email,
     required String password,
   });
-  Future<void> logInWithEmailAndPassword({
+  FutureVoid logInWithEmailAndPassword({
     required String email,
     required String password,
   });

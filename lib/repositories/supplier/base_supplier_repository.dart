@@ -1,8 +1,10 @@
+import 'package:dcs_inventory_system/utils/type_def.dart';
+
 import '../../models/model.dart';
 
 abstract class BaseSupplierRepository {
   Stream<List<Supplier>> getAllSuppliers();
-  Future<void> addSupplier(Supplier supplier);
-  Future<void> editSupplier(Supplier supplier);
-  Future<void> deleteSupplier(Supplier supplier);
+  FutureVoid addSupplier(Supplier supplier);
+  FutureVoid editSupplier(Supplier supplier);
+  FutureVoid deleteSupplier(Supplier supplier);
 }

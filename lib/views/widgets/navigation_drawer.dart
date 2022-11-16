@@ -3,9 +3,10 @@ import 'package:dcs_inventory_system/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:dcs_inventory_system/utils/constants.dart';
 
-class CustomNavigationDrawer extends StatelessWidget {
-  const CustomNavigationDrawer({Key? key}) : super(key: key);
+class NavigationDrawer extends StatelessWidget {
+  const NavigationDrawer({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -93,10 +94,9 @@ class _Header extends StatelessWidget {
                     radius: (50),
                     backgroundColor: Colors.white,
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(50),
-                      child: Image.network(user?.avatarUrl ??
-                          'https://firebasestorage.googleapis.com/v0/b/dcsims-2772c.appspot.com/o/default_profile.png?alt=media&token=9c83c05f-2d6b-4def-8c08-cf212738605d'),
-                    )),
+                        borderRadius: BorderRadius.circular(50),
+                        child: Image.network(user?.avatarUrl ??
+                            Constant.defaultUserProfileUrl))),
                 Text(fullName,
                     style: Theme.of(context)
                         .textTheme

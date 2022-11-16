@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dcs_inventory_system/bloc/bloc.dart';
 
 import 'package:dcs_inventory_system/models/model.dart';
-import 'package:dcs_inventory_system/utils/constant.dart';
+import 'package:dcs_inventory_system/utils/enums.dart';
 
 import 'package:dcs_inventory_system/views/widgets/widgets.dart';
 
@@ -31,14 +31,20 @@ class _AddOrderModalState extends State<AddOrderModal> {
     super.dispose();
   }
 
+  void addOrder(BuildContext context) {
+    OrderModel order = OrderModel(
+        dateReceived: Timestamp.now().toDate(),
+        dateCancelled: Timestamp.now().toDate(),
+        product: selectedProduct!,
+        orderedDate: Timestamp.now().toDate(),
+        quantity: int.parse(productQuantityController.text),
+        status: OrderStatus.pending.name,
+        supplier: selectedSupplier!);
+    BlocProvider.of<OrderBloc>(context).add(AddOrder(order, context));
+  }
+
   @override
   Widget build(BuildContext context) {
-    void success() {
-      productQuantityController.clear();
-
-      Navigator.pop(context);
-    }
-
     return Container(
       padding:
           EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -58,7 +64,7 @@ class _AddOrderModalState extends State<AddOrderModal> {
               BlocBuilder<ProductBloc, ProductState>(
                 builder: (context, state) {
                   if (state is ProductsLoading) {
-                    return const CustomCircularProgress();
+                    return const Loader();
                   }
                   if (state is ProductsLoaded) {
                     return CustomDropdown(
@@ -89,7 +95,7 @@ class _AddOrderModalState extends State<AddOrderModal> {
               BlocBuilder<SupplierBloc, SupplierState>(
                 builder: (context, state) {
                   if (state is SupplierLoading) {
-                    return const CustomCircularProgress();
+                    return const Loader();
                   }
                   if (state is SupplierLoaded) {
                     return CustomDropdown(
@@ -138,17 +144,7 @@ class _AddOrderModalState extends State<AddOrderModal> {
                   backgroundColor: Colors.black,
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      Order order = Order(
-                          dateReceived: Timestamp.now().toDate(),
-                          dateCancelled: Timestamp.now().toDate(),
-                          product: selectedProduct!,
-                          orderedDate: Timestamp.now().toDate(),
-                          quantity: int.parse(productQuantityController.text),
-                          status: OrderStatus.pending.name,
-                          supplier: selectedSupplier!);
-                      BlocProvider.of<OrderBloc>(context).add(AddOrder(order));
-
-                      success();
+                      addOrder(context);
                     }
                   },
                 ),
@@ -160,50 +156,3 @@ class _AddOrderModalState extends State<AddOrderModal> {
     );
   }
 }
-
-/* class _ProductDropdownList extends StatefulWidget {
-  const _ProductDropdownList({Key? key, this.selectedProduct}) : super(key: key);
-  final Product? selectedProduct;
-  @override
-  State<_ProductDropdownList> createState() => _ProductDropdownListState();
-}
-
-class _ProductDropdownListState extends State<_ProductDropdownList> {
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<ProductBloc, ProductState>(
-      builder: (context, state) {
-        if (state is ProductsLoading) {
-          return const CustomCircularProgress();
-        }
-        if (state is ProductsLoaded) {
-          widget.selectedProduct = state.products.first;
-          return CustomDropdown(
-            value: selectedProduct,
-            hint: const Text("Select product."),
-            validator: (value) {
-              if (value == null) {
-                return "Please Select product.";
-              }
-              return null;
-            },
-            onChange: (value) {
-              setState(() {
-                selectedProduct = value!;
-              });
-            },
-            listItem:
-                state.products.map<DropdownMenuItem<Product>>((Product value) {
-              return DropdownMenuItem<Product>(
-                value: value,
-                child: Text(value.productName),
-              );
-            }).toList(),
-          );
-        } else {
-          return const Center(child: Text("Something went wrong."));
-        }
-      },
-    );
-  }
-} */

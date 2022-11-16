@@ -1,4 +1,4 @@
-import 'package:dcs_inventory_system/views/widgets/custom_circular_progress.dart';
+import 'package:dcs_inventory_system/views/widgets/loader.dart';
 import 'package:flutter/material.dart';
 
 class CustomElevatedButton extends StatelessWidget {
@@ -28,7 +28,7 @@ class CustomElevatedButton extends StatelessWidget {
               side: BorderSide(color: borderColor!, width: 2.0))),
       onPressed: onPressed,
       child: isLoading
-          ? const CustomCircularProgress()
+          ? const Loader()
           : Text(
               text,
               style: Theme.of(context)

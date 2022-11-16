@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:dcs_inventory_system/repositories/repository.dart';
+import 'package:dcs_inventory_system/utils/utils.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 
 import '../../models/supplier_model.dart';
 
@@ -37,22 +39,37 @@ class SupplierBloc extends Bloc<SupplierEvent, SupplierState> {
   }
 
   void _onAddSupplier(AddSupplier event, Emitter<SupplierState> emit) async {
-    try {
-      await _supplierRepository.addSupplier(event.supplier);
-    } catch (_) {}
+    final res = await _supplierRepository.addSupplier(event.supplier);
+    res.fold((l) {
+      showErrorSnackBar(event.context, l.message);
+      Navigator.of(event.context).pop();
+    }, (r) {
+      showSuccessSnackBar(event.context, 'Supplier added successfully!');
+      Navigator.of(event.context).pop();
+    });
   }
 
   void _onEditSupplier(EditSupplier event, Emitter<SupplierState> emit) async {
-    try {
-      await _supplierRepository.editSupplier(event.supplier);
-    } catch (_) {}
+    final res = await _supplierRepository.editSupplier(event.supplier);
+    res.fold((l) {
+      showErrorSnackBar(event.context, l.message);
+      Navigator.of(event.context).pop();
+    }, (r) {
+      showSuccessSnackBar(event.context, 'Supplier edited successfully!');
+      Navigator.of(event.context).pop();
+    });
   }
 
   void _onDeleteSupplier(
       DeleteSupplier event, Emitter<SupplierState> emit) async {
-    try {
-      await _supplierRepository.deleteSupplier(event.supplier);
-    } catch (_) {}
+    final res = await _supplierRepository.deleteSupplier(event.supplier);
+    res.fold((l) {
+      showErrorSnackBar(event.context, l.message);
+      Navigator.of(event.context).pop();
+    }, (r) {
+      showSuccessSnackBar(event.context, 'Supplier deleted successfully!');
+      Navigator.of(event.context).pop();
+    });
   }
 
   @override

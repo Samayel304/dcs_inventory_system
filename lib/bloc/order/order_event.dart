@@ -10,10 +10,10 @@ abstract class OrderEvent extends Equatable {
 class LoadOrders extends OrderEvent {}
 
 class UpdateOrders extends OrderEvent {
-  final List<Order> orders;
+  final List<OrderModel> orders;
 
   const UpdateOrders({
-    this.orders = const <Order>[],
+    this.orders = const <OrderModel>[],
   });
 
   @override
@@ -21,36 +21,31 @@ class UpdateOrders extends OrderEvent {
 }
 
 class AddOrder extends OrderEvent {
-  final Order order;
-
-  const AddOrder(
-    this.order,
-  );
+  final OrderModel order;
+  final BuildContext context;
+  const AddOrder(this.order, this.context);
 
   @override
-  List<Object> get props => [order];
+  List<Object> get props => [order, context];
 }
 
 class ReceiveOrder extends OrderEvent {
-  final Order order;
+  final OrderModel order;
   final Product product;
+  final BuildContext context;
 
-  const ReceiveOrder(
-    this.product,
-    this.order,
-  );
+  const ReceiveOrder(this.product, this.order, this.context);
 
   @override
-  List<Object> get props => [order, product];
+  List<Object> get props => [order, product, context];
 }
 
 class CancelOrder extends OrderEvent {
-  final Order order;
+  final OrderModel order;
+  final BuildContext context;
 
-  const CancelOrder(
-    this.order,
-  );
+  const CancelOrder(this.order, this.context);
 
   @override
-  List<Object> get props => [order];
+  List<Object> get props => [order, context];
 }

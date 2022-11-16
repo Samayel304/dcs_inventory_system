@@ -10,8 +10,8 @@ export 'inventory_modals/edit_product_modal.dart';
 export 'supplier_modals/edit_supplier_modal.dart';
 export 'supplier_modals/add_supplier_modal.dart';
 export 'manage_account_modal/add_account_modal.dart';
-export 'custom_navigation_drawer.dart';
-export 'custom_circular_progress.dart';
+export 'navigation_drawer.dart';
+export 'loader.dart';
 export 'custom_dropdown.dart';
 
 export 'notification_badge.dart';

@@ -1,14 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dcs_inventory_system/bloc/bloc.dart';
 import 'package:dcs_inventory_system/models/order_model.dart';
-import 'package:dcs_inventory_system/utils/constant.dart';
-import 'package:dcs_inventory_system/utils/helper.dart';
+import 'package:dcs_inventory_system/utils/enums.dart';
+import 'package:dcs_inventory_system/utils/utils.dart';
 import 'package:dcs_inventory_system/views/widgets/order_modals/add_order_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import '../../models/product_model.dart';
-import '../../utils/methods.dart';
 import '../widgets/widgets.dart';
 
 class OrderScreen extends StatefulWidget {
@@ -22,33 +21,17 @@ class OrderScreen extends StatefulWidget {
 class _OrderScreenState extends State<OrderScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  late ScrollController _scrollController;
-  bool _onTop = true;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
-    _tabController.addListener(() {
-      setState(() {
-        _onTop = true;
-      });
-    });
-    _scrollController = ScrollController();
-    _scrollController.addListener(() {
-      // if (_scrollController.position.atEdge) {
-      setState(() {
-        _onTop = _scrollController.position.pixels == 0;
-      });
-      //}
-    });
   }
 
   @override
   void dispose() {
     super.dispose();
     _tabController.dispose();
-    _scrollController.dispose();
   }
 
   @override
@@ -61,7 +44,7 @@ class _OrderScreenState extends State<OrderScreen>
       child: Scaffold(
           resizeToAvoidBottomInset: false,
           appBar: const CustomAppBar(),
-          drawer: const SafeArea(child: CustomNavigationDrawer()),
+          drawer: const SafeArea(child: NavigationDrawer()),
           bottomNavigationBar: const BottomNavBar(index: 2),
           body: Container(
             padding: const EdgeInsets.only(left: 15, right: 15),
@@ -80,38 +63,35 @@ class _OrderScreenState extends State<OrderScreen>
                     tabBarController: _tabController,
                     tabBarViewChild: [
                       _TabBarViewChild(
-                          orderStatus: OrderStatus.all,
-                          scrollController: _scrollController),
+                        orderStatus: OrderStatus.all,
+                      ),
                       _TabBarViewChild(
-                          orderStatus: OrderStatus.pending,
-                          scrollController: _scrollController),
+                        orderStatus: OrderStatus.pending,
+                      ),
                       _TabBarViewChild(
-                          orderStatus: OrderStatus.received,
-                          scrollController: _scrollController),
+                        orderStatus: OrderStatus.received,
+                      ),
                       _TabBarViewChild(
-                          orderStatus: OrderStatus.cancelled,
-                          scrollController: _scrollController)
+                        orderStatus: OrderStatus.cancelled,
+                      )
                     ],
                   ),
                 )
               ],
             ),
           ),
-          floatingActionButton: Visibility(
-            visible: _onTop,
-            child: CustomFloatingActionButton(children: [
-              SpeedDialChild(
-                child: const Icon(Icons.file_download),
-                label: "Export",
-                onTap: () => {},
-              ),
-              SpeedDialChild(
-                child: const Icon(Icons.add),
-                label: "Add",
-                onTap: () => {showBottomModal(context, const AddOrderModal())},
-              )
-            ]),
-          )),
+          floatingActionButton: CustomFloatingActionButton(children: [
+            SpeedDialChild(
+              child: const Icon(Icons.file_download),
+              label: "Export",
+              onTap: () => {},
+            ),
+            SpeedDialChild(
+              child: const Icon(Icons.add),
+              label: "Add",
+              onTap: () => {showBottomModal(context, const AddOrderModal())},
+            )
+          ])),
     );
   }
 }
@@ -120,10 +100,8 @@ class _TabBarViewChild extends StatelessWidget {
   const _TabBarViewChild({
     Key? key,
     required this.orderStatus,
-    required this.scrollController,
   }) : super(key: key);
   final OrderStatus orderStatus;
-  final ScrollController scrollController;
 
   @override
   Widget build(BuildContext context) {
@@ -133,7 +111,7 @@ class _TabBarViewChild extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         }
         if (state is OrdersLoaded) {
-          List<Order> orders = orderStatus == OrderStatus.all
+          List<OrderModel> orders = orderStatus == OrderStatus.all
               ? state.orders
               : state.orders
                   .where((order) => order.status == orderStatus.name)
@@ -141,10 +119,9 @@ class _TabBarViewChild extends StatelessWidget {
           return Padding(
             padding: const EdgeInsets.only(top: 10),
             child: ListView.builder(
-                controller: scrollController,
                 itemCount: orders.length,
                 itemBuilder: (context, index) {
-                  Order order = orders[index];
+                  OrderModel order = orders[index];
                   return Container(
                     decoration: const BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -193,11 +170,13 @@ class _TabBarViewChild extends StatelessWidget {
                                           fontColor: Colors.white,
                                           backgroundColor: Colors.black,
                                           onPressed: () {
-                                            Order editedOrder = order.copyWith(
-                                                dateReceived:
-                                                    Timestamp.now().toDate(),
-                                                status:
-                                                    OrderStatus.received.name);
+                                            OrderModel editedOrder =
+                                                order.copyWith(
+                                                    dateReceived:
+                                                        Timestamp.now()
+                                                            .toDate(),
+                                                    status: OrderStatus
+                                                        .received.name);
                                             int addedQuantity = order.quantity;
                                             Product product = order.product
                                                 .copyWith(
@@ -207,8 +186,8 @@ class _TabBarViewChild extends StatelessWidget {
                                                     isNew: false);
 
                                             BlocProvider.of<OrderBloc>(context)
-                                                .add(ReceiveOrder(
-                                                    product, editedOrder));
+                                                .add(ReceiveOrder(product,
+                                                    editedOrder, context));
                                           }),
                                     ),
                                     const SizedBox(width: 5),
@@ -217,7 +196,7 @@ class _TabBarViewChild extends StatelessWidget {
                                             text: "Cancel",
                                             backgroundColor: Colors.white,
                                             onPressed: () {
-                                              Order order = orders[index]
+                                              OrderModel order = orders[index]
                                                   .copyWith(
                                                       status: OrderStatus
                                                           .cancelled.name,
@@ -226,7 +205,8 @@ class _TabBarViewChild extends StatelessWidget {
                                                               .toDate());
                                               BlocProvider.of<OrderBloc>(
                                                       context)
-                                                  .add(CancelOrder(order));
+                                                  .add(CancelOrder(
+                                                      order, context));
                                             }))
                                   ],
                                 ),
