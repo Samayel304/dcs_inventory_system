@@ -83,6 +83,7 @@ class _AddSupplierModalState extends State<AddSupplierModal> {
                     ),
                     const SizedBox(height: 12),
                     CustomTextField(
+                      maxLength: 12,
                       controller: contactNumberController,
                       hintText: "Contact Number",
                       validator: (value) {
