@@ -21,11 +21,13 @@ class EditProductModal extends StatefulWidget {
 class _EditProductModalState extends State<EditProductModal> {
   TextEditingController productNameController = TextEditingController();
 
-  final _formKey = GlobalKey<FormState>();
+  //final _formKey = GlobalKey<FormState>();
+  bool _canSave = false;
 
   @override
   void initState() {
     super.initState();
+
     productNameController.text = widget.selectedProduct.productName;
   }
 
@@ -34,6 +36,28 @@ class _EditProductModalState extends State<EditProductModal> {
     productNameController.dispose();
 
     super.dispose();
+  }
+
+  void setCanSave() {
+    if (productNameController.text.isNotEmpty &&
+        (productNameController.text.toLowerCase() !=
+            widget.selectedProduct.productName.toLowerCase())) {
+      setState(() {
+        _canSave = true;
+      });
+    } else {
+      setState(() {
+        _canSave = false;
+      });
+    }
+  }
+
+  void save() {
+    Product editedProduct = widget.selectedProduct
+        .copyWith(productName: productNameController.text);
+
+    BlocProvider.of<ProductBloc>(context)
+        .add(EditProduct(editedProduct, context));
   }
 
   @override
@@ -48,7 +72,7 @@ class _EditProductModalState extends State<EditProductModal> {
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Form(
-          key: _formKey,
+          //key: _formKey,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -56,12 +80,15 @@ class _EditProductModalState extends State<EditProductModal> {
                   style: Theme.of(context).textTheme.headline4),
               const SizedBox(height: 20),
               CustomTextField(
-                  validator: (value) {
+                  onChange: (_) {
+                    setCanSave();
+                  },
+                  /*  validator: (value) {
                     if (value == null || value.isEmpty) {
                       return "Enter Product Name";
                     }
                     return null;
-                  },
+                  }, */
                   hintText: "Product Name",
                   controller: productNameController),
               const SizedBox(height: 15),
@@ -71,19 +98,9 @@ class _EditProductModalState extends State<EditProductModal> {
                 child: CustomElevatedButton(
                   backgroundColor: Colors.black,
                   fontColor: Colors.white,
+                  isDisable: !_canSave,
                   text: "Save",
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      Product editedProduct = widget.selectedProduct
-                          .copyWith(productName: productNameController.text);
-                      if (widget.selectedProduct.productName ==
-                          productNameController.text) {
-                      } else {
-                        BlocProvider.of<ProductBloc>(context)
-                            .add(EditProduct(editedProduct, context));
-                      }
-                    }
-                  },
+                  onPressed: () => save(),
                 ),
               )
             ],

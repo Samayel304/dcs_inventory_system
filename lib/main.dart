@@ -14,24 +14,19 @@ import 'config/app_router.dart';
 import 'firebase_options.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  print("Handling a background message: ${message.messageId}");
-}
-
 void main() async {
   //debugRepaintRainbowEnabled = true;
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
@@ -55,6 +50,17 @@ class MyApp extends StatelessWidget {
               userRepository: context.read<UserRepository>(),
             ),
           ),
+          BlocProvider(
+              create: (context) => ProfileBloc(
+                  authBloc: context.read<AuthBloc>(),
+                  userRepository: context.read<UserRepository>())
+                ..add(
+                  LoadProfile(
+                      userId: BlocProvider.of<AuthBloc>(context)
+                          .state
+                          .authUser!
+                          .uid),
+                )),
           BlocProvider(
               create: (context) => LoginCubit(context.read<AuthRepository>())),
           BlocProvider(

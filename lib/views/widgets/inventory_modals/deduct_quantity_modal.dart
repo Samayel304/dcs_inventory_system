@@ -20,12 +20,27 @@ class DeductQuantityModal extends StatefulWidget {
 
 class _DeductQuantityModalState extends State<DeductQuantityModal> {
   TextEditingController productQuantityController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
+  // final _formKey = GlobalKey<FormState>();
+  bool _canSave = false;
 
   @override
   void dispose() {
-    productQuantityController.dispose();
     super.dispose();
+    productQuantityController.dispose();
+  }
+
+  void setCanSave() {
+    if (productQuantityController.text.isNotEmpty &&
+        int.parse(productQuantityController.text) <=
+            widget.selectedProduct.quantity) {
+      setState(() {
+        _canSave = true;
+      });
+    } else {
+      setState(() {
+        _canSave = false;
+      });
+    }
   }
 
   void deductProductQuantity(BuildContext context) {
@@ -50,24 +65,34 @@ class _DeductQuantityModalState extends State<DeductQuantityModal> {
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Form(
-          key: _formKey,
+          //key: _formKey,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Text("Deduct Quantity",
                   style: Theme.of(context).textTheme.headline4),
               const SizedBox(height: 20),
+              Row(
+                children: [
+                  Text('${widget.selectedProduct.productName} quantity: '),
+                  Text('${widget.selectedProduct.quantity}')
+                ],
+              ),
+              const SizedBox(height: 10),
               CustomTextField(
                 controller: productQuantityController,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Enter quantity";
-                  } else if (int.parse(value) >
-                      widget.selectedProduct.quantity) {
-                    return "Quantity exceeded";
-                  }
-                  return null;
+                onChange: (_) {
+                  setCanSave();
                 },
+                /*  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Enter quantity";
+                    } else if (int.parse(value) >
+                        widget.selectedProduct.quantity) {
+                      return "Quantity exceeded";
+                    }
+                    return null;
+                  }, */
                 hintText: "Quantity",
                 textInputType: TextInputType.number,
               ),
@@ -76,13 +101,12 @@ class _DeductQuantityModalState extends State<DeductQuantityModal> {
                 width: double.infinity,
                 height: 50,
                 child: CustomElevatedButton(
+                  isDisable: !_canSave,
                   text: "Save",
                   fontColor: Colors.white,
                   backgroundColor: Colors.black,
                   onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      deductProductQuantity(context);
-                    }
+                    deductProductQuantity(context);
                   },
                 ),
               )

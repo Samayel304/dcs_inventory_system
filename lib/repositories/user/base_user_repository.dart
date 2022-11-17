@@ -5,4 +5,5 @@ abstract class BaseUserRepository {
   Stream<User> getUser(String userId);
   Future<void> createUser(User user);
   Future<void> editUserDetails(User user);
+  Future<void> addDeviceToken(User user, String deviceToken);
 }

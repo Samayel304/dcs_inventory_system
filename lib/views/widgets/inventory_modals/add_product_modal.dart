@@ -23,13 +23,26 @@ class AddProductModal extends StatefulWidget {
 class _AddProductModalState extends State<AddProductModal> {
   TextEditingController productNameController = TextEditingController();
 
-  final _formKey = GlobalKey<FormState>();
+  //final _formKey = GlobalKey<FormState>();
+  bool _canSave = false;
 
   @override
   void dispose() {
     productNameController.dispose();
 
     super.dispose();
+  }
+
+  void setCanSave() {
+    if (productNameController.text.isNotEmpty) {
+      setState(() {
+        _canSave = true;
+      });
+    } else {
+      setState(() {
+        _canSave = false;
+      });
+    }
   }
 
   @override
@@ -54,18 +67,16 @@ class _AddProductModalState extends State<AddProductModal> {
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Form(
-          key: _formKey,
+          //key: _formKey,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Text("Add Product", style: Theme.of(context).textTheme.headline4),
               const SizedBox(height: 20),
               CustomTextField(
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Enter Product Name";
-                  }
-                  return null;
+                onChange: (_) {
+                  setCanSave();
+                  //print(_formKey.currentState!.validate());
                 },
                 controller: productNameController,
                 hintText: "Product Name",
@@ -75,26 +86,25 @@ class _AddProductModalState extends State<AddProductModal> {
                   width: double.infinity,
                   height: 50,
                   child: CustomElevatedButton(
+                    isDisable: !_canSave,
                     text: "Save",
                     fontColor: Colors.white,
                     backgroundColor: Colors.black,
                     onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        switch (widget.category) {
-                          case 0: //coffee
+                      switch (widget.category) {
+                        case 0: //coffee
 
-                            addProduct(ProductCategory.coffee.name, context);
+                          addProduct(ProductCategory.coffee.name, context);
 
-                            break;
-                          case 1: //milktea
-                            addProduct(ProductCategory.milktea.name, context);
+                          break;
+                        case 1: //milktea
+                          addProduct(ProductCategory.milktea.name, context);
 
-                            break;
-                          case 2: //dimsum
-                            addProduct(ProductCategory.dimsum.name, context);
+                          break;
+                        case 2: //dimsum
+                          addProduct(ProductCategory.dimsum.name, context);
 
-                            break;
-                        }
+                          break;
                       }
                     },
                   )),

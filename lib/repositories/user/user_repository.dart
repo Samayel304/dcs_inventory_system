@@ -27,9 +27,20 @@ class UserRepository extends BaseUserRepository {
   }
 
   @override
+  Future<void> addDeviceToken(User user, String deviceToken) async {
+    var doc = await _firebaseFirestore.collection('users').doc(user.id).get();
+    var currentUser = User.fromSnapshot(doc);
+    bool isDeviceTokenExists = currentUser.deviceToken.contains(deviceToken);
+    if (isDeviceTokenExists) return;
+    await _firebaseFirestore.collection('users').doc(user.id).update({
+      'deviceToken': FieldValue.arrayUnion([deviceToken])
+    });
+  }
+
+  @override
   Stream<List<User>> getAllUser() {
     return _firebaseFirestore
-        .collection("Users")
+        .collection("user")
         .where('role', isNotEqualTo: UserRole.admin.name)
         .snapshots()
         .map((snapshot) {

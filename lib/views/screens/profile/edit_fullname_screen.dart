@@ -80,13 +80,12 @@ class _EditFullNameScreenState extends State<EditFullNameScreen> {
                 Padding(
                   padding: const EdgeInsets.only(top: 10),
                   child: CustomElevatedButton(
+                      isDisable: !_canSave,
                       fontColor: Colors.white,
                       text: "Save Changes",
-                      borderColor:
-                          _canSave ? Colors.black : Colors.black.withAlpha(200),
-                      backgroundColor:
-                          _canSave ? Colors.black : Colors.black.withAlpha(200),
-                      onPressed: _canSave ? () {} : null),
+                      borderColor: Colors.black,
+                      backgroundColor: Colors.black,
+                      onPressed: () {}),
                 )
               ],
             ),

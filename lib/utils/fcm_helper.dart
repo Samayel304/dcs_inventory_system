@@ -1,10 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dcs_inventory_system/repositories/repository.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+import '../models/user_model.dart';
+
 class FcmHelper {
-  static initialize() {
+  static initialize(UserRepository userRepository, User user) {
     _requestPermission();
-    _getToken();
+    _getToken(userRepository, user);
 
     var androidInitialize =
         const AndroidInitializationSettings('@mipmap/ic_launcher');
@@ -42,7 +46,7 @@ class FcmHelper {
       );
       await flutterLocalNotificationsPlugin.show(0, message.notification?.title,
           message.notification?.body, platformChannelSpecifics,
-          payload: message.data[' body']);
+          payload: message.data['body']);
     });
   }
 
@@ -63,11 +67,9 @@ class FcmHelper {
     }
   }
 
-  static _getToken() async {
-    await FirebaseMessaging.instance
-        .getToken()
-        .then((token) => _saveDeviceToken(token!));
+  static _getToken(UserRepository userRepository, User user) async {
+    await FirebaseMessaging.instance.getToken().then((token) {
+      userRepository.addDeviceToken(user, token!);
+    });
   }
-
-  static _saveDeviceToken(String token) {}
 }

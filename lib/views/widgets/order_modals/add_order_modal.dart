@@ -21,9 +21,10 @@ class AddOrderModal extends StatefulWidget {
 class _AddOrderModalState extends State<AddOrderModal> {
   TextEditingController productQuantityController = TextEditingController();
 
-  final _formKey = GlobalKey<FormState>();
+  //final _formKey = GlobalKey<FormState>();
   Product? selectedProduct;
   Supplier? selectedSupplier;
+  bool _canSave = false;
 
   @override
   void dispose() {
@@ -43,6 +44,20 @@ class _AddOrderModalState extends State<AddOrderModal> {
     BlocProvider.of<OrderBloc>(context).add(AddOrder(order, context));
   }
 
+  void setCanSave() {
+    if (selectedProduct != null &&
+        selectedSupplier != null &&
+        productQuantityController.text.isNotEmpty) {
+      setState(() {
+        _canSave = true;
+      });
+    } else {
+      setState(() {
+        _canSave = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -55,11 +70,12 @@ class _AddOrderModalState extends State<AddOrderModal> {
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Form(
-          key: _formKey,
+          // key: _formKey,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text("Add Order", style: Theme.of(context).textTheme.headline4),
+              Text("Request Supply",
+                  style: Theme.of(context).textTheme.headline4),
               const SizedBox(height: 20),
               BlocBuilder<ProductBloc, ProductState>(
                 builder: (context, state) {
@@ -68,12 +84,6 @@ class _AddOrderModalState extends State<AddOrderModal> {
                   }
                   if (state is ProductsLoaded) {
                     return CustomDropdown(
-                      validator: (value) {
-                        if (value == null) {
-                          return "Select Product";
-                        }
-                        return null;
-                      },
                       hint: "Select Product",
                       itemAsString: (product) {
                         return product.productName;
@@ -83,6 +93,7 @@ class _AddOrderModalState extends State<AddOrderModal> {
                         setState(() {
                           selectedProduct = value;
                         });
+                        setCanSave();
                       },
                       selectedItem: selectedProduct,
                     );
@@ -99,12 +110,6 @@ class _AddOrderModalState extends State<AddOrderModal> {
                   }
                   if (state is SupplierLoaded) {
                     return CustomDropdown(
-                      validator: (value) {
-                        if (value == null) {
-                          return "Select Supplier";
-                        }
-                        return null;
-                      },
                       hint: "Select Supplier",
                       itemAsString: (supplier) {
                         return supplier.supplierName;
@@ -114,6 +119,7 @@ class _AddOrderModalState extends State<AddOrderModal> {
                         setState(() {
                           selectedSupplier = value;
                         });
+                        setCanSave();
                       },
                       selectedItem: selectedSupplier,
                     );
@@ -124,11 +130,8 @@ class _AddOrderModalState extends State<AddOrderModal> {
               ),
               const SizedBox(height: 15),
               CustomTextField(
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Enter Quantity";
-                  }
-                  return null;
+                onChange: (_) {
+                  setCanSave();
                 },
                 controller: productQuantityController,
                 hintText: "Quantity",
@@ -139,13 +142,12 @@ class _AddOrderModalState extends State<AddOrderModal> {
                 width: double.infinity,
                 height: 50,
                 child: CustomElevatedButton(
+                  isDisable: !_canSave,
                   text: "Order",
                   fontColor: Colors.white,
                   backgroundColor: Colors.black,
                   onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      addOrder(context);
-                    }
+                    addOrder(context);
                   },
                 ),
               )
