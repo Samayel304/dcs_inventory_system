@@ -58,7 +58,7 @@ class Supplier extends Equatable {
   Map<String, Object> toDocument() {
     return {
       'supplierName': supplierName,
-      'contactPerson': contactNumber,
+      'contactPerson': contactPerson,
       'contactNumber': contactNumber,
       'address': address,
       'dateCreated': dateCreated

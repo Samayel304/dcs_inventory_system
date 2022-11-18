@@ -18,7 +18,8 @@ class _AddSupplierModalState extends State<AddSupplierModal> {
   final TextEditingController contactPersonController = TextEditingController();
   final TextEditingController contactNumberController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
+  //final _formKey = GlobalKey<FormState>();
+  bool _canSave = false;
 
   @override
   void dispose() {
@@ -39,6 +40,21 @@ class _AddSupplierModalState extends State<AddSupplierModal> {
     BlocProvider.of<SupplierBloc>(context).add(AddSupplier(supplier, context));
   }
 
+  void setCanSave() {
+    if (supplierNameController.text.isNotEmpty &&
+        contactNumberController.text.isNotEmpty &&
+        contactPersonController.text.isNotEmpty &&
+        addressController.text.isNotEmpty) {
+      setState(() {
+        _canSave = true;
+      });
+    } else {
+      setState(() {
+        _canSave = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -53,7 +69,7 @@ class _AddSupplierModalState extends State<AddSupplierModal> {
           child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: Form(
-                key: _formKey,
+                //key: _formKey,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -63,23 +79,29 @@ class _AddSupplierModalState extends State<AddSupplierModal> {
                     CustomTextField(
                       controller: supplierNameController,
                       hintText: "Supplier Name",
-                      validator: (value) {
+                      onChange: (_) {
+                        setCanSave();
+                      },
+                      /* validator: (value) {
                         if (value == null || value.isEmpty) {
                           return "Enter Supplier Name";
                         }
                         return null;
-                      },
+                      }, */
                     ),
                     const SizedBox(height: 12),
                     CustomTextField(
                       controller: contactPersonController,
                       hintText: "Contact Person",
-                      validator: (value) {
+                      onChange: (_) {
+                        setCanSave();
+                      },
+                      /*  validator: (value) {
                         if (value == null || value.isEmpty) {
                           return "Enter Contact Person";
                         }
                         return null;
-                      },
+                      }, */
                     ),
                     const SizedBox(height: 12),
                     CustomTextField(
@@ -87,36 +109,43 @@ class _AddSupplierModalState extends State<AddSupplierModal> {
                       textInputType: TextInputType.number,
                       controller: contactNumberController,
                       hintText: "Contact Number",
-                      validator: (value) {
+                      onChange: (_) {
+                        setCanSave();
+                      },
+                      /*  validator: (value) {
                         if (value == null || value.isEmpty) {
                           return "Enter Contact Number";
                         }
                         return null;
-                      },
+                      }, */
                     ),
                     const SizedBox(height: 12),
                     CustomTextField(
                       controller: addressController,
                       hintText: "Address",
-                      validator: (value) {
+                      onChange: (_) {
+                        setCanSave();
+                      },
+                      /* validator: (value) {
                         if (value == null || value.isEmpty) {
                           return "Enter Address";
                         }
                         return null;
-                      },
+                      }, */
                     ),
                     const SizedBox(height: 12),
                     SizedBox(
                       width: double.infinity,
                       height: 50,
                       child: CustomElevatedButton(
+                          isDisable: !_canSave,
                           fontColor: Colors.white,
                           text: "Save",
                           backgroundColor: Colors.black,
                           onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              addSupplier(context);
-                            }
+                            //if (_formKey.currentState!.validate()) {
+                            addSupplier(context);
+                            //}
                           }),
                     )
                   ],
