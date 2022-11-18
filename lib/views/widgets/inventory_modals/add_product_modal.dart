@@ -45,18 +45,18 @@ class _AddProductModalState extends State<AddProductModal> {
     }
   }
 
+  void addSupply(String category, BuildContext context) {
+    int quantity = 0;
+    Product product = Product(
+        productName: productNameController.text,
+        category: category,
+        quantity: quantity,
+        dateCreated: Timestamp.now().toDate());
+    BlocProvider.of<ProductBloc>(context).add(AddProduct(product, context));
+  }
+
   @override
   Widget build(BuildContext context) {
-    void addProduct(String category, BuildContext context) {
-      int quantity = 0;
-      Product product = Product(
-          productName: productNameController.text,
-          category: category,
-          quantity: quantity,
-          dateCreated: Timestamp.now().toDate());
-      BlocProvider.of<ProductBloc>(context).add(AddProduct(product, context));
-    }
-
     return Container(
       padding:
           EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -94,15 +94,19 @@ class _AddProductModalState extends State<AddProductModal> {
                       switch (widget.category) {
                         case 0: //coffee
 
-                          addProduct(ProductCategory.coffee.name, context);
+                          addSupply(ProductCategory.coffee.name, context);
 
                           break;
                         case 1: //milktea
-                          addProduct(ProductCategory.milktea.name, context);
+                          addSupply(ProductCategory.milktea.name, context);
 
                           break;
                         case 2: //dimsum
-                          addProduct(ProductCategory.dimsum.name, context);
+                          addSupply(ProductCategory.dimsum.name, context);
+
+                          break;
+                        case 3: //dimsum
+                          addSupply(ProductCategory.other.name, context);
 
                           break;
                       }

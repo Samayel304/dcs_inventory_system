@@ -27,7 +27,7 @@ class _InventoryScreenState extends State<InventoryScreen>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
     _tabController.addListener(() {
       setState(() {
         _currentTabIndex = _tabController.index;
@@ -54,7 +54,7 @@ class _InventoryScreenState extends State<InventoryScreen>
 
   @override
   Widget build(BuildContext context) {
-    List<String> tabs = ['Coffee', 'Milktea', 'Dimsum'];
+    List<String> tabs = ['Coffee', 'Milktea', 'Dimsum', 'Other'];
 
     return DefaultTabController(
         initialIndex: 0,
@@ -98,6 +98,11 @@ class _InventoryScreenState extends State<InventoryScreen>
                             child: _TabBarViewChild(
                                 headers: Header.headers,
                                 productCategory: ProductCategory.dimsum,
+                                scrollController: _scrollController)),
+                        SizedBox(
+                            child: _TabBarViewChild(
+                                headers: Header.headers,
+                                productCategory: ProductCategory.other,
                                 scrollController: _scrollController)),
                       ]),
                 ),
