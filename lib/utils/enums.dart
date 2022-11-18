@@ -1,4 +1,4 @@
-enum ProductCategory { coffee, milktea, dimsum, other }
+enum ItemCategory { coffee, milktea, dimsum, other }
 
 enum OrderStatus { all, pending, received, cancelled }
 

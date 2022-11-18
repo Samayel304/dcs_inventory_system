@@ -21,20 +21,20 @@ class AddProductModal extends StatefulWidget {
 }
 
 class _AddProductModalState extends State<AddProductModal> {
-  TextEditingController productNameController = TextEditingController();
+  TextEditingController itemNameController = TextEditingController();
 
   //final _formKey = GlobalKey<FormState>();
   bool _canSave = false;
 
   @override
   void dispose() {
-    productNameController.dispose();
+    itemNameController.dispose();
 
     super.dispose();
   }
 
   void setCanSave() {
-    if (productNameController.text.isNotEmpty) {
+    if (itemNameController.text.isNotEmpty) {
       setState(() {
         _canSave = true;
       });
@@ -45,10 +45,10 @@ class _AddProductModalState extends State<AddProductModal> {
     }
   }
 
-  void addSupply(String category, BuildContext context) {
+  void addItem(String category, BuildContext context) {
     int quantity = 0;
     Product product = Product(
-        productName: productNameController.text,
+        productName: itemNameController.text,
         category: category,
         quantity: quantity,
         dateCreated: Timestamp.now().toDate());
@@ -71,15 +71,15 @@ class _AddProductModalState extends State<AddProductModal> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text("Add Product", style: Theme.of(context).textTheme.headline4),
+              Text("Add Item", style: Theme.of(context).textTheme.headline4),
               const SizedBox(height: 20),
               CustomTextField(
                 onChange: (_) {
                   setCanSave();
                   //print(_formKey.currentState!.validate());
                 },
-                controller: productNameController,
-                hintText: "Product Name",
+                controller: itemNameController,
+                hintText: "Item Name",
               ),
               const SizedBox(height: 15),
               SizedBox(
@@ -94,19 +94,19 @@ class _AddProductModalState extends State<AddProductModal> {
                       switch (widget.category) {
                         case 0: //coffee
 
-                          addSupply(ProductCategory.coffee.name, context);
+                          addItem(ItemCategory.coffee.name, context);
 
                           break;
                         case 1: //milktea
-                          addSupply(ProductCategory.milktea.name, context);
+                          addItem(ItemCategory.milktea.name, context);
 
                           break;
                         case 2: //dimsum
-                          addSupply(ProductCategory.dimsum.name, context);
+                          addItem(ItemCategory.dimsum.name, context);
 
                           break;
                         case 3: //dimsum
-                          addSupply(ProductCategory.other.name, context);
+                          addItem(ItemCategory.other.name, context);
 
                           break;
                       }

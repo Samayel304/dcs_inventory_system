@@ -86,23 +86,23 @@ class _InventoryScreenState extends State<InventoryScreen>
                         SizedBox(
                             child: _TabBarViewChild(
                           headers: Header.headers,
-                          productCategory: ProductCategory.coffee,
+                          productCategory: ItemCategory.coffee,
                           scrollController: _scrollController,
                         )),
                         SizedBox(
                             child: _TabBarViewChild(
                                 headers: Header.headers,
-                                productCategory: ProductCategory.milktea,
+                                productCategory: ItemCategory.milktea,
                                 scrollController: _scrollController)),
                         SizedBox(
                             child: _TabBarViewChild(
                                 headers: Header.headers,
-                                productCategory: ProductCategory.dimsum,
+                                productCategory: ItemCategory.dimsum,
                                 scrollController: _scrollController)),
                         SizedBox(
                             child: _TabBarViewChild(
                                 headers: Header.headers,
-                                productCategory: ProductCategory.other,
+                                productCategory: ItemCategory.other,
                                 scrollController: _scrollController)),
                       ]),
                 ),
@@ -145,7 +145,7 @@ class _TabBarViewChild extends StatelessWidget {
   }) : super(key: key);
   final ScrollController scrollController;
   final List<Header> headers;
-  final ProductCategory productCategory;
+  final ItemCategory productCategory;
 
   @override
   Widget build(BuildContext context) {
