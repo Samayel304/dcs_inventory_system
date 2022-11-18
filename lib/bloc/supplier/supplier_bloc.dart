@@ -65,10 +65,8 @@ class SupplierBloc extends Bloc<SupplierEvent, SupplierState> {
     final res = await _supplierRepository.deleteSupplier(event.supplier);
     res.fold((l) {
       showErrorSnackBar(event.context, l.message);
-      Navigator.of(event.context).pop();
     }, (r) {
       showSuccessSnackBar(event.context, 'Supplier deleted successfully!');
-      Navigator.of(event.context).pop();
     });
   }
 
