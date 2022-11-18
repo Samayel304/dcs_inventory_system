@@ -41,7 +41,7 @@ class _EditSupplierModalState extends State<EditSupplierModal> {
   }
 
   void editSupplier(BuildContext context) {
-    Supplier supplier = Supplier(
+    Supplier supplier = widget.selectedSupplier.copyWith(
         supplierName: supplierNameController.text,
         contactPerson: contactPersonController.text,
         address: addressController.text,
