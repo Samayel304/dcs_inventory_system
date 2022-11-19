@@ -98,7 +98,9 @@ class MyApp extends StatelessWidget {
           return MaterialApp.router(
             title: 'DCS Inventory System',
             theme: theme(),
-            routerConfig: AppRouter(context.read<AuthBloc>()).router,
+            routerConfig: AppRouter(context.read<AuthBloc>(),
+                    context.read<CategoryRepository>())
+                .router,
           );
         }),
       ),

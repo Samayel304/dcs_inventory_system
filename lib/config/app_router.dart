@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dcs_inventory_system/repositories/category/category_repository.dart';
 import 'package:dcs_inventory_system/views/screens/category_Screen.dart';
 import 'package:dcs_inventory_system/views/screens/profile/edit_password_screen.dart';
 import 'package:dcs_inventory_system/views/screens/screens.dart';
@@ -11,7 +12,8 @@ import '../bloc/bloc.dart';
 
 class AppRouter {
   final AuthBloc authBloc;
-  AppRouter(this.authBloc);
+  final CategoryRepository categoryRepository;
+  AppRouter(this.authBloc, this.categoryRepository);
 
   late final GoRouter router = GoRouter(
     debugLogDiagnostics: true,

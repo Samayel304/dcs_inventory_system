@@ -1,3 +1,4 @@
+import 'package:dcs_inventory_system/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 class CustomTabBar extends StatelessWidget {
@@ -26,7 +27,7 @@ class CustomTabBar extends StatelessWidget {
           tabs: tabs
               .map(
                 (tab) => Tab(
-                  text: tab,
+                  text: tab.toTitleCase(),
                 ),
               )
               .toList(),

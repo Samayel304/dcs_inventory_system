@@ -59,17 +59,20 @@ class _CategoryScreenState extends State<CategoryScreen> {
             child: Column(
               children: [
                 const SizedBox(height: 20),
-                Row(
-                  children: Header.categoryHeaders
-                      .map(
-                        (header) => Expanded(
-                            flex: header.flex,
-                            child: Text(
-                              header.title,
-                              style: Theme.of(context).textTheme.bodyText1,
-                            )),
-                      )
-                      .toList(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Row(
+                    children: Header.categoryHeaders
+                        .map(
+                          (header) => Expanded(
+                              flex: header.flex,
+                              child: Text(
+                                header.title,
+                                style: Theme.of(context).textTheme.bodyText1,
+                              )),
+                        )
+                        .toList(),
+                  ),
                 ),
                 const SizedBox(height: 15),
                 Expanded(
@@ -102,46 +105,48 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                       ),
                                       _detailText(
                                         context,
-                                        category.categoryName,
+                                        category.categoryName.toTitleCase(),
                                       ),
-                                      SizedBox(
-                                        width: 25,
-                                        child: PopupMenuButton(
-                                          onSelected: (value) {
-                                            switch (value) {
-                                              case 0:
-                                                /*    showBottomModal(
-                                                      context,
-                                                      const AddCategoryModal(
-                                                        ));  */
-                                                break;
-                                              case 1:
-                                                /*  showAlertDialog(
-                                                      context: context,
-                                                      title: 'Delete Supplier',
-                                                      content:
-                                                          'Are you sure you to delete this supplier?',
-                                                      onPressed: () {
-                                                        Navigator.pop(context);
-                                                        BlocProvider.of<SupplierBloc>(
-                                                                context)
-                                                            .add(DeleteSupplier(
-                                                                supplier, context));
-                                                      }); */
-                                                break;
-                                            }
-                                          },
-                                          icon: const Icon(Icons.more_vert),
-                                          itemBuilder: (context) {
-                                            return [
-                                              const PopupMenuItem(
-                                                  value: 0,
-                                                  child: Text("Edit")),
-                                              const PopupMenuItem(
-                                                  value: 1,
-                                                  child: Text("Delete"))
-                                            ];
-                                          },
+                                      Expanded(
+                                        child: Align(
+                                          alignment: Alignment.centerRight,
+                                          child: PopupMenuButton(
+                                            onSelected: (value) {
+                                              switch (value) {
+                                                case 0:
+                                                  /*    showBottomModal(
+                                                        context,
+                                                        const AddCategoryModal(
+                                                          ));  */
+                                                  break;
+                                                case 1:
+                                                  /*  showAlertDialog(
+                                                        context: context,
+                                                        title: 'Delete Supplier',
+                                                        content:
+                                                            'Are you sure you to delete this supplier?',
+                                                        onPressed: () {
+                                                          Navigator.pop(context);
+                                                          BlocProvider.of<SupplierBloc>(
+                                                                  context)
+                                                              .add(DeleteSupplier(
+                                                                  supplier, context));
+                                                        }); */
+                                                  break;
+                                              }
+                                            },
+                                            icon: const Icon(Icons.more_vert),
+                                            itemBuilder: (context) {
+                                              return [
+                                                const PopupMenuItem(
+                                                    value: 0,
+                                                    child: Text("Edit")),
+                                                const PopupMenuItem(
+                                                    value: 1,
+                                                    child: Text("Delete"))
+                                              ];
+                                            },
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -160,8 +165,13 @@ class _CategoryScreenState extends State<CategoryScreen> {
   }
 }
 
-Widget _detailText(BuildContext context, String text, {int flex = 1}) {
+Widget _detailText(BuildContext context, String text,
+    {int flex = 1, TextAlign textAlign = TextAlign.start}) {
   return Expanded(
       flex: flex,
-      child: Text(text, style: Theme.of(context).textTheme.headline5));
+      child: Text(
+        text,
+        style: Theme.of(context).textTheme.headline5,
+        textAlign: textAlign,
+      ));
 }
