@@ -4,3 +4,4 @@ export 'user_model.dart';
 export 'header_model.dart';
 export 'supplier_model.dart';
 export 'activity_log_model.dart';
+export 'category_model.dart';

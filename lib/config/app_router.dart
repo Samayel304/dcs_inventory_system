@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dcs_inventory_system/views/screens/category_Screen.dart';
 import 'package:dcs_inventory_system/views/screens/profile/edit_password_screen.dart';
 import 'package:dcs_inventory_system/views/screens/screens.dart';
 import 'package:flutter/material.dart';
@@ -36,6 +37,11 @@ class AppRouter {
           path: '/inventory',
           builder: (BuildContext context, GoRouterState state) {
             return const InventoryScreen();
+          }),
+      GoRoute(
+          path: '/category',
+          builder: (BuildContext context, GoRouterState state) {
+            return const CategoryScreen();
           }),
       GoRoute(
           path: '/order',

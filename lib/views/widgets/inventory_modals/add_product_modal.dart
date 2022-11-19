@@ -48,7 +48,7 @@ class _AddProductModalState extends State<AddProductModal> {
   void addItem(String category, BuildContext context) {
     int quantity = 0;
     Product product = Product(
-        productName: itemNameController.text,
+        productName: itemNameController.text.toLowerCase(),
         category: category,
         quantity: quantity,
         dateCreated: Timestamp.now().toDate());

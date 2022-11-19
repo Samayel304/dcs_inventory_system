@@ -54,7 +54,7 @@ class _EditProductModalState extends State<EditProductModal> {
 
   void save() {
     Product editedProduct = widget.selectedProduct
-        .copyWith(productName: productNameController.text);
+        .copyWith(productName: productNameController.text.toLowerCase());
 
     BlocProvider.of<ProductBloc>(context)
         .add(EditProduct(editedProduct, context));

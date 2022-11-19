@@ -1,0 +1,54 @@
+import 'dart:async';
+
+import 'package:bloc/bloc.dart';
+import 'package:dcs_inventory_system/models/model.dart';
+import 'package:dcs_inventory_system/repositories/repository.dart';
+import 'package:dcs_inventory_system/utils/utils.dart';
+import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
+
+part 'category_event.dart';
+part 'category_state.dart';
+
+class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
+  final CategoryRepository _categoryRepository;
+  StreamSubscription? _streamSubscription;
+  CategoryBloc({required CategoryRepository categoryRepository})
+      : _categoryRepository = categoryRepository,
+        super(CategoryLoading()) {
+    on<LoadCategory>(_onLoadCategory);
+    on<UpdateCategory>(_onUpdateCategory);
+    on<AddCategory>(_onAddCategory);
+  }
+  void _onLoadCategory(LoadCategory event, Emitter<CategoryState> emit) {
+    _streamSubscription?.cancel();
+    _streamSubscription =
+        _categoryRepository.getAllCategory().listen((categories) {
+      add(UpdateCategory(categories: categories));
+    });
+  }
+
+  void _onUpdateCategory(UpdateCategory event, Emitter<CategoryState> emit) {
+    emit(CategoryLoaded(event.categories));
+  }
+
+  void _onAddCategory(AddCategory event, Emitter<CategoryState> emit) async {
+    final state = this.state;
+    if (state is CategoryLoaded) {
+      final res = await _categoryRepository.createCategory(event.category);
+      res.fold((l) {
+        showErrorSnackBar(event.context, l.message);
+        Navigator.of(event.context).pop();
+      }, (r) {
+        showSuccessSnackBar(event.context, 'Category added successfully!');
+        Navigator.of(event.context).pop();
+      });
+    }
+  }
+
+  @override
+  Future<void> close() async {
+    _streamSubscription?.cancel();
+    super.close();
+  }
+}

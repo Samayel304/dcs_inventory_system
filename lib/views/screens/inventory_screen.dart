@@ -6,6 +6,7 @@ import 'package:dcs_inventory_system/views/widgets/widgets.dart';
 import "package:flutter/material.dart";
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../utils/utils.dart';
 
@@ -67,16 +68,30 @@ class _InventoryScreenState extends State<InventoryScreen>
             padding: const EdgeInsets.only(left: 15, right: 15),
             child: Column(
               children: [
-                CustomTextField(
-                  hintText: "Search",
-                  prefixIcon: const Icon(
-                    Icons.search,
-                    color: Colors.grey,
-                  ),
-                  onChange: (keyword) {
-                    BlocProvider.of<ProductBloc>(context)
-                        .add(SearchProducts(keyword));
-                  },
+                Row(
+                  children: [
+                    Expanded(
+                      child: CustomTextField(
+                        hintText: "Search",
+                        prefixIcon: const Icon(
+                          Icons.search,
+                          color: Colors.grey,
+                        ),
+                        onChange: (keyword) {
+                          BlocProvider.of<ProductBloc>(context)
+                              .add(SearchProducts(keyword));
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                        width: 25,
+                        child: IconButton(
+                          icon: const Icon(Icons.settings),
+                          onPressed: () {
+                            GoRouter.of(context).push('/category');
+                          },
+                        ))
+                  ],
                 ),
                 Expanded(
                   child: CustomTabBar(
@@ -205,7 +220,7 @@ class _TabBarViewChild extends StatelessWidget {
                                       Theme.of(context).textTheme.headline5)),
                           Expanded(
                               flex: 4,
-                              child: Text(product.productName,
+                              child: Text(product.productName.toTitleCase(),
                                   style:
                                       Theme.of(context).textTheme.headline5)),
                           Expanded(

@@ -12,7 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'config/app_router.dart';
 import 'firebase_options.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 
 void main() async {
   //debugRepaintRainbowEnabled = true;
@@ -40,7 +39,8 @@ class MyApp extends StatelessWidget {
         RepositoryProvider(create: (context) => ProductRepository()),
         RepositoryProvider(create: (context) => OrderRepository()),
         RepositoryProvider(create: (context) => SupplierRepository()),
-        RepositoryProvider(create: (context) => ActivityLogRepository())
+        RepositoryProvider(create: (context) => ActivityLogRepository()),
+        RepositoryProvider(create: (context) => CategoryRepository())
       ],
       child: MultiBlocProvider(
         providers: [
@@ -49,6 +49,11 @@ class MyApp extends StatelessWidget {
               authRepository: context.read<AuthRepository>(),
               userRepository: context.read<UserRepository>(),
             ),
+          ),
+          BlocProvider(
+            create: (context) => CategoryBloc(
+              categoryRepository: context.read<CategoryRepository>(),
+            )..add(LoadCategory()),
           ),
           BlocProvider(
               create: (context) => ProfileBloc(

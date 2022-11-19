@@ -146,10 +146,8 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       final res = await _productRepository.deleteProduct(event.product);
       res.fold((l) {
         showErrorSnackBar(event.context, l.message);
-        Navigator.of(event.context).pop();
       }, (r) {
         showSuccessSnackBar(event.context, 'Deleted successfully!');
-        Navigator.of(event.context).pop();
       });
       /*  try {
         emit(const Success(successMessage: "Deleted Successfully"));

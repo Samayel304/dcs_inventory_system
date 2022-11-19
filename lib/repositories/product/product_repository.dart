@@ -19,7 +19,7 @@ class ProductRepository extends BaseProductRepository {
     try {
       var productDoc = await _firebaseFirestore
           .collection("products")
-          .where('productName', isNotEqualTo: product.productName.toLowerCase())
+          .where('productName', isEqualTo: product.productName.toLowerCase())
           .snapshots()
           .map((snapshot) {
         return snapshot.docs.map((doc) => Product.fromSnapshot(doc)).toList();

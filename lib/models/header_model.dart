@@ -11,6 +11,12 @@ class Header {
     Header(title: "", flex: 1)
   ];
 
+  static List<Header> categoryHeaders = [
+    Header(title: "No", flex: 1),
+    Header(title: "Category Name", flex: 1),
+    Header(title: "", flex: 1)
+  ];
+
   static List<Header> manageAccountHeaders = [
     Header(title: "", flex: 1),
     Header(title: "Fullname", flex: 3),
