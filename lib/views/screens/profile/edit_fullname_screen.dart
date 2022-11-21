@@ -1,7 +1,6 @@
 import 'package:dcs_inventory_system/bloc/auth/auth_bloc.dart';
 import 'package:dcs_inventory_system/views/widgets/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class EditFullNameScreen extends StatefulWidget {
   const EditFullNameScreen({super.key, required this.authUser});
@@ -34,15 +33,28 @@ class _EditFullNameScreenState extends State<EditFullNameScreen> {
   }
 
   void checkChanges() {
-    if (firstNameController.text == widget.authUser.user!.firstName &&
-        middleNameController.text == widget.authUser.user!.middleName &&
-        lastNameController.text == widget.authUser.user!.lastName) {
+    bool isOldAndNewFirstNameNotEqual =
+        firstNameController.text.toLowerCase() !=
+            widget.authUser.user!.firstName.toLowerCase();
+    bool isOldAndNewMiddleNameNotEqual =
+        middleNameController.text.toLowerCase() !=
+            widget.authUser.user!.middleName.toLowerCase();
+    bool isOldAndNewLastNameNotEqual = lastNameController.text.toLowerCase() !=
+        widget.authUser.user!.lastName.toLowerCase();
+
+    bool isAllFieldNotEmpty = firstNameController.text.isNotEmpty &&
+        lastNameController.text.isNotEmpty;
+
+    if ((isOldAndNewFirstNameNotEqual ||
+            isOldAndNewMiddleNameNotEqual ||
+            isOldAndNewLastNameNotEqual) &&
+        isAllFieldNotEmpty) {
       setState(() {
-        _canSave = false;
+        _canSave = true;
       });
     } else {
       setState(() {
-        _canSave = true;
+        _canSave = false;
       });
     }
   }

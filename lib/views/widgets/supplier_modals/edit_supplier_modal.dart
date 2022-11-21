@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dcs_inventory_system/models/model.dart';
 import 'package:dcs_inventory_system/views/widgets/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../bloc/supplier/supplier_bloc.dart';
@@ -20,7 +20,8 @@ class _EditSupplierModalState extends State<EditSupplierModal> {
   final TextEditingController contactPersonController = TextEditingController();
   final TextEditingController contactNumberController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
+  //final _formKey = GlobalKey<FormState>();
+  bool _canSave = false;
 
   @override
   void initState() {
@@ -50,6 +51,38 @@ class _EditSupplierModalState extends State<EditSupplierModal> {
     BlocProvider.of<SupplierBloc>(context).add(EditSupplier(supplier, context));
   }
 
+  void setCanSave() {
+    bool isFieldNotEmpty = supplierNameController.text.isNotEmpty &&
+        addressController.text.isNotEmpty &&
+        addressController.text.isNotEmpty &&
+        contactNumberController.text.isNotEmpty;
+    bool isSupplierNameNotEqual =
+        widget.selectedSupplier.supplierName.toLowerCase() !=
+            supplierNameController.text.toLowerCase();
+
+    bool isContactPersonNotEqual =
+        widget.selectedSupplier.contactPerson.toLowerCase() !=
+                contactPersonController.text.toLowerCase() &&
+            contactPersonController.text.isNotEmpty;
+    bool isAddressNotEqual = widget.selectedSupplier.address.toLowerCase() !=
+        addressController.text.toLowerCase();
+    bool isContactNumberNotEqual =
+        widget.selectedSupplier.contactNumber != contactNumberController.text;
+    if ((isSupplierNameNotEqual ||
+            isContactPersonNotEqual ||
+            isAddressNotEqual ||
+            isContactNumberNotEqual) &&
+        isFieldNotEmpty) {
+      setState(() {
+        _canSave = true;
+      });
+    } else {
+      setState(() {
+        _canSave = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -64,33 +97,39 @@ class _EditSupplierModalState extends State<EditSupplierModal> {
           child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: Form(
-                key: _formKey,
+                //key: _formKey,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text("Edit Order",
+                    Text("Edit Supplier",
                         style: Theme.of(context).textTheme.headline4),
                     const SizedBox(height: 20),
                     CustomTextField(
                       controller: supplierNameController,
                       hintText: "Supplier Name",
-                      validator: (value) {
+                      onChange: (_) {
+                        setCanSave();
+                      },
+                      /*   validator: (value) {
                         if (value == null || value.isEmpty) {
                           return "Enter Supplier Name";
                         }
                         return null;
-                      },
+                      }, */
                     ),
                     const SizedBox(height: 12),
                     CustomTextField(
                       controller: contactPersonController,
                       hintText: "Contact Person",
-                      validator: (value) {
+                      onChange: (_) {
+                        setCanSave();
+                      },
+                      /*  validator: (value) {
                         if (value == null || value.isEmpty) {
                           return "Enter Contact Person";
                         }
                         return null;
-                      },
+                      }, */
                     ),
                     const SizedBox(height: 12),
                     CustomTextField(
@@ -98,23 +137,29 @@ class _EditSupplierModalState extends State<EditSupplierModal> {
                       textInputType: TextInputType.number,
                       controller: contactNumberController,
                       hintText: "Contact Number",
-                      validator: (value) {
+                      onChange: (_) {
+                        setCanSave();
+                      },
+                      /* validator: (value) {
                         if (value == null || value.isEmpty) {
                           return "Enter Contact Number";
                         }
                         return null;
-                      },
+                      }, */
                     ),
                     const SizedBox(height: 12),
                     CustomTextField(
                       controller: addressController,
                       hintText: "Address",
-                      validator: (value) {
+                      onChange: (_) {
+                        setCanSave();
+                      },
+                      /* validator: (value) {
                         if (value == null || value.isEmpty) {
                           return "Enter Address";
                         }
                         return null;
-                      },
+                      }, */
                     ),
                     const SizedBox(height: 12),
                     SizedBox(
@@ -122,12 +167,13 @@ class _EditSupplierModalState extends State<EditSupplierModal> {
                       height: 50,
                       child: CustomElevatedButton(
                           fontColor: Colors.white,
+                          isDisable: !_canSave,
                           text: "Save",
                           backgroundColor: Colors.black,
                           onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              editSupplier(context);
-                            }
+                            //if (_formKey.currentState!.validate()) {
+                            editSupplier(context);
+                            //}
                           }),
                     )
                   ],
