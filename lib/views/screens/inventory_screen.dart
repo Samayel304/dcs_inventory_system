@@ -68,7 +68,7 @@ class _InventoryScreenState extends State<InventoryScreen>
           );
         } else if (state is CategoryLoaded) {
           int length = state.categories.length;
-
+          bool isTabBarEmpty = length == 0;
           List<String> tabs = state.categories
               .map((category) => category.categoryName)
               .toList();
@@ -85,6 +85,7 @@ class _InventoryScreenState extends State<InventoryScreen>
               _onTop = true;
             });
           });
+
           return DefaultTabController(
               initialIndex: 0,
               length: length,
@@ -108,19 +109,40 @@ class _InventoryScreenState extends State<InventoryScreen>
                         },
                       ),
                       Expanded(
-                        child: CustomTabBar(
-                            tabs: tabs,
-                            tabBarController: _tabController,
-                            tabBarViewChild: tabs.map(
-                              (tab) {
-                                return SizedBox(
-                                    child: _TabBarViewChild(
-                                  headers: Header.headers,
-                                  category: tab,
-                                  scrollController: _scrollController,
-                                ));
-                              },
-                            ).toList()),
+                        child: isTabBarEmpty
+                            ? Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'No Category!',
+                                      style:
+                                          Theme.of(context).textTheme.headline5,
+                                    ),
+                                    CustomElevatedButton(
+                                      text: 'Add Category',
+                                      backgroundColor: Colors.black,
+                                      fontColor: Colors.white,
+                                      onPressed: () {
+                                        GoRouter.of(context).push('/category');
+                                      },
+                                    )
+                                  ],
+                                ),
+                              )
+                            : CustomTabBar(
+                                tabs: tabs,
+                                tabBarController: _tabController,
+                                tabBarViewChild: tabs.map(
+                                  (tab) {
+                                    return SizedBox(
+                                        child: _TabBarViewChild(
+                                      headers: Header.headers,
+                                      category: tab,
+                                      scrollController: _scrollController,
+                                    ));
+                                  },
+                                ).toList()),
                       ),
                     ],
                   ),
