@@ -96,30 +96,16 @@ class _InventoryScreenState extends State<InventoryScreen>
                   padding: const EdgeInsets.only(left: 15, right: 15),
                   child: Column(
                     children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: CustomTextField(
-                              hintText: "Search",
-                              prefixIcon: const Icon(
-                                Icons.search,
-                                color: Colors.grey,
-                              ),
-                              onChange: (keyword) {
-                                BlocProvider.of<ProductBloc>(context)
-                                    .add(SearchProducts(keyword));
-                              },
-                            ),
-                          ),
-                          SizedBox(
-                              width: 25,
-                              child: IconButton(
-                                icon: const Icon(Icons.settings),
-                                onPressed: () {
-                                  GoRouter.of(context).push('/category');
-                                },
-                              ))
-                        ],
+                      CustomTextField(
+                        hintText: "Search",
+                        prefixIcon: const Icon(
+                          Icons.search,
+                          color: Colors.grey,
+                        ),
+                        onChange: (keyword) {
+                          BlocProvider.of<ProductBloc>(context)
+                              .add(SearchProducts(keyword));
+                        },
                       ),
                       Expanded(
                         child: CustomTabBar(
@@ -152,13 +138,20 @@ class _InventoryScreenState extends State<InventoryScreen>
                         },
                       ),
                       SpeedDialChild(
+                        child: const Icon(Icons.category),
+                        label: "Manage Category",
+                        onTap: () {
+                          GoRouter.of(context).push('/category');
+                        },
+                      ),
+                      SpeedDialChild(
                         child: const Icon(Icons.add),
-                        label: "Add",
+                        label: "Add Item",
                         onTap: () => {
                           showBottomModal(context,
                               AddProductModal(category: tabs[_currentTabIndex]))
                         },
-                      )
+                      ),
                     ],
                   ),
                 ),
