@@ -6,4 +6,6 @@ abstract class BaseProductRepository {
   FutureVoid createProduct(Product product);
   FutureVoid editProductDetails(Product product);
   FutureVoid deleteProduct(Product product);
+  Future<void> deleteProductByCategory(String category);
+  Future<void> updateProductCategory(String category, String newCategory);
 }

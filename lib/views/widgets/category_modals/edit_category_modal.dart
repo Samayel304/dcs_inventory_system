@@ -1,22 +1,28 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dcs_inventory_system/bloc/bloc.dart';
 import 'package:dcs_inventory_system/models/model.dart';
 import 'package:dcs_inventory_system/views/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class AddCategoryModal extends StatefulWidget {
-  const AddCategoryModal({super.key});
+class EditCategoryModel extends StatefulWidget {
+  const EditCategoryModel({super.key, required this.selectedCategory});
+  final Category selectedCategory;
 
   @override
-  State<AddCategoryModal> createState() => _AddCategoryModalState();
+  State<EditCategoryModel> createState() => _EditCategoryModelState();
 }
 
-class _AddCategoryModalState extends State<AddCategoryModal> {
+class _EditCategoryModelState extends State<EditCategoryModel> {
   final TextEditingController categoryNameController = TextEditingController();
 
   //final _formKey = GlobalKey<FormState>();
   bool _canSave = false;
+
+  @override
+  void initState() {
+    categoryNameController.text = widget.selectedCategory.categoryName;
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -25,15 +31,17 @@ class _AddCategoryModalState extends State<AddCategoryModal> {
     categoryNameController.dispose();
   }
 
-  void addCategory(BuildContext context) {
-    Category category = Category(
-        categoryName: categoryNameController.text.toLowerCase(),
-        dateCreated: Timestamp.now().toDate());
-    BlocProvider.of<CategoryBloc>(context).add(AddCategory(category, context));
+  void editCategory(BuildContext context) {
+    Category category = widget.selectedCategory
+        .copyWith(categoryName: categoryNameController.text.toLowerCase());
+    BlocProvider.of<CategoryBloc>(context).add(
+        EditCategory(category, context, widget.selectedCategory.categoryName));
   }
 
   void setCanSave() {
-    if (categoryNameController.text.isNotEmpty) {
+    if (categoryNameController.text.isNotEmpty &&
+        categoryNameController.text.toLowerCase() !=
+            widget.selectedCategory.categoryName.toLowerCase()) {
       setState(() {
         _canSave = true;
       });
@@ -62,7 +70,7 @@ class _AddCategoryModalState extends State<AddCategoryModal> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text("Add Category",
+                    Text("Edit Category",
                         style: Theme.of(context).textTheme.headline4),
                     const SizedBox(height: 20),
                     CustomTextField(
@@ -89,7 +97,7 @@ class _AddCategoryModalState extends State<AddCategoryModal> {
                           backgroundColor: Colors.black,
                           onPressed: () {
                             //if (_formKey.currentState!.validate()) {
-                            addCategory(context);
+                            editCategory(context);
                             //}
                           }),
                     )

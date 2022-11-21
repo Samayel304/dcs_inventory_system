@@ -12,13 +12,19 @@ part 'category_state.dart';
 
 class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
   final CategoryRepository _categoryRepository;
+  final ProductRepository _productRepository;
   StreamSubscription? _streamSubscription;
-  CategoryBloc({required CategoryRepository categoryRepository})
+  CategoryBloc(
+      {required CategoryRepository categoryRepository,
+      required ProductRepository productRepository})
       : _categoryRepository = categoryRepository,
+        _productRepository = productRepository,
         super(CategoryLoading()) {
     on<LoadCategory>(_onLoadCategory);
     on<UpdateCategory>(_onUpdateCategory);
     on<AddCategory>(_onAddCategory);
+    on<DeleteCategory>(_onDeleteCategory);
+    on<EditCategory>(_onEditCategory);
   }
   void _onLoadCategory(LoadCategory event, Emitter<CategoryState> emit) {
     _streamSubscription?.cancel();
@@ -41,6 +47,38 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
         Navigator.of(event.context).pop();
       }, (r) {
         showSuccessSnackBar(event.context, 'Category added successfully!');
+        Navigator.of(event.context).pop();
+      });
+    }
+  }
+
+  void _onDeleteCategory(
+      DeleteCategory event, Emitter<CategoryState> emit) async {
+    final state = this.state;
+    if (state is CategoryLoaded) {
+      final res = await _categoryRepository.deleteCategory(event.category);
+
+      res.fold((l) {
+        showErrorSnackBar(event.context, l.message);
+      }, (r) {
+        _productRepository.deleteProductByCategory(event.category.categoryName);
+        showSuccessSnackBar(event.context, 'Category deleted successfully!');
+      });
+    }
+  }
+
+  void _onEditCategory(EditCategory event, Emitter<CategoryState> emit) async {
+    final state = this.state;
+    if (state is CategoryLoaded) {
+      final res = await _categoryRepository.editCategory(event.category);
+
+      res.fold((l) {
+        showErrorSnackBar(event.context, l.message);
+        Navigator.of(event.context).pop();
+      }, (r) {
+        _productRepository.updateProductCategory(
+            event.oldCategory, event.category.categoryName);
+        showSuccessSnackBar(event.context, 'Category updated successfully!');
         Navigator.of(event.context).pop();
       });
     }

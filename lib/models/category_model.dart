@@ -10,7 +10,7 @@ class Category extends Equatable {
       {this.categoryId, required this.categoryName, required this.dateCreated});
 
   Category copyWith(
-      String? categoryId, String? categoryName, DateTime? dateCreated) {
+      {String? categoryId, String? categoryName, DateTime? dateCreated}) {
     return Category(
         categoryId: categoryId ?? this.categoryId,
         categoryName: categoryName ?? this.categoryName,

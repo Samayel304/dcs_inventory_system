@@ -14,7 +14,7 @@ class AddProductModal extends StatefulWidget {
     required this.category,
   }) : super(key: key);
 
-  final int category;
+  final String category;
 
   @override
   State<AddProductModal> createState() => _AddProductModalState();
@@ -91,25 +91,7 @@ class _AddProductModalState extends State<AddProductModal> {
                     fontColor: Colors.white,
                     backgroundColor: Colors.black,
                     onPressed: () {
-                      switch (widget.category) {
-                        case 0: //coffee
-
-                          addItem(ItemCategory.coffee.name, context);
-
-                          break;
-                        case 1: //milktea
-                          addItem(ItemCategory.milktea.name, context);
-
-                          break;
-                        case 2: //dimsum
-                          addItem(ItemCategory.dimsum.name, context);
-
-                          break;
-                        case 3: //dimsum
-                          addItem(ItemCategory.other.name, context);
-
-                          break;
-                      }
+                      addItem(widget.category, context);
                     },
                   )),
             ],

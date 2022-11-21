@@ -1,8 +1,8 @@
 import 'package:dcs_inventory_system/bloc/bloc.dart';
+import 'package:dcs_inventory_system/views/widgets/category_modals/edit_category_modal.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import '../../models/model.dart';
 import '../../utils/utils.dart';
@@ -114,24 +114,28 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                             onSelected: (value) {
                                               switch (value) {
                                                 case 0:
-                                                  /*    showBottomModal(
-                                                        context,
-                                                        const AddCategoryModal(
-                                                          ));  */
+                                                  showBottomModal(
+                                                      context,
+                                                      EditCategoryModel(
+                                                        selectedCategory:
+                                                            category,
+                                                      ));
                                                   break;
                                                 case 1:
-                                                  /*  showAlertDialog(
-                                                        context: context,
-                                                        title: 'Delete Supplier',
-                                                        content:
-                                                            'Are you sure you to delete this supplier?',
-                                                        onPressed: () {
-                                                          Navigator.pop(context);
-                                                          BlocProvider.of<SupplierBloc>(
-                                                                  context)
-                                                              .add(DeleteSupplier(
-                                                                  supplier, context));
-                                                        }); */
+                                                  showAlertDialog(
+                                                      context: context,
+                                                      title: 'Delete Supplier',
+                                                      content:
+                                                          'By deleting this category, the items under this category will also deleted. Are you sure do you to delete this category?',
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                        BlocProvider.of<
+                                                                    CategoryBloc>(
+                                                                context)
+                                                            .add(DeleteCategory(
+                                                                category,
+                                                                context));
+                                                      });
                                                   break;
                                               }
                                             },

@@ -45,4 +45,44 @@ class CategoryRepository extends BaseCategoryRepository {
       return snapshots.docs.map((doc) => Category.fromSnapshot(doc)).toList();
     });
   }
+
+  @override
+  FutureVoid deleteCategory(Category category) async {
+    try {
+      // ignore: void_checks
+      return right(_firebaseFirestore
+          .collection('categories')
+          .doc(category.categoryId)
+          .delete());
+    } on FirebaseException catch (e) {
+      throw e.message!;
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
+  }
+
+  @override
+  FutureVoid editCategory(Category category) async {
+    try {
+      var categoryDoc = await _firebaseFirestore
+          .collection("categories")
+          .where('categoryName', isEqualTo: category.categoryName.toLowerCase())
+          .snapshots()
+          .map((snapshot) {
+        return snapshot.docs.map((doc) => Category.fromSnapshot(doc)).toList();
+      }).first;
+      if (categoryDoc.isNotEmpty) {
+        throw 'Category with the same name already exists!';
+      }
+      // ignore: void_checks
+      return right(_firebaseFirestore
+          .collection('categories')
+          .doc(category.categoryId)
+          .update(category.toDocument()));
+    } on FirebaseException catch (e) {
+      throw e.message!;
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
+  }
 }

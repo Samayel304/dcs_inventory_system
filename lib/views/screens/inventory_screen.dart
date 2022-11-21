@@ -61,9 +61,14 @@ class _InventoryScreenState extends State<InventoryScreen>
     return BlocBuilder<CategoryBloc, CategoryState>(
       builder: (context, state) {
         if (state is CategoryLoading) {
-          return const Loader();
+          return const Scaffold(
+            appBar: CustomAppBar(),
+            body: Loader(),
+            bottomNavigationBar: BottomNavBar(index: 1),
+          );
         } else if (state is CategoryLoaded) {
           int length = state.categories.length;
+
           List<String> tabs = state.categories
               .map((category) => category.categoryName)
               .toList();
@@ -71,7 +76,9 @@ class _InventoryScreenState extends State<InventoryScreen>
           _tabLength = length;
 
           _tabController = TabController(
-              length: length, vsync: this, initialIndex: _currentTabIndex);
+              length: length,
+              vsync: this,
+              initialIndex: _currentTabIndex >= length ? 0 : _currentTabIndex);
           _tabController.addListener(() {
             setState(() {
               _currentTabIndex = _tabController.index;
@@ -133,7 +140,7 @@ class _InventoryScreenState extends State<InventoryScreen>
                   ),
                 ),
                 floatingActionButton: Visibility(
-                  visible: _onTop,
+                  visible: _onTop && length > 0,
                   child: CustomFloatingActionButton(
                     children: [
                       SpeedDialChild(
@@ -149,7 +156,7 @@ class _InventoryScreenState extends State<InventoryScreen>
                         label: "Add",
                         onTap: () => {
                           showBottomModal(context,
-                              AddProductModal(category: _currentTabIndex))
+                              AddProductModal(category: tabs[_currentTabIndex]))
                         },
                       )
                     ],

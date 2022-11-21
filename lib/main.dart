@@ -52,8 +52,9 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider(
             create: (context) => CategoryBloc(
-              categoryRepository: context.read<CategoryRepository>(),
-            )..add(LoadCategory()),
+                categoryRepository: context.read<CategoryRepository>(),
+                productRepository: context.read<ProductRepository>())
+              ..add(LoadCategory()),
           ),
           BlocProvider(
               create: (context) => ProfileBloc(
