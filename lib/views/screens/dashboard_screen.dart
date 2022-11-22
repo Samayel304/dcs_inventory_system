@@ -20,7 +20,7 @@ class DashboardScreen extends StatelessWidget {
       appBar: const CustomAppBar(),
       drawer: const SafeArea(child: NavigationDrawer()),
       body: Container(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

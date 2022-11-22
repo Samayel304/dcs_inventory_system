@@ -154,4 +154,18 @@ class ProductRepository extends BaseProductRepository {
       return left(Failure(e.toString()));
     }
   }
+
+  @override
+  FutureVoid addProductQuantity(Product product) async {
+    try {
+      return right(_firebaseFirestore
+          .collection("products")
+          .doc(product.productId)
+          .update(product.toDocument()));
+    } on FirebaseException catch (e) {
+      throw e.message!;
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
+  }
 }

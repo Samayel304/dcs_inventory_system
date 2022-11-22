@@ -5,6 +5,7 @@ abstract class BaseProductRepository {
   Stream<List<Product>> getAllProducts();
   FutureVoid createProduct(Product product);
   FutureVoid editProductDetails(Product product);
+  FutureVoid addProductQuantity(Product product);
   FutureVoid deductProductQuantity(Product product);
   FutureVoid deleteProduct(Product product);
   Future<void> deleteProductByCategory(String category);

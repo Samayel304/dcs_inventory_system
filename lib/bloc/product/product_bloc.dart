@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:dcs_inventory_system/bloc/activity_log/activity_log_bloc.dart';
 import 'package:dcs_inventory_system/bloc/auth/auth_bloc.dart';
-import 'package:dcs_inventory_system/utils/enums.dart';
+
 import 'package:equatable/equatable.dart';
 import 'package:excel/excel.dart';
 import 'package:flutter/cupertino.dart';
@@ -98,7 +98,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   void _onDeductProductQuantity(
       DeductProductQuantity event, Emitter<ProductState> emit) async {
     if (state is ProductsLoaded) {
-      final res = await _productRepository.editProductDetails(event.product);
+      final res = await _productRepository.deductProductQuantity(event.product);
       res.fold((l) {
         showErrorSnackBar(event.context, l.message);
         Navigator.of(event.context).pop();

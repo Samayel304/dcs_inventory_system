@@ -33,16 +33,14 @@ class ProfileScreen extends StatelessWidget {
                               title: "FullName",
                               value: fullName,
                               onTap: () {
-                                GoRouter.of(context)
-                                    .push('/profile/edit_fullname');
+                                GoRouter.of(context).push('/edit_fullname');
                               },
                             ),
                             _UserInfo(
                               title: "Email",
                               value: email,
                               onTap: () {
-                                GoRouter.of(context)
-                                    .push('/profile/edit_email');
+                                GoRouter.of(context).go('/profile/edit_email');
                               },
                             ),
                             _UserInfo(
