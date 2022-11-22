@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:dcs_inventory_system/repositories/repository.dart';
+import 'package:dcs_inventory_system/utils/utils.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 
 import '../../models/model.dart';
 
@@ -22,6 +24,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     on<LoadUsers>(_onLoadUsers);
     on<UpdateUsers>(_onUpdateUsers);
     on<AddUser>(_onAddUser);
+    on<EditUser>(_onEditUser);
   }
 
   void _onLoadUsers(LoadUsers event, Emitter<UserState> emit) {
@@ -44,6 +47,18 @@ class UserBloc extends Bloc<UserEvent, UserState> {
             email: event.user.email, password: event.user.email);
       }
     } catch (_) {}
+  }
+
+  void _onEditUser(EditUser event, Emitter<UserState> emit) async {
+    final state = this.state;
+    if (state is UserLoaded) {
+      final res = await _userRepository.editUserDetails(event.user);
+      res.fold((l) {
+        showErrorSnackBar(event.context, l.message);
+      }, (r) {
+        showSuccessSnackBar(event.context, 'Edited successfully!');
+      });
+    }
   }
 
   @override

@@ -1,6 +1,9 @@
 import 'package:dcs_inventory_system/bloc/auth/auth_bloc.dart';
+import 'package:dcs_inventory_system/bloc/user/user_bloc.dart';
+import 'package:dcs_inventory_system/models/model.dart';
 import 'package:dcs_inventory_system/views/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class EditFullNameScreen extends StatefulWidget {
   const EditFullNameScreen({super.key, required this.authUser});
@@ -30,6 +33,14 @@ class _EditFullNameScreenState extends State<EditFullNameScreen> {
     middleNameController.dispose();
     lastNameController.dispose();
     super.dispose();
+  }
+
+  void editUser(BuildContext context) {
+    UserModel user = widget.authUser.user!.copyWith(
+        firstName: firstNameController.text,
+        middleName: middleNameController.text,
+        lastName: lastNameController.text);
+    BlocProvider.of<UserBloc>(context).add(EditUser(user, context));
   }
 
   void checkChanges() {
@@ -97,7 +108,9 @@ class _EditFullNameScreenState extends State<EditFullNameScreen> {
                       text: "Save Changes",
                       borderColor: Colors.black,
                       backgroundColor: Colors.black,
-                      onPressed: () {}),
+                      onPressed: () {
+                        editUser(context);
+                      }),
                 )
               ],
             ),

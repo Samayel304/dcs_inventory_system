@@ -124,9 +124,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                                 case 1:
                                                   showAlertDialog(
                                                       context: context,
-                                                      title: 'Delete Supplier',
+                                                      title: 'Delete Category',
                                                       content:
-                                                          'By deleting this category, the items under this category will also deleted. Are you sure do you to delete this category?',
+                                                          'All of the items under this category will also be deleted. Are you sure do you to delete this category?',
                                                       onPressed: () {
                                                         Navigator.pop(context);
                                                         BlocProvider.of<

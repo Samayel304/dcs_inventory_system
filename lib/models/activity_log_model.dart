@@ -6,7 +6,7 @@ import 'model.dart';
 class ActivityLog extends Equatable {
   final String? activityLogId;
   final DateTime dateCreated;
-  final User user;
+  final UserModel user;
   final String activity;
 
   const ActivityLog(
@@ -15,8 +15,8 @@ class ActivityLog extends Equatable {
       required this.user,
       required this.activity});
 
-  ActivityLog copyWith(String? activityLogId, DateTime? dateCreated, User? user,
-      String? activity) {
+  ActivityLog copyWith(String? activityLogId, DateTime? dateCreated,
+      UserModel? user, String? activity) {
     return ActivityLog(
         dateCreated: dateCreated ?? this.dateCreated,
         user: user ?? this.user,
@@ -28,7 +28,7 @@ class ActivityLog extends Equatable {
         activityLogId: snap.id,
         dateCreated: DateTime.parse(
             ((snap['dateCreated']) as Timestamp).toDate().toString()),
-        user: User.fromActiviyLogSnapshot(snap['user']),
+        user: UserModel.fromActiviyLogSnapshot(snap['user']),
         activity: snap['activity']);
   }
 

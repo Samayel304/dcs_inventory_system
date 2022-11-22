@@ -70,9 +70,7 @@ void showErrorSnackBar(BuildContext context, String errorMessage) {
     duration: const Duration(seconds: 3),
     backgroundColor: Colors.red,
   );
-  ScaffoldMessenger.of(context)
-    ..hideCurrentSnackBar()
-    ..showSnackBar(snackBar);
+  ScaffoldMessenger.of(context).showSnackBar(snackBar);
 }
 
 void showSuccessSnackBar(BuildContext context, String message) {
@@ -82,9 +80,7 @@ void showSuccessSnackBar(BuildContext context, String message) {
     duration: const Duration(seconds: 3),
     backgroundColor: Colors.green,
   );
-  ScaffoldMessenger.of(context)
-    ..hideCurrentSnackBar()
-    ..showSnackBar(snackBar);
+  ScaffoldMessenger.of(context).showSnackBar(snackBar);
 }
 
 Future<dynamic> showAlertDialog(

@@ -70,7 +70,7 @@ class _Header extends StatelessWidget {
           if (state is ProfileLoading) {
             return const Loader();
           } else if (state is ProfileLoaded) {
-            User authUser = state.user;
+            UserModel authUser = state.user;
             String fullName =
                 '${authUser.firstName} ${authUser.middleName} ${authUser.lastName}';
             String email = authUser.email;

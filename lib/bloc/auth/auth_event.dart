@@ -9,7 +9,7 @@ abstract class AuthEvent extends Equatable {
 
 class AuthUserChanged extends AuthEvent {
   final auth.User? authUser;
-  final User? user;
+  final UserModel? user;
   final bool? isInialized;
 
   const AuthUserChanged({required this.authUser, this.user, this.isInialized});
@@ -19,3 +19,14 @@ class AuthUserChanged extends AuthEvent {
 }
 
 class AuthLogoutRequested extends AuthEvent {}
+
+class ChangePassword extends AuthEvent {
+  final String currentPassword;
+  final String newPassword;
+  final BuildContext context;
+
+  const ChangePassword(this.currentPassword, this.newPassword, this.context);
+
+  @override
+  List<Object?> get props => [currentPassword, newPassword, context];
+}

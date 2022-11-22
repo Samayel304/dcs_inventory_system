@@ -3,6 +3,7 @@ import 'package:dcs_inventory_system/bloc/bloc.dart';
 
 import 'package:dcs_inventory_system/models/model.dart';
 import 'package:dcs_inventory_system/utils/enums.dart';
+import 'package:dcs_inventory_system/utils/utils.dart';
 
 import 'package:dcs_inventory_system/views/widgets/widgets.dart';
 
@@ -86,7 +87,7 @@ class _AddOrderModalState extends State<AddOrderModal> {
                     return CustomDropdown(
                       hint: "Select Product",
                       itemAsString: (product) {
-                        return product.productName;
+                        return product.productName.toString().toTitleCase();
                       },
                       items: state.products,
                       onChanged: (value) {

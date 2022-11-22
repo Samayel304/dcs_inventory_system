@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:dcs_inventory_system/utils/utils.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:flutter/cupertino.dart';
 
 import '../../models/model.dart';
 import '../../repositories/auth/auth_repository.dart';
@@ -15,7 +17,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository _authRepository;
   final UserRepository _userRepository;
   StreamSubscription<auth.User?>? _authUserSubscription;
-  StreamSubscription<User?>? _userSubscription;
+  StreamSubscription<UserModel?>? _userSubscription;
 
   AuthBloc({
     required AuthRepository authRepository,
@@ -25,6 +27,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         super(const AuthState.unknown()) {
     on<AuthUserChanged>(_onAuthUserChanged);
     on<AuthLogoutRequested>(_onLogoutRequested);
+    on<ChangePassword>(_onChangePassword);
 
     _authUserSubscription = _authRepository.user.listen((authUser) {
       print('Auth user: $authUser');
@@ -62,6 +65,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) {
     unawaited(_authRepository.signOut());
+  }
+
+  void _onChangePassword(ChangePassword event, Emitter<AuthState> emit) async {
+    final res = await _authRepository.changePassword(
+        event.currentPassword, event.newPassword);
+    res.fold((l) {
+      showErrorSnackBar(event.context, l.message);
+    }, (r) {
+      showSuccessSnackBar(event.context, 'Password changed successfully!');
+    });
   }
 
   @override

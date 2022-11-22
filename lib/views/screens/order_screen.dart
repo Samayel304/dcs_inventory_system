@@ -61,7 +61,7 @@ class _OrderScreenState extends State<OrderScreen>
                   child: CustomTabBar(
                     tabs: tabs,
                     tabBarController: _tabController,
-                    tabBarViewChild: [
+                    tabBarViewChild: const [
                       _TabBarViewChild(
                         orderStatus: OrderStatus.all,
                       ),

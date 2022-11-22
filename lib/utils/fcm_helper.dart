@@ -5,7 +5,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import '../models/user_model.dart';
 
 class FcmHelper {
-  static initialize(UserRepository userRepository, User user) {
+  static initialize(UserRepository userRepository, UserModel user) {
     _requestPermission();
     _getToken(userRepository, user);
 
@@ -66,7 +66,7 @@ class FcmHelper {
     }
   }
 
-  static _getToken(UserRepository userRepository, User user) async {
+  static _getToken(UserRepository userRepository, UserModel user) async {
     await FirebaseMessaging.instance.getToken().then((token) {
       userRepository.addDeviceToken(user, token!);
     });

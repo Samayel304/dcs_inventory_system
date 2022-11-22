@@ -18,7 +18,7 @@ class ProfileScreen extends StatelessWidget {
           child: BlocBuilder<ProfileBloc, ProfileState>(
             builder: (context, state) {
               if (state is ProfileLoaded) {
-                User authUser = state.user;
+                UserModel authUser = state.user;
                 String fullName =
                     '${authUser.firstName} ${authUser.middleName} ${authUser.lastName}';
                 String email = authUser.email;
@@ -120,7 +120,7 @@ class _ProfilePicture extends StatelessWidget {
     Key? key,
     required this.user,
   }) : super(key: key);
-  final User user;
+  final UserModel user;
 
   @override
   Widget build(BuildContext context) {

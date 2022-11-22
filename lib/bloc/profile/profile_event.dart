@@ -17,7 +17,7 @@ class LoadProfile extends ProfileEvent {
 }
 
 class UpdateProfile extends ProfileEvent {
-  final User user;
+  final UserModel user;
 
   const UpdateProfile({required this.user});
 

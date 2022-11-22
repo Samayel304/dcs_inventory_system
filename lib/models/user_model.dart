@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class User extends Equatable {
+class UserModel extends Equatable {
   final String? id;
   final String firstName;
   final String middleName;
@@ -12,7 +12,7 @@ class User extends Equatable {
   final String role;
   final String avatarUrl;
 
-  const User(
+  const UserModel(
       {this.id,
       this.deviceToken = const [],
       required this.firstName,
@@ -23,7 +23,7 @@ class User extends Equatable {
       this.avatarUrl =
           "https://firebasestorage.googleapis.com/v0/b/dcsims-2772c.appspot.com/o/default_profile.png?alt=media&token=9c83c05f-2d6b-4def-8c08-cf212738605d"});
 
-  User copyWith(
+  UserModel copyWith(
       {String? id,
       String? firstName,
       String? middleName,
@@ -33,7 +33,7 @@ class User extends Equatable {
       String? role,
       String? avatarUrl,
       List<dynamic>? deviceToken}) {
-    return User(
+    return UserModel(
         id: id ?? this.id,
         firstName: firstName ?? this.firstName,
         middleName: middleName ?? this.middleName,
@@ -44,8 +44,8 @@ class User extends Equatable {
         deviceToken: deviceToken ?? this.deviceToken);
   }
 
-  factory User.fromSnapshot(DocumentSnapshot snap) {
-    return User(
+  factory UserModel.fromSnapshot(DocumentSnapshot snap) {
+    return UserModel(
         id: snap.id,
         firstName: snap['firstName'],
         middleName: snap['middleName'],
@@ -56,8 +56,8 @@ class User extends Equatable {
         deviceToken: snap['deviceToken']);
   }
 
-  factory User.fromActiviyLogSnapshot(Map<String, dynamic> snap) {
-    return User(
+  factory UserModel.fromActiviyLogSnapshot(Map<String, dynamic> snap) {
+    return UserModel(
         id: snap['id'],
         firstName: snap['firstName'],
         middleName: snap['middleName'],

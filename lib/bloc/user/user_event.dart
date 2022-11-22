@@ -10,15 +10,24 @@ abstract class UserEvent extends Equatable {
 class LoadUsers extends UserEvent {}
 
 class UpdateUsers extends UserEvent {
-  final List<User> users;
+  final List<UserModel> users;
   const UpdateUsers({required this.users});
   @override
   List<Object> get props => [users];
 }
 
 class AddUser extends UserEvent {
-  final User user;
-  const AddUser({required this.user});
+  final UserModel user;
+  final BuildContext context;
+  const AddUser(this.user, this.context);
   @override
-  List<Object> get props => [user];
+  List<Object> get props => [user, context];
+}
+
+class EditUser extends UserEvent {
+  final UserModel user;
+  final BuildContext context;
+  const EditUser(this.user, this.context);
+  @override
+  List<Object> get props => [user, context];
 }

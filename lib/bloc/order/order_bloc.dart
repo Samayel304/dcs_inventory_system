@@ -59,9 +59,13 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     final res = await _orderRepository.editOrderDetails(event.order);
     res.fold((l) {
       showErrorSnackBar(event.context, l.message);
-    }, (r) {
-      _productRepository.editProductDetails(event.product);
-      showSuccessSnackBar(event.context, 'Order recieved!');
+    }, (r) async {
+      final res = await _productRepository.deductProductQuantity(event.product);
+      res.fold((l) {
+        showErrorSnackBar(event.context, l.message);
+      }, (r) {
+        showSuccessSnackBar(event.context, 'Order recieved!');
+      });
     });
   }
 

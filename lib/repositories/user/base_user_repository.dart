@@ -1,9 +1,11 @@
+import 'package:dcs_inventory_system/utils/type_def.dart';
+
 import '../../models/user_model.dart';
 
 abstract class BaseUserRepository {
-  Stream<List<User>> getAllUser();
-  Stream<User> getUser(String userId);
-  Future<void> createUser(User user);
-  Future<void> editUserDetails(User user);
-  Future<void> addDeviceToken(User user, String deviceToken);
+  Stream<List<UserModel>> getAllUser();
+  Stream<UserModel> getUser(String userId);
+  FutureVoid createUser(UserModel user);
+  FutureVoid editUserDetails(UserModel user);
+  Future<void> addDeviceToken(UserModel user, String deviceToken);
 }
