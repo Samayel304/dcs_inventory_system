@@ -16,12 +16,13 @@ class UpdateUsers extends UserEvent {
   List<Object> get props => [users];
 }
 
-class AddUser extends UserEvent {
+class CreateUser extends UserEvent {
   final UserModel user;
+  final String password;
   final BuildContext context;
-  const AddUser(this.user, this.context);
+  const CreateUser(this.user, this.context, this.password);
   @override
-  List<Object> get props => [user, context];
+  List<Object> get props => [user, context, password];
 }
 
 class EditUser extends UserEvent {

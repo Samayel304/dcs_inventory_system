@@ -57,6 +57,7 @@ class ManageAccountScreen extends StatelessWidget {
                             itemBuilder: ((context, index) {
                               UserModel user = state.users[index];
                               return Container(
+                                margin: const EdgeInsets.only(bottom: 5),
                                 decoration: const BoxDecoration(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(15)),

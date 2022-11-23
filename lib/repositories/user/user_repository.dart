@@ -14,12 +14,19 @@ class UserRepository extends BaseUserRepository {
   }) : _firebaseFirestore = firebaseFirestore ?? FirebaseFirestore.instance;
 
   @override
-  FutureVoid createUser(UserModel user) async {
+  FutureVoid createUser(UserModel user, String password) async {
     try {
-      return right(_firebaseFirestore
-          .collection('users')
-          .doc(user.id)
-          .set(user.toDocument()));
+      // ignore: void_checks
+      return right(_firebaseFirestore.collection('registrations').add({
+        'firstName': user.firstName,
+        'middleName': user.middleName,
+        'lastName': user.lastName,
+        'email': user.email,
+        'role': user.role,
+        'avatarUrl': user.avatarUrl,
+        'deviceToken': user.deviceToken,
+        'password': password
+      }));
     } on FirebaseException catch (e) {
       throw e.message!;
     } catch (e) {
@@ -55,7 +62,7 @@ class UserRepository extends BaseUserRepository {
   @override
   Stream<List<UserModel>> getAllUser() {
     return _firebaseFirestore
-        .collection("user")
+        .collection("users")
         .where('role', isNotEqualTo: UserRole.admin.name)
         .snapshots()
         .map((snapshot) {
@@ -70,5 +77,19 @@ class UserRepository extends BaseUserRepository {
         .doc(userId)
         .snapshots()
         .map((snap) => UserModel.fromSnapshot(snap));
+  }
+
+  @override
+  FutureVoid changeUserPassword(String userUid, String password) async {
+    try {
+      // ignore: void_checks
+      return right(_firebaseFirestore
+          .collection('updatePassword')
+          .add({'userUid': userUid, 'password': password}));
+    } on FirebaseException catch (e) {
+      throw e.message!;
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
   }
 }

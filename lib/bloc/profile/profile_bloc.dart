@@ -10,24 +10,23 @@ part 'profile_event.dart';
 part 'profile_state.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
-  final AuthBloc _authBloc;
   final UserRepository _userRepository;
+  final AuthRepository _authRepository;
   StreamSubscription? _authSubscription;
 
   ProfileBloc({
-    required AuthBloc authBloc,
+    required AuthRepository authRepository,
     required UserRepository userRepository,
-  })  : _authBloc = authBloc,
+  })  : _authRepository = authRepository,
         _userRepository = userRepository,
         super(ProfileLoading()) {
     on<LoadProfile>(_onLoadProfile);
     on<UpdateProfile>(_onUpdateProfile);
 
-    _authSubscription = _authBloc.stream.listen((state) {
-      if (state.authUser is AuthUserChanged) {
-        if (state.authUser != null) {
-          add(LoadProfile(userId: state.authUser!.uid));
-        }
+    _authSubscription = _authRepository.user.listen((authUser) {
+      print('user change');
+      if (authUser != null) {
+        add(LoadProfile(userId: authUser.uid));
       }
     });
   }
@@ -40,6 +39,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       add(
         UpdateProfile(user: user),
       );
+      print(user);
     });
   }
 

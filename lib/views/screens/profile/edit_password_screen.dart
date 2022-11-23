@@ -44,14 +44,14 @@ class _EditPasswordScreenState extends State<EditPasswordScreen> {
             child: Column(
               children: [
                 LabeledTextfield(
-                  hintText: "OldPassword",
+                  hintText: "Current Password",
                   controller: currentPasswordController,
                   onChange: (_) {
                     setCanSave();
                   },
                 ),
                 LabeledTextfield(
-                  hintText: "NewPassword",
+                  hintText: "New Password",
                   controller: newPasswordController,
                   onChange: (_) {
                     setCanSave();

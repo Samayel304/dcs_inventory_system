@@ -1,4 +1,5 @@
 import 'package:dcs_inventory_system/bloc/bloc.dart';
+import 'package:dcs_inventory_system/utils/utils.dart';
 import 'package:dcs_inventory_system/views/widgets/custom_elevated_button.dart';
 import 'package:dcs_inventory_system/views/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
@@ -74,7 +75,8 @@ class _DeductQuantityModalState extends State<DeductQuantityModal> {
               const SizedBox(height: 20),
               Row(
                 children: [
-                  Text('${widget.selectedProduct.productName} quantity: '),
+                  Text(
+                      '${widget.selectedProduct.productName.toTitleCase()} quantity: '),
                   Text('${widget.selectedProduct.quantity}')
                 ],
               ),

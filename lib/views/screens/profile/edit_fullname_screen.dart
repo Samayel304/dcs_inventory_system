@@ -1,4 +1,3 @@
-import 'package:dcs_inventory_system/bloc/auth/auth_bloc.dart';
 import 'package:dcs_inventory_system/bloc/user/user_bloc.dart';
 import 'package:dcs_inventory_system/models/model.dart';
 import 'package:dcs_inventory_system/views/widgets/widgets.dart';
@@ -6,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class EditFullNameScreen extends StatefulWidget {
-  const EditFullNameScreen({super.key, required this.authUser});
-  final AuthState authUser;
+  const EditFullNameScreen({super.key, required this.selectedUser});
+  final UserModel selectedUser;
   @override
   State<EditFullNameScreen> createState() => _EditFullNameScreenState();
 }
@@ -22,9 +21,9 @@ class _EditFullNameScreenState extends State<EditFullNameScreen> {
   void initState() {
     super.initState();
 
-    firstNameController.text = widget.authUser.user!.firstName;
-    middleNameController.text = widget.authUser.user!.middleName;
-    lastNameController.text = widget.authUser.user!.lastName;
+    firstNameController.text = widget.selectedUser.firstName;
+    middleNameController.text = widget.selectedUser.middleName;
+    lastNameController.text = widget.selectedUser.lastName;
   }
 
   @override
@@ -36,7 +35,7 @@ class _EditFullNameScreenState extends State<EditFullNameScreen> {
   }
 
   void editUser(BuildContext context) {
-    UserModel user = widget.authUser.user!.copyWith(
+    UserModel user = widget.selectedUser.copyWith(
         firstName: firstNameController.text,
         middleName: middleNameController.text,
         lastName: lastNameController.text);
@@ -46,12 +45,12 @@ class _EditFullNameScreenState extends State<EditFullNameScreen> {
   void checkChanges() {
     bool isOldAndNewFirstNameNotEqual =
         firstNameController.text.toLowerCase() !=
-            widget.authUser.user!.firstName.toLowerCase();
+            widget.selectedUser.firstName.toLowerCase();
     bool isOldAndNewMiddleNameNotEqual =
         middleNameController.text.toLowerCase() !=
-            widget.authUser.user!.middleName.toLowerCase();
+            widget.selectedUser.middleName.toLowerCase();
     bool isOldAndNewLastNameNotEqual = lastNameController.text.toLowerCase() !=
-        widget.authUser.user!.lastName.toLowerCase();
+        widget.selectedUser.lastName.toLowerCase();
 
     bool isAllFieldNotEmpty = firstNameController.text.isNotEmpty &&
         lastNameController.text.isNotEmpty;

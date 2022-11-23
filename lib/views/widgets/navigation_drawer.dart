@@ -77,7 +77,7 @@ class _Header extends StatelessWidget {
             String avatarUrl = authUser.avatarUrl;
             return InkWell(
               onTap: () {
-                // Navigator.pop(context);
+                Navigator.pop(context);
                 GoRouter.of(context).push('/profile');
               },
               child: DrawerHeader(

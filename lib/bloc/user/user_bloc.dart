@@ -13,17 +13,15 @@ part 'user_state.dart';
 
 class UserBloc extends Bloc<UserEvent, UserState> {
   final UserRepository _userRepository;
-  final AuthRepository _authRepository;
+
   StreamSubscription? _userSubscription;
-  UserBloc(
-      {required UserRepository userRepository,
-      required AuthRepository authRepository})
-      : _userRepository = userRepository,
-        _authRepository = authRepository,
+  UserBloc({
+    required UserRepository userRepository,
+  })  : _userRepository = userRepository,
         super(UserLoading()) {
     on<LoadUsers>(_onLoadUsers);
     on<UpdateUsers>(_onUpdateUsers);
-    on<AddUser>(_onAddUser);
+    on<CreateUser>(_onCreateUser);
     on<EditUser>(_onEditUser);
   }
 
@@ -38,15 +36,18 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     emit(UserLoaded(users: event.users));
   }
 
-  void _onAddUser(AddUser event, Emitter<UserState> emit) async {
-    try {
-      final state = this.state;
-      if (state is UserLoaded) {
-        await _userRepository.createUser(event.user);
-        await _authRepository.signUp(
-            email: event.user.email, password: event.user.email);
-      }
-    } catch (_) {}
+  void _onCreateUser(CreateUser event, Emitter<UserState> emit) async {
+    final state = this.state;
+    if (state is UserLoaded) {
+      final res = await _userRepository.createUser(event.user, event.password);
+      res.fold((l) {
+        showErrorSnackBar(event.context, l.message);
+        Navigator.of(event.context).pop();
+      }, (r) {
+        showSuccessSnackBar(event.context, 'User created successfully!');
+        Navigator.of(event.context).pop();
+      });
+    }
   }
 
   void _onEditUser(EditUser event, Emitter<UserState> emit) async {

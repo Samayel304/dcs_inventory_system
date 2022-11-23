@@ -58,7 +58,7 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider(
               create: (context) => ProfileBloc(
-                  authBloc: context.read<AuthBloc>(),
+                  authRepository: context.read<AuthRepository>(),
                   userRepository: context.read<UserRepository>())
                 ..add(
                   LoadProfile(
@@ -71,9 +71,8 @@ class MyApp extends StatelessWidget {
               create: (context) => LoginCubit(context.read<AuthRepository>())),
           BlocProvider(
               create: (context) => UserBloc(
-                  userRepository: context.read<UserRepository>(),
-                  authRepository: context.read<AuthRepository>())
-                ..add(LoadUsers())),
+                    userRepository: context.read<UserRepository>(),
+                  )..add(LoadUsers())),
           BlocProvider(
               create: (context) => ActivityLogBloc(
                   activityLogRepository: context.read<ActivityLogRepository>())
