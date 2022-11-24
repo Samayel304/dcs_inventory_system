@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dcs_inventory_system/models/category_model.dart';
 import 'package:equatable/equatable.dart';
 
 class Supplier extends Equatable {
@@ -7,6 +8,7 @@ class Supplier extends Equatable {
   final String contactPerson;
   final String address;
   final String contactNumber;
+  final Category category;
   final DateTime dateCreated;
 
   const Supplier(
@@ -15,6 +17,7 @@ class Supplier extends Equatable {
       required this.address,
       required this.contactNumber,
       this.supplierId,
+      required this.category,
       required this.dateCreated});
 
   Supplier copyWith(
@@ -23,14 +26,16 @@ class Supplier extends Equatable {
       String? address,
       String? contactNumber,
       String? contactPerson,
-      DateTime? dateCreated}) {
+      DateTime? dateCreated,
+      Category? category}) {
     return Supplier(
         supplierId: supplierId ?? this.supplierId,
         supplierName: supplierName ?? this.supplierName,
         contactPerson: contactPerson ?? this.contactPerson,
         address: address ?? this.address,
         contactNumber: contactNumber ?? this.contactNumber,
-        dateCreated: dateCreated ?? this.dateCreated);
+        dateCreated: dateCreated ?? this.dateCreated,
+        category: category ?? this.category);
   }
 
   factory Supplier.fromSnapshot(DocumentSnapshot snap) {
@@ -40,12 +45,14 @@ class Supplier extends Equatable {
         contactPerson: snap['contactPerson'],
         address: snap['address'],
         contactNumber: snap['contactNumber'],
+        category: Category.fromSupplierSnapshot(snap['category']),
         dateCreated: DateTime.parse(
             ((snap['dateCreated']) as Timestamp).toDate().toString()));
   }
 
   factory Supplier.fromOrderSnapshot(Map<String, dynamic> snap) {
     return Supplier(
+        category: Category.fromSupplierSnapshot(snap['category']),
         supplierId: snap['supplierId'],
         supplierName: snap['supplierName'],
         contactPerson: snap['contactPerson'],
@@ -61,7 +68,8 @@ class Supplier extends Equatable {
       'contactPerson': contactPerson,
       'contactNumber': contactNumber,
       'address': address,
-      'dateCreated': dateCreated
+      'dateCreated': dateCreated,
+      'category': category.toDocument()
     };
   }
 
@@ -72,7 +80,8 @@ class Supplier extends Equatable {
       'contactPerson': contactPerson,
       'contactNumber': contactNumber,
       'address': address,
-      'dateCreated': dateCreated
+      'dateCreated': dateCreated,
+      'category': category.toDocument()
     };
   }
 
@@ -83,6 +92,7 @@ class Supplier extends Equatable {
         contactPerson,
         address,
         contactNumber,
-        dateCreated
+        dateCreated,
+        category
       ];
 }

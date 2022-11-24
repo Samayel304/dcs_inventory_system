@@ -1,4 +1,8 @@
-import 'package:dcs_inventory_system/bloc/bloc.dart';
+import 'package:dcs_inventory_system/bloc/user/user_bloc.dart';
+
+import 'package:dcs_inventory_system/utils/utils.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -11,59 +15,75 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const BackAppBar(),
-      body: SingleChildScrollView(
-        child: Center(
-          child: BlocBuilder<ProfileBloc, ProfileState>(
-            builder: (context, state) {
-              if (state is ProfileLoaded) {
-                UserModel authUser = state.user;
-                String fullName =
-                    '${authUser.firstName} ${authUser.middleName} ${authUser.lastName}';
-                String email = authUser.email;
-                return Column(
-                  children: [
-                    _ProfilePicture(user: authUser),
-                    Container(
-                        padding: const EdgeInsets.only(top: 20),
-                        child: Column(
-                          children: [
-                            _UserInfo(
-                              title: "FullName",
-                              value: fullName,
-                              onTap: () {
-                                GoRouter.of(context)
-                                    .push('/profile/edit_fullname');
-                              },
-                            ),
-                            _UserInfo(
-                              title: "Email",
-                              value: email,
-                              onTap: () {
-                                GoRouter.of(context)
-                                    .push('/profile/edit_email');
-                              },
-                            ),
-                            _UserInfo(
-                              title: "Password",
-                              value: "",
-                              onTap: () {
-                                GoRouter.of(context)
-                                    .push('/profile/edit_password');
-                              },
-                            ),
-                          ],
-                        ))
-                  ],
-                );
-              } else {
-                return const ErrorScreen();
-              }
-            },
-          ),
-        ),
+    return const Scaffold(
+      resizeToAvoidBottomInset: false,
+      appBar: BackAppBar(),
+      body: Center(
+        child: ProfileDetails(),
       ),
+    );
+  }
+}
+
+class ProfileDetails extends StatelessWidget {
+  const ProfileDetails({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    // final currentUser =
+    final currentUser = FirebaseAuth.instance.currentUser;
+
+    return BlocBuilder<UserBloc, UserState>(
+      builder: (context, state) {
+        if (state is UserLoading) {
+          return const Loader();
+        }
+        if (state is UserLoaded) {
+          UserModel authUser =
+              state.users.where((user) => user.id == currentUser!.uid).first;
+          String fullName =
+              '${authUser.firstName} ${authUser.middleName} ${authUser.lastName}';
+          String email = authUser.email;
+          return Column(
+            children: [
+              _ProfilePicture(user: authUser),
+              Container(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: Column(
+                    children: [
+                      _UserInfo(
+                        title: "FullName",
+                        value: fullName,
+                        onTap: () {
+                          //GoRouter.of(context).push('/edit_fullname');
+                          /* showBottomModal(
+                              context, EditFullName(selectedUser: authUser)); */
+                        },
+                      ),
+                      _UserInfo(
+                        title: "Email",
+                        value: email,
+                        onTap: () {
+                          /* GoRouter.of(context).push('/profile/edit_email'); */
+                        },
+                      ),
+                      _UserInfo(
+                        title: "Password",
+                        value: "",
+                        onTap: () {
+                          /* GoRouter.of(context).push('/profile/edit_password'); */
+                        },
+                      ),
+                    ],
+                  ))
+            ],
+          );
+        } else {
+          return const ErrorScreen();
+        }
+      },
     );
   }
 }

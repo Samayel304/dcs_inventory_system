@@ -54,10 +54,9 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     final state = this.state;
     if (state is UserLoaded) {
       final res = await _userRepository.editUserDetails(event.user);
-      res.fold((l) {
-        showErrorSnackBar(event.context, l.message);
-      }, (r) {
+      res.fold((l) {}, (r) {
         showSuccessSnackBar(event.context, 'Edited successfully!');
+        Navigator.of(event.context).pop();
       });
     }
   }

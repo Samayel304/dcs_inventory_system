@@ -1,6 +1,8 @@
 import 'package:dcs_inventory_system/bloc/bloc.dart';
+import 'package:dcs_inventory_system/bloc/user/user_bloc.dart';
 import 'package:dcs_inventory_system/models/user_model.dart';
 import 'package:dcs_inventory_system/views/widgets/widgets.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -63,14 +65,16 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currentUser = FirebaseAuth.instance.currentUser;
     return SizedBox(
       width: double.infinity,
-      child: BlocBuilder<ProfileBloc, ProfileState>(
+      child: BlocBuilder<UserBloc, UserState>(
         builder: (context, state) {
-          if (state is ProfileLoading) {
+          if (state is UserLoading) {
             return const Loader();
-          } else if (state is ProfileLoaded) {
-            UserModel authUser = state.user;
+          } else if (state is UserLoaded) {
+            UserModel authUser =
+                state.users.where((user) => user.id == currentUser!.uid).first;
             String fullName =
                 '${authUser.firstName} ${authUser.middleName} ${authUser.lastName}';
             String email = authUser.email;

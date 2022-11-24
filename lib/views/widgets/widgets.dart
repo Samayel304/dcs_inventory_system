@@ -11,6 +11,8 @@ export 'supplier_modals/edit_supplier_modal.dart';
 export 'supplier_modals/add_supplier_modal.dart';
 export 'manage_account_modal/add_account_modal.dart';
 
+export 'profile_modals/edit_full_name.dart';
+
 export 'category_modals/add_category_modal.dart';
 export 'navigation_drawer.dart';
 export 'loader.dart';

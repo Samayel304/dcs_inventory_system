@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dcs_inventory_system/bloc/bloc.dart';
 import 'package:dcs_inventory_system/models/model.dart';
 import 'package:dcs_inventory_system/views/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,7 @@ class _AddSupplierModalState extends State<AddSupplierModal> {
   final TextEditingController addressController = TextEditingController();
   //final _formKey = GlobalKey<FormState>();
   bool _canSave = false;
+  Category? selectedCategory;
 
   @override
   void dispose() {
@@ -36,7 +38,8 @@ class _AddSupplierModalState extends State<AddSupplierModal> {
         contactPerson: contactPersonController.text,
         address: addressController.text,
         contactNumber: contactNumberController.text,
-        dateCreated: Timestamp.now().toDate());
+        dateCreated: Timestamp.now().toDate(),
+        category: selectedCategory!);
     BlocProvider.of<SupplierBloc>(context).add(AddSupplier(supplier, context));
   }
 
@@ -44,7 +47,8 @@ class _AddSupplierModalState extends State<AddSupplierModal> {
     if (supplierNameController.text.isNotEmpty &&
         contactNumberController.text.isNotEmpty &&
         contactPersonController.text.isNotEmpty &&
-        addressController.text.isNotEmpty) {
+        addressController.text.isNotEmpty &&
+        selectedCategory != null) {
       setState(() {
         _canSave = true;
       });
@@ -88,6 +92,35 @@ class _AddSupplierModalState extends State<AddSupplierModal> {
                         }
                         return null;
                       }, */
+                    ),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    BlocBuilder<CategoryBloc, CategoryState>(
+                      builder: (context, state) {
+                        if (state is CategoryLoading) {
+                          return const Loader();
+                        }
+                        if (state is CategoryLoaded) {
+                          return CustomDropdown(
+                            hint: "Select Supply Type",
+                            itemAsString: (category) {
+                              return category.categoryName;
+                            },
+                            items: state.categories,
+                            onChanged: (value) {
+                              setState(() {
+                                selectedCategory = value;
+                              });
+                              setCanSave();
+                            },
+                            selectedItem: selectedCategory,
+                          );
+                        } else {
+                          return const Center(
+                              child: Text("Something went wrong."));
+                        }
+                      },
                     ),
                     const SizedBox(height: 12),
                     CustomTextField(

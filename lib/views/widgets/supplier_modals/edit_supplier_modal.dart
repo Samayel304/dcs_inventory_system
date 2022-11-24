@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dcs_inventory_system/bloc/bloc.dart';
 import 'package:dcs_inventory_system/models/model.dart';
 import 'package:dcs_inventory_system/views/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,7 @@ class _EditSupplierModalState extends State<EditSupplierModal> {
   final TextEditingController addressController = TextEditingController();
   //final _formKey = GlobalKey<FormState>();
   bool _canSave = false;
+  Category? selectedCategory;
 
   @override
   void initState() {
@@ -30,6 +32,7 @@ class _EditSupplierModalState extends State<EditSupplierModal> {
     contactPersonController.text = widget.selectedSupplier.contactPerson;
     addressController.text = widget.selectedSupplier.address;
     contactNumberController.text = widget.selectedSupplier.contactNumber;
+    selectedCategory = widget.selectedSupplier.category;
   }
 
   @override
@@ -47,7 +50,8 @@ class _EditSupplierModalState extends State<EditSupplierModal> {
         contactPerson: contactPersonController.text,
         address: addressController.text,
         contactNumber: contactNumberController.text,
-        dateCreated: Timestamp.now().toDate());
+        dateCreated: Timestamp.now().toDate(),
+        category: selectedCategory);
     BlocProvider.of<SupplierBloc>(context).add(EditSupplier(supplier, context));
   }
 
@@ -68,7 +72,10 @@ class _EditSupplierModalState extends State<EditSupplierModal> {
         addressController.text.toLowerCase();
     bool isContactNumberNotEqual =
         widget.selectedSupplier.contactNumber != contactNumberController.text;
-    if ((isSupplierNameNotEqual ||
+    bool isCategoryNotEqual =
+        selectedCategory != widget.selectedSupplier.category;
+    if ((isCategoryNotEqual ||
+            isSupplierNameNotEqual ||
             isContactPersonNotEqual ||
             isAddressNotEqual ||
             isContactNumberNotEqual) &&
@@ -116,6 +123,35 @@ class _EditSupplierModalState extends State<EditSupplierModal> {
                         }
                         return null;
                       }, */
+                    ),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    BlocBuilder<CategoryBloc, CategoryState>(
+                      builder: (context, state) {
+                        if (state is CategoryLoading) {
+                          return const Loader();
+                        }
+                        if (state is CategoryLoaded) {
+                          return CustomDropdown(
+                            hint: "Select Supply Type",
+                            itemAsString: (category) {
+                              return category.categoryName;
+                            },
+                            items: state.categories,
+                            onChanged: (value) {
+                              setState(() {
+                                selectedCategory = value;
+                              });
+                              setCanSave();
+                            },
+                            selectedItem: selectedCategory,
+                          );
+                        } else {
+                          return const Center(
+                              child: Text("Something went wrong."));
+                        }
+                      },
                     ),
                     const SizedBox(height: 12),
                     CustomTextField(

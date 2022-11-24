@@ -69,28 +69,16 @@ class AppRouter {
       ),
       GoRoute(
           path: '/profile',
-          builder: (BuildContext context, GoRouterState state) {
+          builder: (context, state) {
             return const ProfileScreen();
-          },
-          routes: [
-            GoRoute(
-                path: 'edit_fullname',
-                builder: (context, state) {
-                  final authUser =
-                      context.select((AuthBloc authBloc) => authBloc.state);
-                  return EditFullNameScreen(selectedUser: authUser.user!);
-                }),
-            GoRoute(
-                path: 'edit_email',
-                builder: (context, state) {
-                  return const EditEmailScreen();
-                }),
-            GoRoute(
-                path: 'edit_password',
-                builder: (context, state) {
-                  return const EditPasswordScreen();
-                })
-          ])
+          }),
+      GoRoute(
+          path: '/edit_fullName',
+          
+          builder: (context, state) {
+            
+            return const EditFullNameScreen();
+          })
     ],
     redirect: (BuildContext context, GoRouterState state) {
       final bool initialized = authBloc.state.isInitialized;

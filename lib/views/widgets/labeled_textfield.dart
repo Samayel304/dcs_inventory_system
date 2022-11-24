@@ -3,15 +3,17 @@ import 'package:flutter/material.dart';
 import 'widgets.dart';
 
 class LabeledTextfield extends StatelessWidget {
-  const LabeledTextfield({
-    Key? key,
-    required this.hintText,
-    this.controller,
-    this.onChange,
-  }) : super(key: key);
+  const LabeledTextfield(
+      {Key? key,
+      required this.hintText,
+      this.controller,
+      this.onChange,
+      this.initialValue})
+      : super(key: key);
   final String hintText;
   final TextEditingController? controller;
   final void Function(String)? onChange;
+  final String? initialValue;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -24,6 +26,7 @@ class LabeledTextfield extends StatelessWidget {
               style: Theme.of(context).textTheme.headline4,
             )),
         CustomTextField(
+          initialValue: initialValue,
           hintText: hintText,
           controller: controller,
           onChange: onChange,

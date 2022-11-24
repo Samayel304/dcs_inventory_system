@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:dcs_inventory_system/bloc/bloc.dart';
+
 import 'package:dcs_inventory_system/models/model.dart';
 import 'package:dcs_inventory_system/repositories/repository.dart';
+import 'package:dcs_inventory_system/utils/utils.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 
 part 'profile_event.dart';
 part 'profile_state.dart';
@@ -13,6 +15,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final UserRepository _userRepository;
   final AuthRepository _authRepository;
   StreamSubscription? _authSubscription;
+  StreamSubscription? _userSubscription;
 
   ProfileBloc({
     required AuthRepository authRepository,
@@ -22,24 +25,34 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         super(ProfileLoading()) {
     on<LoadProfile>(_onLoadProfile);
     on<UpdateProfile>(_onUpdateProfile);
-
-    _authSubscription = _authRepository.user.listen((authUser) {
-      print('user change');
-      if (authUser != null) {
-        add(LoadProfile(userId: authUser.uid));
-      }
-    });
+    on<EditProfile>(_onEditProfile);
   }
 
   void _onLoadProfile(
     LoadProfile event,
     Emitter<ProfileState> emit,
   ) {
-    _userRepository.getUser(event.userId).listen((user) {
-      add(
-        UpdateProfile(user: user),
-      );
-      print(user);
+    _authSubscription?.cancel();
+    _authSubscription = _authRepository.user.listen((authUser) {
+      if (authUser != null) {
+        _userSubscription?.cancel();
+        _userSubscription = _userRepository.getUser(authUser.uid).listen(
+          (user) {
+            add(UpdateProfile(user: user));
+          },
+        );
+      }
+    });
+  }
+
+  void _onEditProfile(
+    EditProfile event,
+    Emitter<ProfileState> emit,
+  ) async {
+    final res = await _userRepository.editUserDetails(event.user);
+    res.fold((l) {}, (r) {
+      showSuccessSnackBar(event.context, "Edited successfully!");
+      //Navigator.of(event.context).pop();
     });
   }
 
@@ -53,6 +66,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   @override
   Future<void> close() async {
     _authSubscription?.cancel();
+    _userSubscription?.cancel();
     super.close();
   }
 }

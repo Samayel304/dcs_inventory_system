@@ -41,6 +41,7 @@ class _SupplierScreenState extends State<SupplierScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print('reload');
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: const BackAppBar(),
@@ -100,6 +101,11 @@ class _SupplierScreenState extends State<SupplierScreen> {
                                           _DetailText(
                                               text: supplier.supplierName,
                                               title: "Supplier Name"),
+                                          _DetailText(
+                                              text: supplier
+                                                  .category.categoryName
+                                                  .toTitleCase(),
+                                              title: "Supply Type"),
                                           _DetailText(
                                               text: supplier.contactPerson,
                                               title: "Contact Person"),

@@ -16,7 +16,8 @@ class CustomTextField extends StatelessWidget {
       this.prefixIcon,
       this.validator,
       this.onChange,
-      this.maxLength});
+      this.maxLength,
+      this.initialValue});
 
   final String hintText;
   final TextInputType? textInputType;
@@ -32,10 +33,12 @@ class CustomTextField extends StatelessWidget {
   final String? Function(String?)? validator;
   final void Function(String)? onChange;
   final int? maxLength;
+  final String? initialValue;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      initialValue: initialValue,
       maxLength: maxLength,
       onChanged: onChange,
       validator: validator,
