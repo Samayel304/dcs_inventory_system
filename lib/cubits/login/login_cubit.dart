@@ -1,5 +1,5 @@
 import 'package:dcs_inventory_system/utils/utils.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -42,6 +42,7 @@ class LoginCubit extends Cubit<LoginState> {
     res.fold(
       (l) {
         showErrorSnackBar(context, l.message);
+        emit(state.copyWith(status: LoginStatus.initial));
       },
       (r) {
         emit(state.copyWith(status: LoginStatus.success));

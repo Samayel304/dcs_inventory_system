@@ -40,12 +40,19 @@ class AuthRepository extends BaseAuthRepository {
   }) async {
     try {
       // ignore: void_checks
-      return right(_firebaseAuth.signInWithEmailAndPassword(
+      final res = await _firebaseAuth
+          .signInWithEmailAndPassword(
         email: email,
         password: password,
-      ));
-    } on FirebaseException catch (e) {
-      throw e.message!;
+      )
+          .catchError((e) {
+        throw e.code;
+      });
+      // ignore: void_checks
+      return right(res);
+    } on FirebaseAuthException catch (e) {
+      print('error');
+      return left(Failure(e.message!));
     } catch (e) {
       return left(Failure(e.toString()));
     }
