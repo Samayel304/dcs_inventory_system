@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:dcs_inventory_system/bloc/activity_log/activity_log_bloc.dart';
 import 'package:dcs_inventory_system/bloc/auth/auth_bloc.dart';
+import 'package:dcs_inventory_system/utils/enums.dart';
 
 import 'package:equatable/equatable.dart';
 import 'package:excel/excel.dart';
@@ -63,6 +65,16 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         Navigator.of(event.context).pop();
       }, (r) {
         showSuccessSnackBar(event.context, 'Product created successfully!');
+        UserModel user = _authBloc.state.user!;
+        String userFullname =
+            '${user.firstName} ${user.middleName} ${user.lastName}';
+        ActivityLog activityLog = ActivityLog(
+            dateCreated: Timestamp.now().toDate(),
+            user: user,
+            activity: user.role == UserRole.admin.name
+                ? 'You created a product named ${event.product.productName}'
+                : '$userFullname created a product named ${event.product.productName}');
+        _activityLogBloc.add(AddActivityLog(activityLog: activityLog));
         Navigator.of(event.context).pop();
       });
 
@@ -103,6 +115,16 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         showErrorSnackBar(event.context, l.message);
         Navigator.of(event.context).pop();
       }, (r) {
+        UserModel user = _authBloc.state.user!;
+        String userFullname =
+            '${user.firstName} ${user.middleName} ${user.lastName}';
+        ActivityLog activityLog = ActivityLog(
+            dateCreated: Timestamp.now().toDate(),
+            user: user,
+            activity: user.role == UserRole.admin.name
+                ? 'You deducted ${event.product.productName}\'s quantity by ${event.deductedQuantity}'
+                : '$userFullname deducted ${event.product.productName}\'s quantity by ${event.deductedQuantity}');
+        _activityLogBloc.add(AddActivityLog(activityLog: activityLog));
         showSuccessSnackBar(event.context, 'Deducted successfully!');
         Navigator.of(event.context).pop();
       });
