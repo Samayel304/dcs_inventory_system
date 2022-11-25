@@ -61,11 +61,7 @@ class UserRepository extends BaseUserRepository {
 
   @override
   Stream<List<UserModel>> getAllUser() {
-    return _firebaseFirestore
-        .collection("users")
-        .where('role', isNotEqualTo: UserRole.admin.name)
-        .snapshots()
-        .map((snapshot) {
+    return _firebaseFirestore.collection("users").snapshots().map((snapshot) {
       return snapshot.docs.map((doc) => UserModel.fromSnapshot(doc)).toList();
     });
   }
