@@ -5,10 +5,9 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import '../models/user_model.dart';
 
 class FcmHelper {
-  static initialize(UserRepository userRepository, UserModel user) {
+  static initialize() async {
     _requestPermission();
-    _getToken(userRepository, user);
-
+    await FirebaseMessaging.instance.getToken().then((token) => print(token));
     var androidInitialize =
         const AndroidInitializationSettings('@mipmap/ic_launcher');
     var initializationsSettings =
@@ -34,7 +33,7 @@ class FcmHelper {
           AndroidNotificationDetails(
         'androidChannel',
         'androidChannel',
-        importance: Importance.high,
+        importance: Importance.max,
         styleInformation: bigTextStyleInformation,
         priority: Priority.high,
         playSound: true,
@@ -66,9 +65,11 @@ class FcmHelper {
     }
   }
 
-  static _getToken(UserRepository userRepository, UserModel user) async {
-    await FirebaseMessaging.instance.getToken().then((token) {
-      userRepository.addDeviceToken(user, token!);
-    });
+  static Future<String> getToken() async {
+    String deviceToken = '';
+    await FirebaseMessaging.instance
+        .getToken()
+        .then((token) => deviceToken = token!);
+    return deviceToken;
   }
 }

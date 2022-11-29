@@ -20,6 +20,17 @@ class UpdateProducts extends ProductEvent {
   List<Object> get props => [products];
 }
 
+class SendNotification extends ProductEvent {
+  final List<Product> products;
+
+  const SendNotification({
+    this.products = const <Product>[],
+  });
+
+  @override
+  List<Object> get props => [products];
+}
+
 class AddProduct extends ProductEvent {
   final Product product;
   final BuildContext context;

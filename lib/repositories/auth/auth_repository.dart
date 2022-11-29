@@ -51,7 +51,6 @@ class AuthRepository extends BaseAuthRepository {
       // ignore: void_checks
       return right(res);
     } on FirebaseAuthException catch (e) {
-      print('error');
       return left(Failure(e.message!));
     } catch (e) {
       return left(Failure(e.toString()));

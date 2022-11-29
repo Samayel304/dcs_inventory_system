@@ -30,3 +30,12 @@ class ChangePassword extends AuthEvent {
   @override
   List<Object?> get props => [currentPassword, newPassword, context];
 }
+
+class AddDeviceToken extends AuthEvent {
+  final UserModel user;
+
+  const AddDeviceToken(this.user);
+
+  @override
+  List<Object?> get props => [user];
+}

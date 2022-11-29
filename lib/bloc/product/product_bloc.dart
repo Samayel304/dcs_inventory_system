@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:dcs_inventory_system/bloc/activity_log/activity_log_bloc.dart';
 import 'package:dcs_inventory_system/bloc/auth/auth_bloc.dart';
+import 'package:dcs_inventory_system/models/notifcation_model.dart';
 import 'package:dcs_inventory_system/utils/enums.dart';
 
 import 'package:equatable/equatable.dart';
@@ -24,15 +25,22 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   final AuthBloc _authBloc;
   final ProductRepository _productRepository;
   final ActivityLogBloc _activityLogBloc;
+  final NotificationRepository _notificationRepository;
+  final UserRepository _userRepository;
   StreamSubscription? _productSubscription;
+  StreamSubscription? _userSubscription;
 
   ProductBloc(
       {required ProductRepository productRepository,
       required ActivityLogBloc activityLogBloc,
-      required AuthBloc authBloc})
+      required AuthBloc authBloc,
+      required NotificationRepository notificationRepository,
+      required UserRepository userRepository})
       : _productRepository = productRepository,
         _activityLogBloc = activityLogBloc,
         _authBloc = authBloc,
+        _notificationRepository = notificationRepository,
+        _userRepository = userRepository,
         super(ProductsLoading()) {
     on<LoadProducts>(_onLoadProducts);
     on<UpdateProducts>(_onUpdateProducts);
@@ -42,6 +50,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     on<DeleteProduct>(_onDeleteProduct);
     on<SearchProducts>(_onSearchProducts);
     on<ExportToExcel>(_onExportToExcel);
+    on<SendNotification>(_onSendNotification);
   }
 
   void _onLoadProducts(
@@ -49,12 +58,19 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     Emitter<ProductState> emit,
   ) {
     _productSubscription?.cancel();
-    _productSubscription = _productRepository.getAllProducts().listen(
-          (products) => add(
-            UpdateProducts(products: products),
-          ),
-        );
+    _productSubscription =
+        _productRepository.getAllProducts().listen((products) {
+      add(
+        UpdateProducts(products: products),
+      );
+      add(SendNotification(products: products));
+    });
   }
+
+  void _onSendNotification(
+    SendNotification event,
+    Emitter<ProductState> emit,
+  ) async {}
 
   void _onAddProduct(AddProduct event, Emitter<ProductState> emit) async {
     final state = this.state;
@@ -198,6 +214,26 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
 
   void _onUpdateProducts(UpdateProducts event, Emitter<ProductState> emit) {
     emit(ProductsLoaded(products: event.products.reversed.toList()));
+    _userSubscription?.cancel();
+
+    _userRepository.getAllUser().map((users) {
+      List<String> deviceToken = [];
+      users.map(
+          (user) => user.deviceToken.map((token) => deviceToken.add(token)));
+      event.products.map((product) {
+        if (product.quantity == 3) {
+          NotificationModel notificationModel = NotificationModel(
+              message: '$product have only 3 remaining stock',
+              deviceToken: deviceToken);
+          _notificationRepository.createNotification(notificationModel);
+        } else if (product.quantity == 0) {
+          NotificationModel notificationModel = NotificationModel(
+              message: '$product is out of stock', deviceToken: deviceToken);
+          _notificationRepository.createNotification(notificationModel);
+        }
+      });
+    });
+    print('update');
   }
 
   void _onExportToExcel(ExportToExcel event, Emitter<ProductState> emit) async {
@@ -230,6 +266,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   @override
   Future<void> close() async {
     _productSubscription?.cancel();
+    _userSubscription?.cancel();
     super.close();
   }
 }

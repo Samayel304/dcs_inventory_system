@@ -135,7 +135,7 @@ class _TabBarViewChild extends StatelessWidget {
                             title: "ID", text: order.orderId.toString()),
                         _OrderDetailContainer(
                             title: "Product Name",
-                            text: order.product.productName),
+                            text: order.product.productName.toTitleCase()),
                         _OrderDetailContainer(
                             title: "Quantity", text: order.quantity.toString()),
                         _OrderDetailContainer(

@@ -5,13 +5,19 @@ import 'package:dcs_inventory_system/cubits/login/login_cubit.dart';
 import 'package:dcs_inventory_system/config/theme.dart';
 import 'package:dcs_inventory_system/repositories/order/order_repository.dart';
 import 'package:dcs_inventory_system/repositories/repository.dart';
+import 'package:dcs_inventory_system/utils/fcm_helper.dart';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'config/app_router.dart';
 import 'firebase_options.dart';
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  print('Handling a background message ${message.messageId}');
+}
 
 void main() async {
   //debugRepaintRainbowEnabled = true;
@@ -19,7 +25,8 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  FcmHelper.initialize();
   runApp(const MyApp());
 }
 
@@ -40,7 +47,8 @@ class MyApp extends StatelessWidget {
         RepositoryProvider(create: (context) => OrderRepository()),
         RepositoryProvider(create: (context) => SupplierRepository()),
         RepositoryProvider(create: (context) => ActivityLogRepository()),
-        RepositoryProvider(create: (context) => CategoryRepository())
+        RepositoryProvider(create: (context) => CategoryRepository()),
+        RepositoryProvider(create: (context) => NotificationRepository())
       ],
       child: MultiBlocProvider(
         providers: [
@@ -75,6 +83,8 @@ class MyApp extends StatelessWidget {
                 ..add(LoadActivityLogs())),
           BlocProvider(
             create: (context) => ProductBloc(
+                userRepository: context.read<UserRepository>(),
+                notificationRepository: context.read<NotificationRepository>(),
                 productRepository: context.read<ProductRepository>(),
                 activityLogBloc: context.read<ActivityLogBloc>(),
                 authBloc: context.read<AuthBloc>())

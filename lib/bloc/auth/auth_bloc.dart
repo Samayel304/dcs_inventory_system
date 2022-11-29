@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:dcs_inventory_system/utils/fcm_helper.dart';
 import 'package:dcs_inventory_system/utils/utils.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
@@ -28,6 +29,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthUserChanged>(_onAuthUserChanged);
     on<AuthLogoutRequested>(_onLogoutRequested);
     on<ChangePassword>(_onChangePassword);
+    on<AddDeviceToken>(_onAddDeviceToken);
 
     _authUserSubscription = _authRepository.user.listen((authUser) {
       print('Auth user: $authUser');
@@ -35,6 +37,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         _userRepository.getUser(authUser.uid).listen((user) {
           add(AuthUserChanged(
               authUser: authUser, user: user, isInialized: true));
+          add(AddDeviceToken(user));
         });
       } else {
         add(AuthUserChanged(authUser: authUser, isInialized: true));
@@ -58,6 +61,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
               authUser: event.authUser!, user: event.user!))
           : emit(const AuthState.unauthenticated());
     }
+  }
+
+  void _onAddDeviceToken(
+    AddDeviceToken event,
+    Emitter<AuthState> emit,
+  ) async {
+    String token = await FcmHelper.getToken();
+    _userRepository.addDeviceToken(event.user, token);
   }
 
   void _onLogoutRequested(

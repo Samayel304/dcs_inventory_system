@@ -93,8 +93,8 @@ class _TodaysOrderListView extends StatelessWidget {
                                 children: [
                                   _generateOrderDetails(
                                       context, order.orderId!),
-                                  _generateOrderDetails(
-                                      context, order.product.productName,
+                                  _generateOrderDetails(context,
+                                      order.product.productName.toTitleCase(),
                                       flex: 2),
                                   _generateOrderDetails(
                                       context, 'x${order.quantity}'),
