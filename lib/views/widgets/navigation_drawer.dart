@@ -93,11 +93,14 @@ class _Header extends StatelessWidget {
                     child: Column(
                   children: [
                     CircleAvatar(
-                        radius: (50),
+                        radius: (45),
                         backgroundColor: Colors.white,
                         child: ClipRRect(
-                            borderRadius: BorderRadius.circular(50),
+                            borderRadius: BorderRadius.circular(45),
                             child: Image.network(avatarUrl))),
+                    const SizedBox(
+                      height: 10,
+                    ),
                     Text(fullName,
                         style: Theme.of(context)
                             .textTheme

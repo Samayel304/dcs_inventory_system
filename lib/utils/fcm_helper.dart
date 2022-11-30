@@ -1,22 +1,26 @@
-import 'package:dcs_inventory_system/repositories/repository.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-
-import '../models/user_model.dart';
+import 'package:go_router/go_router.dart';
 
 class FcmHelper {
-  static initialize() async {
+  static initialize(BuildContext context) async {
     _requestPermission();
     await FirebaseMessaging.instance.getToken().then((token) => print(token));
     var androidInitialize =
         const AndroidInitializationSettings('@mipmap/ic_launcher');
     var initializationsSettings =
         InitializationSettings(android: androidInitialize);
+
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
         FlutterLocalNotificationsPlugin();
+
     flutterLocalNotificationsPlugin.initialize(
       initializationsSettings,
-      onDidReceiveNotificationResponse: (details) {},
+      onDidReceiveNotificationResponse: (payload) {
+        print('Clicked');
+        GoRouter.of(context).go('/inventory');
+      },
     );
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {

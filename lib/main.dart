@@ -12,6 +12,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'config/app_router.dart';
 import 'firebase_options.dart';
 
@@ -26,7 +27,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  FcmHelper.initialize();
+
   runApp(const MyApp());
 }
 
@@ -83,7 +84,6 @@ class MyApp extends StatelessWidget {
                 ..add(LoadActivityLogs())),
           BlocProvider(
             create: (context) => ProductBloc(
-                userRepository: context.read<UserRepository>(),
                 notificationRepository: context.read<NotificationRepository>(),
                 productRepository: context.read<ProductRepository>(),
                 activityLogBloc: context.read<ActivityLogBloc>(),

@@ -3,18 +3,24 @@ import 'package:equatable/equatable.dart';
 
 class NotificationModel extends Equatable {
   final String message;
-  final List<dynamic> deviceToken;
+  final String userUid;
+  final DateTime dateCreated;
 
-  const NotificationModel({required this.message, required this.deviceToken});
+  const NotificationModel(
+      {required this.message,
+      required this.userUid,
+      required this.dateCreated});
   factory NotificationModel.fromSnapshot(DocumentSnapshot snap) {
     return NotificationModel(
-        message: snap['message'], deviceToken: snap['deviceToken']);
+        message: snap['message'],
+        userUid: snap['userUid'],
+        dateCreated: snap['dataCreated']);
   }
 
   Map<String, dynamic> toDocument() {
-    return {'message': message, 'deviceToken': deviceToken};
+    return {'message': message, 'userUid': userUid, 'dateCreated': dateCreated};
   }
 
   @override
-  List<Object?> get props => [message, deviceToken];
+  List<Object?> get props => [message, userUid, dateCreated];
 }

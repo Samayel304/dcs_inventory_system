@@ -26,21 +26,19 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   final ProductRepository _productRepository;
   final ActivityLogBloc _activityLogBloc;
   final NotificationRepository _notificationRepository;
-  final UserRepository _userRepository;
+
   StreamSubscription? _productSubscription;
   StreamSubscription? _userSubscription;
 
-  ProductBloc(
-      {required ProductRepository productRepository,
-      required ActivityLogBloc activityLogBloc,
-      required AuthBloc authBloc,
-      required NotificationRepository notificationRepository,
-      required UserRepository userRepository})
-      : _productRepository = productRepository,
+  ProductBloc({
+    required ProductRepository productRepository,
+    required ActivityLogBloc activityLogBloc,
+    required AuthBloc authBloc,
+    required NotificationRepository notificationRepository,
+  })  : _productRepository = productRepository,
         _activityLogBloc = activityLogBloc,
         _authBloc = authBloc,
         _notificationRepository = notificationRepository,
-        _userRepository = userRepository,
         super(ProductsLoading()) {
     on<LoadProducts>(_onLoadProducts);
     on<UpdateProducts>(_onUpdateProducts);
@@ -50,7 +48,6 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     on<DeleteProduct>(_onDeleteProduct);
     on<SearchProducts>(_onSearchProducts);
     on<ExportToExcel>(_onExportToExcel);
-    on<SendNotification>(_onSendNotification);
   }
 
   void _onLoadProducts(
@@ -63,14 +60,8 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       add(
         UpdateProducts(products: products),
       );
-      add(SendNotification(products: products));
     });
   }
-
-  void _onSendNotification(
-    SendNotification event,
-    Emitter<ProductState> emit,
-  ) async {}
 
   void _onAddProduct(AddProduct event, Emitter<ProductState> emit) async {
     final state = this.state;
@@ -131,16 +122,9 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         showErrorSnackBar(event.context, l.message);
         Navigator.of(event.context).pop();
       }, (r) {
-        UserModel user = _authBloc.state.user!;
-        String userFullname =
-            '${user.firstName} ${user.middleName} ${user.lastName}';
-        ActivityLog activityLog = ActivityLog(
-            dateCreated: Timestamp.now().toDate(),
-            user: user,
-            activity: user.role == UserRole.admin.name
-                ? 'You deducted ${event.product.productName}\'s quantity by ${event.deductedQuantity}'
-                : '$userFullname deducted ${event.product.productName}\'s quantity by ${event.deductedQuantity}');
-        _activityLogBloc.add(AddActivityLog(activityLog: activityLog));
+        addDeductLog(event.product.productName, event.deductedQuantity);
+        addNotification(event.product.quantity, event.deductedQuantity,
+            event.product.productName);
         showSuccessSnackBar(event.context, 'Deducted successfully!');
         Navigator.of(event.context).pop();
       });
@@ -214,26 +198,6 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
 
   void _onUpdateProducts(UpdateProducts event, Emitter<ProductState> emit) {
     emit(ProductsLoaded(products: event.products.reversed.toList()));
-    _userSubscription?.cancel();
-
-    _userRepository.getAllUser().map((users) {
-      List<String> deviceToken = [];
-      users.map(
-          (user) => user.deviceToken.map((token) => deviceToken.add(token)));
-      event.products.map((product) {
-        if (product.quantity == 3) {
-          NotificationModel notificationModel = NotificationModel(
-              message: '$product have only 3 remaining stock',
-              deviceToken: deviceToken);
-          _notificationRepository.createNotification(notificationModel);
-        } else if (product.quantity == 0) {
-          NotificationModel notificationModel = NotificationModel(
-              message: '$product is out of stock', deviceToken: deviceToken);
-          _notificationRepository.createNotification(notificationModel);
-        }
-      });
-    });
-    print('update');
   }
 
   void _onExportToExcel(ExportToExcel event, Emitter<ProductState> emit) async {
@@ -260,6 +224,55 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         ..createSync(recursive: true)
         ..writeAsBytesSync(fileBytes!); */
       print(directory);
+    }
+  }
+
+  void addDeductLog(String productName, int deductedQuantity) {
+    UserModel user = _authBloc.state.user!;
+    String userFullname =
+        '${user.firstName} ${user.middleName} ${user.lastName}';
+    ActivityLog activityLog = ActivityLog(
+        dateCreated: Timestamp.now().toDate(),
+        user: user,
+        activity: user.role == UserRole.admin.name
+            ? 'You deducted $productName\'s quantity by $deductedQuantity'
+            : '$userFullname deducted $productName\'s quantity by $deductedQuantity');
+    _activityLogBloc.add(AddActivityLog(activityLog: activityLog));
+  }
+
+  void addNotification(
+      int productQuantity, int deductedQuantity, String productName) {
+    int remainingQuantity = productQuantity - deductedQuantity;
+    UserModel user = _authBloc.state.user!;
+    switch (remainingQuantity) {
+      case 3:
+        NotificationModel notificationModel = NotificationModel(
+            message: 'There are only 3 $productName left.',
+            userUid: user.id!,
+            dateCreated: Timestamp.now().toDate());
+        _notificationRepository.createNotification(notificationModel);
+        break;
+      case 2:
+        NotificationModel notificationModel = NotificationModel(
+            message: 'There are only 2 $productName left.',
+            userUid: user.id!,
+            dateCreated: Timestamp.now().toDate());
+        _notificationRepository.createNotification(notificationModel);
+        break;
+      case 1:
+        NotificationModel notificationModel = NotificationModel(
+            message: 'There are only 1 $productName left.',
+            userUid: user.id!,
+            dateCreated: Timestamp.now().toDate());
+        _notificationRepository.createNotification(notificationModel);
+        break;
+      case 0:
+        NotificationModel notificationModel = NotificationModel(
+            message: '$productName is out of stock.',
+            userUid: user.id!,
+            dateCreated: Timestamp.now().toDate());
+        _notificationRepository.createNotification(notificationModel);
+        break;
     }
   }
 

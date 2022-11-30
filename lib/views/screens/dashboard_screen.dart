@@ -1,5 +1,7 @@
 import 'package:dcs_inventory_system/bloc/bloc.dart';
 import 'package:dcs_inventory_system/bloc/user/user_bloc.dart';
+import 'package:dcs_inventory_system/utils/fcm_helper.dart';
+
 import 'package:dcs_inventory_system/utils/utils.dart';
 import 'package:dcs_inventory_system/views/widgets/widgets.dart';
 
@@ -8,8 +10,21 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../models/model.dart';
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
+
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  @override
+  void initState() {
+    Future.delayed(Duration.zero).then((value) {
+      FcmHelper.initialize(context);
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
