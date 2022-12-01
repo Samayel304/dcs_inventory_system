@@ -28,7 +28,6 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   final NotificationRepository _notificationRepository;
 
   StreamSubscription? _productSubscription;
-  StreamSubscription? _userSubscription;
 
   ProductBloc({
     required ProductRepository productRepository,
@@ -280,7 +279,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   @override
   Future<void> close() async {
     _productSubscription?.cancel();
-    _userSubscription?.cancel();
+
     super.close();
   }
 }
