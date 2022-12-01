@@ -78,32 +78,6 @@ class _AddOrderModalState extends State<AddOrderModal> {
               Text("Request Supply",
                   style: Theme.of(context).textTheme.headline4),
               const SizedBox(height: 20),
-              BlocBuilder<ProductBloc, ProductState>(
-                builder: (context, state) {
-                  if (state is ProductsLoading) {
-                    return const Loader();
-                  }
-                  if (state is ProductsLoaded) {
-                    return CustomDropdown(
-                      hint: "Select Product",
-                      itemAsString: (product) {
-                        return product.productName.toString().toTitleCase();
-                      },
-                      items: state.products,
-                      onChanged: (value) {
-                        setState(() {
-                          selectedProduct = value;
-                        });
-                        setCanSave();
-                      },
-                      selectedItem: selectedProduct,
-                    );
-                  } else {
-                    return const Center(child: Text("Something went wrong."));
-                  }
-                },
-              ),
-              const SizedBox(height: 15),
               BlocBuilder<SupplierBloc, SupplierState>(
                 builder: (context, state) {
                   if (state is SupplierLoading) {
@@ -119,10 +93,42 @@ class _AddOrderModalState extends State<AddOrderModal> {
                       onChanged: (value) {
                         setState(() {
                           selectedSupplier = value;
+                          selectedProduct = null;
                         });
                         setCanSave();
                       },
                       selectedItem: selectedSupplier,
+                    );
+                  } else {
+                    return const Center(child: Text("Something went wrong."));
+                  }
+                },
+              ),
+              const SizedBox(height: 15),
+              BlocBuilder<ProductBloc, ProductState>(
+                builder: (context, state) {
+                  if (state is ProductsLoading) {
+                    return const Loader();
+                  }
+                  if (state is ProductsLoaded) {
+                    List<Product> productByCategory = state.products
+                        .where((product) =>
+                            product.category ==
+                            (selectedSupplier?.category.categoryName ?? ''))
+                        .toList();
+                    return CustomDropdown(
+                      hint: "Select Product",
+                      itemAsString: (product) {
+                        return product.productName.toString().toTitleCase();
+                      },
+                      items: productByCategory,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedProduct = value;
+                        });
+                        setCanSave();
+                      },
+                      selectedItem: selectedProduct,
                     );
                   } else {
                     return const Center(child: Text("Something went wrong."));

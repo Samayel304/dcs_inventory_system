@@ -50,8 +50,36 @@ class UserRepository extends BaseUserRepository {
 
   @override
   Future<void> addDeviceToken(UserModel user, String deviceToken) async {
-    var doc = await _firebaseFirestore.collection('users').doc(user.id).get();
-    var currentUser = UserModel.fromSnapshot(doc);
+    String uidWithSameDeviceToken = '';
+    List<dynamic> newDeviceToken = [];
+    List<UserModel> otherUsers = await _firebaseFirestore
+        .collection('users')
+        .where(FieldPath.documentId, isNotEqualTo: user.id)
+        .get()
+        .then((value) =>
+            value.docs.map((doc) => UserModel.fromSnapshot(doc)).toList());
+
+    for (var otherUser in otherUsers) {
+      if (otherUser.deviceToken.contains(deviceToken)) {
+        uidWithSameDeviceToken = otherUser.id!;
+        for (var token in otherUser.deviceToken) {
+          if (token != deviceToken) {
+            newDeviceToken.add(token);
+          }
+        }
+      }
+    }
+    if (uidWithSameDeviceToken.isNotEmpty) {
+      await _firebaseFirestore
+          .collection('users')
+          .doc(uidWithSameDeviceToken)
+          .update({'deviceToken': newDeviceToken});
+    }
+    UserModel currentUser = await _firebaseFirestore
+        .collection('users')
+        .doc(user.id)
+        .get()
+        .then((doc) => UserModel.fromSnapshot(doc));
     bool isDeviceTokenExists = currentUser.deviceToken.contains(deviceToken);
     if (isDeviceTokenExists) return;
     await _firebaseFirestore.collection('users').doc(user.id).update({

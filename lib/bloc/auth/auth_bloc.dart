@@ -32,7 +32,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AddDeviceToken>(_onAddDeviceToken);
 
     _authUserSubscription = _authRepository.user.listen((authUser) {
-      print('Auth user: $authUser');
       if (authUser != null) {
         _userRepository.getUser(authUser.uid).listen((user) {
           add(AuthUserChanged(

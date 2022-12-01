@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:dcs_inventory_system/bloc/activity_log/activity_log_bloc.dart';
 import 'package:dcs_inventory_system/bloc/auth/auth_bloc.dart';
-import 'package:dcs_inventory_system/models/notifcation_model.dart';
+
 import 'package:dcs_inventory_system/utils/enums.dart';
 
 import 'package:equatable/equatable.dart';
@@ -123,8 +123,8 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         Navigator.of(event.context).pop();
       }, (r) {
         addDeductLog(event.product.productName, event.deductedQuantity);
-        addNotification(event.product.quantity, event.deductedQuantity,
-            event.product.productName);
+        addNotification(event.product.quantity + event.deductedQuantity,
+            event.deductedQuantity, event.product.productName);
         showSuccessSnackBar(event.context, 'Deducted successfully!');
         Navigator.of(event.context).pop();
       });
@@ -243,33 +243,34 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   void addNotification(
       int productQuantity, int deductedQuantity, String productName) {
     int remainingQuantity = productQuantity - deductedQuantity;
-    UserModel user = _authBloc.state.user!;
+    String userUid = _authBloc.state.user!.id!;
+
     switch (remainingQuantity) {
       case 3:
         NotificationModel notificationModel = NotificationModel(
-            message: 'There are only 3 $productName left.',
-            userUid: user.id!,
+            message: 'There are only 3 ${productName.toTitleCase()} left.',
+            userUid: userUid,
             dateCreated: Timestamp.now().toDate());
         _notificationRepository.createNotification(notificationModel);
         break;
       case 2:
         NotificationModel notificationModel = NotificationModel(
-            message: 'There are only 2 $productName left.',
-            userUid: user.id!,
+            message: 'There are only 2 ${productName.toTitleCase()} left.',
+            userUid: userUid,
             dateCreated: Timestamp.now().toDate());
         _notificationRepository.createNotification(notificationModel);
         break;
       case 1:
         NotificationModel notificationModel = NotificationModel(
-            message: 'There are only 1 $productName left.',
-            userUid: user.id!,
+            message: 'There are only 1 ${productName.toTitleCase()} left.',
+            userUid: userUid,
             dateCreated: Timestamp.now().toDate());
         _notificationRepository.createNotification(notificationModel);
         break;
       case 0:
         NotificationModel notificationModel = NotificationModel(
-            message: '$productName is out of stock.',
-            userUid: user.id!,
+            message: '${productName.toTitleCase()} is out of stock.',
+            userUid: userUid,
             dateCreated: Timestamp.now().toDate());
         _notificationRepository.createNotification(notificationModel);
         break;

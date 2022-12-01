@@ -9,3 +9,4 @@ export 'profile/edit_fullname_screen.dart';
 export 'profile/edit_email_screen.dart';
 export 'manage_account_screen.dart';
 export 'activity_log_screen.dart';
+export 'notification_screen.dart';

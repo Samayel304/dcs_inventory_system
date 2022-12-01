@@ -71,6 +71,7 @@ class FcmHelper {
 
   static Future<String> getToken() async {
     String deviceToken = '';
+
     await FirebaseMessaging.instance
         .getToken()
         .then((token) => deviceToken = token!);
