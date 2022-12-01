@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:dcs_inventory_system/repositories/category/category_repository.dart';
 import 'package:dcs_inventory_system/views/screens/category_Screen.dart';
-import 'package:dcs_inventory_system/views/screens/profile/edit_password_screen.dart';
+
 import 'package:dcs_inventory_system/views/screens/screens.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:go_router/go_router.dart';
 
 import '../bloc/bloc.dart';
@@ -68,15 +68,19 @@ class AppRouter {
         },
       ),
       GoRoute(
+        path: '/notification',
+        builder: (context, state) {
+          return const NotificationScreen();
+        },
+      ),
+      GoRoute(
           path: '/profile',
           builder: (context, state) {
             return const ProfileScreen();
           }),
       GoRoute(
           path: '/edit_fullName',
-          
           builder: (context, state) {
-            
             return const EditFullNameScreen();
           })
     ],

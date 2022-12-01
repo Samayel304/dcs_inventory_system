@@ -16,9 +16,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'config/app_router.dart';
 import 'firebase_options.dart';
 
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  print('Handling a background message ${message.messageId}');
-}
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {}
 
 void main() async {
   //debugRepaintRainbowEnabled = true;
@@ -99,6 +97,11 @@ class MyApp extends StatelessWidget {
               create: (context) => SupplierBloc(
                   supplierRepository: context.read<SupplierRepository>())
                 ..add(LoadSuppliers())),
+          BlocProvider(
+              create: (context) => NotificationBloc(
+                  notificationRepository:
+                      context.read<NotificationRepository>())
+                ..add(LoadNotification())),
         ],
         child: Builder(builder: (context) {
           return MaterialApp.router(
