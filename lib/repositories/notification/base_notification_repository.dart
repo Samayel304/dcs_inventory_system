@@ -3,7 +3,7 @@ import 'package:dcs_inventory_system/utils/type_def.dart';
 
 abstract class BaseNotificationRepository {
   Future<void> createNotification(NotificationModel notification);
-  Stream<List<NotificationModel>> getAllNotifications();
+  Stream<List<NotificationModel>> getAllNotifications(String uid);
   FutureVoid readNotification(NotificationModel notificationModel);
   Future<void> seenNotification(List<NotificationModel> notifications);
 }
