@@ -56,7 +56,6 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       final res = await _userRepository.editUserDetails(event.user);
       res.fold((l) {}, (r) {
         showSuccessSnackBar(event.context, 'Edited successfully!');
-        Navigator.of(event.context).pop();
       });
     }
   }

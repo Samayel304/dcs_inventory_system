@@ -116,4 +116,10 @@ class UserRepository extends BaseUserRepository {
       return left(Failure(e.toString()));
     }
   }
+
+  @override
+  FutureVoid changeProfilePicture(UserModel user) async {
+    // TODO: implement changeProfilePicture
+    throw UnimplementedError();
+  }
 }

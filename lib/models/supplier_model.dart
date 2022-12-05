@@ -8,7 +8,7 @@ class Supplier extends Equatable {
   final String contactPerson;
   final String address;
   final String contactNumber;
-  final Category category;
+  final String category;
   final DateTime dateCreated;
 
   const Supplier(
@@ -27,7 +27,7 @@ class Supplier extends Equatable {
       String? contactNumber,
       String? contactPerson,
       DateTime? dateCreated,
-      Category? category}) {
+      String? category}) {
     return Supplier(
         supplierId: supplierId ?? this.supplierId,
         supplierName: supplierName ?? this.supplierName,
@@ -45,14 +45,14 @@ class Supplier extends Equatable {
         contactPerson: snap['contactPerson'],
         address: snap['address'],
         contactNumber: snap['contactNumber'],
-        category: Category.fromSupplierSnapshot(snap['category']),
+        category: snap['category'],
         dateCreated: DateTime.parse(
             ((snap['dateCreated']) as Timestamp).toDate().toString()));
   }
 
   factory Supplier.fromOrderSnapshot(Map<String, dynamic> snap) {
     return Supplier(
-        category: Category.fromSupplierSnapshot(snap['category']),
+        category: snap['category'],
         supplierId: snap['supplierId'],
         supplierName: snap['supplierName'],
         contactPerson: snap['contactPerson'],
@@ -69,7 +69,7 @@ class Supplier extends Equatable {
       'contactNumber': contactNumber,
       'address': address,
       'dateCreated': dateCreated,
-      'category': category.toDocument()
+      'category': category
     };
   }
 
@@ -81,7 +81,7 @@ class Supplier extends Equatable {
       'contactNumber': contactNumber,
       'address': address,
       'dateCreated': dateCreated,
-      'category': category.toDocument()
+      'category': category
     };
   }
 

@@ -13,12 +13,15 @@ part 'category_state.dart';
 class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
   final CategoryRepository _categoryRepository;
   final ProductRepository _productRepository;
+  final SupplierRepository _supplierRepository;
   StreamSubscription? _streamSubscription;
   CategoryBloc(
       {required CategoryRepository categoryRepository,
-      required ProductRepository productRepository})
+      required ProductRepository productRepository,
+      required SupplierRepository supplierRepository})
       : _categoryRepository = categoryRepository,
         _productRepository = productRepository,
+        _supplierRepository = supplierRepository,
         super(CategoryLoading()) {
     on<LoadCategory>(_onLoadCategory);
     on<UpdateCategory>(_onUpdateCategory);
@@ -62,6 +65,8 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
         showErrorSnackBar(event.context, l.message);
       }, (r) {
         _productRepository.deleteProductByCategory(event.category.categoryName);
+        _supplierRepository
+            .deleteSupplierByCategory(event.category.categoryName);
         showSuccessSnackBar(event.context, 'Category deleted successfully!');
       });
     }

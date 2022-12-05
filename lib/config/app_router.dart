@@ -5,6 +5,7 @@ import 'package:dcs_inventory_system/views/screens/category_Screen.dart';
 
 import 'package:dcs_inventory_system/views/screens/screens.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:go_router/go_router.dart';
 
@@ -12,6 +13,7 @@ import '../bloc/bloc.dart';
 
 class AppRouter {
   final AuthBloc authBloc;
+
   final CategoryRepository categoryRepository;
   AppRouter(this.authBloc, this.categoryRepository);
 
@@ -43,6 +45,7 @@ class AppRouter {
       GoRoute(
           path: '/category',
           builder: (BuildContext context, GoRouterState state) {
+            print('refresh category');
             return const CategoryScreen();
           }),
       GoRoute(
@@ -81,7 +84,10 @@ class AppRouter {
       GoRoute(
           path: '/edit_fullName',
           builder: (context, state) {
-            return const EditFullNameScreen();
+            print('refresh edit fullName');
+            var currentUser =
+                context.select((ProfileBloc bloc) => bloc.state.user);
+            return EditFullNameScreen(currentUser: currentUser!);
           })
     ],
     redirect: (BuildContext context, GoRouterState state) {
@@ -116,9 +122,10 @@ class AppRouter {
 class GoRouterRefreshStream extends ChangeNotifier {
   GoRouterRefreshStream(Stream<dynamic> stream) {
     notifyListeners();
-    _subscription = stream.asBroadcastStream().listen(
-          (dynamic _) => notifyListeners(),
-        );
+    _subscription = stream.asBroadcastStream().listen((dynamic _) {
+      notifyListeners();
+      print('go router refresh');
+    });
   }
 
   late final StreamSubscription<dynamic> _subscription;

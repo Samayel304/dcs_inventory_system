@@ -59,6 +59,7 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider(
             create: (context) => CategoryBloc(
+                supplierRepository: context.read<SupplierRepository>(),
                 categoryRepository: context.read<CategoryRepository>(),
                 productRepository: context.read<ProductRepository>())
               ..add(LoadCategory()),
@@ -66,10 +67,7 @@ class MyApp extends StatelessWidget {
           BlocProvider(
               create: (context) => ProfileBloc(
                   authRepository: context.read<AuthRepository>(),
-                  userRepository: context.read<UserRepository>())
-                ..add(
-                  LoadProfile(),
-                )),
+                  userRepository: context.read<UserRepository>())),
           BlocProvider(
               create: (context) => LoginCubit(context.read<AuthRepository>())),
           BlocProvider(

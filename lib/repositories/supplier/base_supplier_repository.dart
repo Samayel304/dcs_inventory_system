@@ -7,4 +7,5 @@ abstract class BaseSupplierRepository {
   FutureVoid addSupplier(Supplier supplier);
   FutureVoid editSupplier(Supplier supplier);
   FutureVoid deleteSupplier(Supplier supplier);
+  Future<void> deleteSupplierByCategory(String category);
 }

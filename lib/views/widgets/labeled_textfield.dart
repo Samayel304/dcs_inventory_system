@@ -8,12 +8,14 @@ class LabeledTextfield extends StatelessWidget {
       required this.hintText,
       this.controller,
       this.onChange,
-      this.initialValue})
+      this.initialValue,
+      this.focusNode})
       : super(key: key);
   final String hintText;
   final TextEditingController? controller;
   final void Function(String)? onChange;
   final String? initialValue;
+  final FocusNode? focusNode;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -26,6 +28,7 @@ class LabeledTextfield extends StatelessWidget {
               style: Theme.of(context).textTheme.headline4,
             )),
         CustomTextField(
+          focusNode: focusNode,
           initialValue: initialValue,
           hintText: hintText,
           controller: controller,

@@ -61,4 +61,35 @@ class SupplierRepository extends BaseSupplierRepository {
       return left(Failure(e.toString()));
     }
   }
+
+  @override
+  Future<void> deleteSupplierByCategory(String category) async {
+    try {
+      /*    var docs = await _firebaseFirestore
+          .collection('products')
+          .where('category', isEqualTo: category.toLowerCase())
+          .get()
+          .then((snapshot) =>
+              snapshot.docs.map((doc) => Product.fromSnapshot(doc)).toList());
+
+      Future.wait(docs.map((product) {
+        return deleteProduct(product);
+      })); */
+      WriteBatch batch = _firebaseFirestore.batch();
+      return await _firebaseFirestore
+          .collection('supplier')
+          .where('category', isEqualTo: category.toLowerCase())
+          .get()
+          .then((res) {
+        for (var doc in res.docs) {
+          batch.delete(doc.reference);
+        }
+        return batch.commit();
+      });
+    } on FirebaseException catch (e) {
+      throw e.message!;
+    } catch (e) {
+      e.toString();
+    }
+  }
 }

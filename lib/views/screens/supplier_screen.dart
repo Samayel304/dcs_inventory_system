@@ -102,8 +102,7 @@ class _SupplierScreenState extends State<SupplierScreen> {
                                               text: supplier.supplierName,
                                               title: "Supplier Name"),
                                           _DetailText(
-                                              text: supplier
-                                                  .category.categoryName
+                                              text: supplier.category
                                                   .toTitleCase(),
                                               title: "Supply Type"),
                                           _DetailText(

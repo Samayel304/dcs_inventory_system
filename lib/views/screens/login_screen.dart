@@ -1,9 +1,8 @@
 import 'package:dcs_inventory_system/cubits/login/login_cubit.dart';
-import 'package:dcs_inventory_system/utils/utils.dart';
+
 import 'package:dcs_inventory_system/views/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../utils/constants.dart';
 import '../widgets/custom_elevated_button.dart';

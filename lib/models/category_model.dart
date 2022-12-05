@@ -25,13 +25,6 @@ class Category extends Equatable {
             ((snap['dateCreated']) as Timestamp).toDate().toString()));
   }
 
-  factory Category.fromSupplierSnapshot(Map<String, dynamic> snap) {
-    return Category(
-        categoryName: snap['categoryName'],
-        dateCreated: DateTime.parse(
-            ((snap['dateCreated']) as Timestamp).toDate().toString()));
-  }
-
   Map<String, dynamic> toDocument() {
     return {
       'dateCreated': dateCreated,

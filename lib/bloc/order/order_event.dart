@@ -49,3 +49,5 @@ class CancelOrder extends OrderEvent {
   @override
   List<Object> get props => [order, context];
 }
+
+class ExportOrders extends OrderEvent {}

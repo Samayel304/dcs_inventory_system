@@ -17,7 +17,8 @@ class CustomTextField extends StatelessWidget {
       this.validator,
       this.onChange,
       this.maxLength,
-      this.initialValue});
+      this.initialValue,
+      this.focusNode});
 
   final String hintText;
   final TextInputType? textInputType;
@@ -34,6 +35,7 @@ class CustomTextField extends StatelessWidget {
   final void Function(String)? onChange;
   final int? maxLength;
   final String? initialValue;
+  final FocusNode? focusNode;
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +50,7 @@ class CustomTextField extends StatelessWidget {
       enableSuggestions: isEnableSuggestion,
       autocorrect: isAutoCorrect,
       keyboardType: textInputType,
+      focusNode: focusNode,
       decoration: InputDecoration(
           contentPadding: const EdgeInsets.all(10),
           hintText: hintText,

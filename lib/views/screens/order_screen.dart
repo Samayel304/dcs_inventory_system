@@ -84,7 +84,8 @@ class _OrderScreenState extends State<OrderScreen>
             SpeedDialChild(
               child: const Icon(Icons.file_download),
               label: "Export",
-              onTap: () => {},
+              onTap: () =>
+                  {BlocProvider.of<OrderBloc>(context).add(ExportOrders())},
             ),
             SpeedDialChild(
               child: const Icon(Icons.add),

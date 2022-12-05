@@ -31,13 +31,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<ChangePassword>(_onChangePassword);
     on<AddDeviceToken>(_onAddDeviceToken);
 
-    _authUserSubscription = _authRepository.user.listen((authUser) {
+    _authUserSubscription = _authRepository.user.listen((authUser) async {
       if (authUser != null) {
-        _userRepository.getUser(authUser.uid).listen((user) {
-          add(AuthUserChanged(
-              authUser: authUser, user: user, isInialized: true));
-          add(AddDeviceToken(user));
-        });
+        UserModel user = await _userRepository.getUser(authUser.uid).first;
+        print('get User');
+        add(AuthUserChanged(authUser: authUser, user: user, isInialized: true));
+        add(AddDeviceToken(user));
       } else {
         add(AuthUserChanged(authUser: authUser, isInialized: true));
       }

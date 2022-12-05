@@ -23,13 +23,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
     Future.delayed(Duration.zero).then((value) {
       FcmHelper.initialize(context);
     });
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     DateTime currentDate = DateTime.now();
-    final user = context.select((AuthBloc authBloc) => authBloc.state);
+    final user = context.select((ProfileBloc authBloc) => authBloc.state);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: const CustomAppBar(),
@@ -40,11 +41,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Greetings(
-              currentDate: currentDate,
-              userFirstName: user.status == AuthStatus.authenticated
-                  ? user.user!.firstName.toTitleCase()
-                  : '',
-            ),
+                currentDate: currentDate,
+                userFirstName: user.user?.firstName ?? ''),
             const _Cards(),
             const _TodaysOrderListView()
           ],

@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class EditFullNameScreen extends StatefulWidget {
-  const EditFullNameScreen({super.key});
-
+  const EditFullNameScreen({super.key, required this.currentUser});
+  final UserModel currentUser;
   @override
   State<EditFullNameScreen> createState() => _EditFullNameScreenState();
 }
@@ -16,16 +16,20 @@ class _EditFullNameScreenState extends State<EditFullNameScreen> {
   TextEditingController firstNameController = TextEditingController();
   TextEditingController middleNameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
+  FocusNode firstNameFocusNode = FocusNode();
+  FocusNode middleNameFocusNode = FocusNode();
+  FocusNode lastNameFocusNode = FocusNode();
+  UserModel? user;
   bool _canSave = false;
 
   @override
   void initState() {
-    super.initState();
+    user = widget.currentUser;
+    firstNameController.text = user!.firstName;
+    middleNameController.text = user!.middleName;
+    lastNameController.text = user!.lastName;
 
-    /* firstNameController.text = widget.selectedUser.firstName;
-    middleNameController.text = widget.selectedUser.middleName;
-    lastNameController.text = widget.selectedUser.lastName; */
-    /*  init(context); */
+    super.initState();
   }
 
   @override
@@ -33,32 +37,34 @@ class _EditFullNameScreenState extends State<EditFullNameScreen> {
     firstNameController.dispose();
     middleNameController.dispose();
     lastNameController.dispose();
+    firstNameFocusNode.dispose();
+    middleNameFocusNode.dispose();
+    lastNameFocusNode.dispose();
+
     super.dispose();
   }
-/* 
-  void init(BuildContext context) {
-    final user = context.select((AuthBloc authBloc) => authBloc.state.user!);
-    firstNameController.text = user.firstName;
-    middleNameController.text = user.middleName;
-    lastNameController.text = user.lastName;
-  } */
 
-  void editUser(BuildContext context, UserModel user) {
-    UserModel editedUser = user.copyWith(
+  void editUser(BuildContext context) {
+    UserModel editedUser = user!.copyWith(
         firstName: firstNameController.text,
         middleName: middleNameController.text,
         lastName: lastNameController.text);
     BlocProvider.of<UserBloc>(context).add(EditUser(editedUser, context));
+    user = editedUser;
+    checkChanges();
+    firstNameFocusNode.unfocus();
+    middleNameFocusNode.unfocus();
+    lastNameFocusNode.unfocus();
   }
 
-  void checkChanges(UserModel user) {
+  void checkChanges() {
     bool isOldAndNewFirstNameNotEqual =
-        firstNameController.text.toLowerCase() != user.firstName.toLowerCase();
+        firstNameController.text.toLowerCase() != user!.firstName.toLowerCase();
     bool isOldAndNewMiddleNameNotEqual =
         middleNameController.text.toLowerCase() !=
-            user.middleName.toLowerCase();
+            user!.middleName.toLowerCase();
     bool isOldAndNewLastNameNotEqual =
-        lastNameController.text.toLowerCase() != user.lastName.toLowerCase();
+        lastNameController.text.toLowerCase() != user!.lastName.toLowerCase();
 
     bool isAllFieldNotEmpty = firstNameController.text.isNotEmpty &&
         lastNameController.text.isNotEmpty;
@@ -79,64 +85,51 @@ class _EditFullNameScreenState extends State<EditFullNameScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final user = context.select((AuthBloc authBloc) => authBloc.state.user!);
-    firstNameController.text = user.firstName;
-    middleNameController.text = user.middleName;
-    lastNameController.text = user.lastName;
     return Scaffold(
         appBar: const BackAppBar(),
         body: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: BlocBuilder<ProfileBloc, ProfileState>(
-              builder: (context, state) {
-                if (state is ProfileLoading) {
-                  return const Loader();
-                } else if (state is ProfileLoaded) {
-                  UserModel user = state.user;
-                  return Column(
-                    children: [
-                      LabeledTextfield(
-                        hintText: "FirstName",
-                        controller: firstNameController,
-                        onChange: (value) {
-                          checkChanges(user);
-                        },
-                      ),
-                      LabeledTextfield(
-                        hintText: "MiddleName",
-                        controller: middleNameController,
-                        onChange: (value) {
-                          checkChanges(user);
-                        },
-                      ),
-                      LabeledTextfield(
-                        hintText: "LastName",
-                        controller: lastNameController,
-                        onChange: (value) {
-                          checkChanges(user);
-                        },
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10),
-                        child: CustomElevatedButton(
-                            isDisable: !_canSave,
-                            fontColor: Colors.white,
-                            text: "Save Changes",
-                            borderColor: Colors.black,
-                            backgroundColor: Colors.black,
-                            onPressed: () {
-                              editUser(context, user);
-                            }),
-                      )
-                    ],
-                  );
-                } else {
-                  return const ErrorScreen();
-                }
-              },
-            ),
-          ),
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  LabeledTextfield(
+                    hintText: "FirstName",
+                    controller: firstNameController,
+                    focusNode: firstNameFocusNode,
+                    onChange: (_) {
+                      checkChanges();
+                    },
+                  ),
+                  LabeledTextfield(
+                    hintText: "MiddleName",
+                    controller: middleNameController,
+                    focusNode: middleNameFocusNode,
+                    onChange: (_) {
+                      checkChanges();
+                    },
+                  ),
+                  LabeledTextfield(
+                    hintText: "LastName",
+                    controller: lastNameController,
+                    focusNode: lastNameFocusNode,
+                    onChange: (_) {
+                      checkChanges();
+                    },
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: CustomElevatedButton(
+                        isDisable: !_canSave,
+                        fontColor: Colors.white,
+                        text: "Save Changes",
+                        borderColor: Colors.black,
+                        backgroundColor: Colors.black,
+                        onPressed: () {
+                          editUser(context);
+                        }),
+                  )
+                ],
+              )),
         ));
   }
 }

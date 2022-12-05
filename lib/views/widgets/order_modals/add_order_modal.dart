@@ -114,7 +114,7 @@ class _AddOrderModalState extends State<AddOrderModal> {
                     List<Product> productByCategory = state.products
                         .where((product) =>
                             product.category ==
-                            (selectedSupplier?.category.categoryName ?? ''))
+                            (selectedSupplier?.category ?? ''))
                         .toList();
                     return CustomDropdown(
                       hint: "Select Product",

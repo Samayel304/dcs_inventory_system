@@ -126,7 +126,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                                       context: context,
                                                       title: 'Delete Category',
                                                       content:
-                                                          'All of the items under this category will also be deleted. Are you sure do you to delete this category?',
+                                                          'All of the supplies and supplier under this category will also be deleted. Are you sure do you to delete this category?',
                                                       onPressed: () {
                                                         Navigator.pop(context);
                                                         BlocProvider.of<

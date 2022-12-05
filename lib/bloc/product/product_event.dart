@@ -68,4 +68,4 @@ class SearchProducts extends ProductEvent {
   List<Object> get props => [keyword];
 }
 
-class ExportToExcel extends ProductEvent {}
+class ExportItems extends ProductEvent {}

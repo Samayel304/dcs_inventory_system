@@ -1,12 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dcs_inventory_system/bloc/bloc.dart';
 import 'package:dcs_inventory_system/models/model.dart';
+import 'package:dcs_inventory_system/utils/utils.dart';
 import 'package:dcs_inventory_system/views/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../bloc/supplier/supplier_bloc.dart';
 
 class EditSupplierModal extends StatefulWidget {
   const EditSupplierModal({super.key, required this.selectedSupplier});
@@ -23,7 +22,7 @@ class _EditSupplierModalState extends State<EditSupplierModal> {
   final TextEditingController addressController = TextEditingController();
   //final _formKey = GlobalKey<FormState>();
   bool _canSave = false;
-  Category? selectedCategory;
+  String? selectedCategory;
 
   @override
   void initState() {
@@ -51,7 +50,7 @@ class _EditSupplierModalState extends State<EditSupplierModal> {
         address: addressController.text,
         contactNumber: contactNumberController.text,
         dateCreated: Timestamp.now().toDate(),
-        category: selectedCategory);
+        category: selectedCategory!);
     BlocProvider.of<SupplierBloc>(context).add(EditSupplier(supplier, context));
   }
 
@@ -133,12 +132,16 @@ class _EditSupplierModalState extends State<EditSupplierModal> {
                           return const Loader();
                         }
                         if (state is CategoryLoaded) {
+                          List<String> categoryNames = [];
+                          for (var category in state.categories) {
+                            categoryNames.add(category.categoryName);
+                          }
                           return CustomDropdown(
                             hint: "Select Supply Type",
                             itemAsString: (category) {
-                              return category.categoryName;
+                              return category.toString().toTitleCase();
                             },
-                            items: state.categories,
+                            items: categoryNames,
                             onChanged: (value) {
                               setState(() {
                                 selectedCategory = value;

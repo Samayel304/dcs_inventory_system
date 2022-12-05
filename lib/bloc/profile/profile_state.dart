@@ -1,19 +1,16 @@
 part of 'profile_bloc.dart';
 
-abstract class ProfileState extends Equatable {
-  const ProfileState();
+enum ProfileStatus { loading, loaded }
+
+class ProfileState extends Equatable {
+  final UserModel? user;
+  final ProfileStatus profileStatus;
+  const ProfileState._({this.user, this.profileStatus = ProfileStatus.loading});
+  const ProfileState.loading() : this._();
+  const ProfileState.loaded(
+      {required UserModel user, required ProfileStatus profileStatus})
+      : this._(user: user, profileStatus: profileStatus);
 
   @override
-  List<Object> get props => [];
-}
-
-class ProfileLoading extends ProfileState {}
-
-class ProfileLoaded extends ProfileState {
-  final UserModel user;
-
-  const ProfileLoaded({required this.user});
-
-  @override
-  List<Object> get props => [user];
+  List<Object?> get props => [user, profileStatus];
 }

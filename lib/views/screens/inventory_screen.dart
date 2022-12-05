@@ -156,7 +156,7 @@ class _InventoryScreenState extends State<InventoryScreen>
                         label: "Export",
                         onTap: () => {
                           BlocProvider.of<ProductBloc>(context)
-                              .add(ExportToExcel())
+                              .add(ExportItems())
                         },
                       ),
                       SpeedDialChild(

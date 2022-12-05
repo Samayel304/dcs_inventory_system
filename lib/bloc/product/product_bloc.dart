@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,7 +10,7 @@ import 'package:dcs_inventory_system/bloc/auth/auth_bloc.dart';
 import 'package:dcs_inventory_system/utils/enums.dart';
 
 import 'package:equatable/equatable.dart';
-import 'package:excel/excel.dart';
+import 'package:to_csv/to_csv.dart' as exportcsv;
 import 'package:flutter/cupertino.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -46,7 +47,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     on<EditProduct>(_onEditProduct);
     on<DeleteProduct>(_onDeleteProduct);
     on<SearchProducts>(_onSearchProducts);
-    on<ExportToExcel>(_onExportToExcel);
+    on<ExportItems>(_onExportToExcel);
   }
 
   void _onLoadProducts(
@@ -199,30 +200,28 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     emit(ProductsLoaded(products: event.products.reversed.toList()));
   }
 
-  void _onExportToExcel(ExportToExcel event, Emitter<ProductState> emit) async {
+  void _onExportToExcel(ExportItems event, Emitter<ProductState> emit) async {
     final state = this.state;
     if (state is ProductsLoaded) {
-      final excel = Excel.createExcel();
-      final sheet = excel.sheets[excel.getDefaultSheet() as String];
-      sheet!.setColWidth(2, 50);
-      sheet.setColAutoFit(3);
+      List<String> header = [];
 
-      sheet
-          .cell(CellIndex.indexByColumnRow(columnIndex: 2, rowIndex: 3))
-          .value = 'Text string';
+      header.add('Item Name');
+      header.add('Quantity');
+      header.add('Category');
+      header.add('Date Created');
 
-      sheet
-              .cell(CellIndex.indexByColumnRow(columnIndex: 3, rowIndex: 4))
-              .value =
-          'Text string Text string Text string Text string Text string Text string Text string Text string';
+      List<List<String>> listOfLists = [];
+      listOfLists.add(header);
+      for (var item in state.products) {
+        List<String> data = [];
+        data.add(item.productName.toTitleCase());
+        data.add(item.quantity.toString());
+        data.add(item.category.toTitleCase());
+        data.add(item.dateCreated.formatDate());
+        listOfLists.add(data);
+      }
 
-      var fileBytes = excel.save();
-      var directory = await getApplicationDocumentsDirectory();
-
-      /* File(("$directory/output_file_name.xlsx"))
-        ..createSync(recursive: true)
-        ..writeAsBytesSync(fileBytes!); */
-      print(directory);
+      exportcsv.myCSV(header, listOfLists);
     }
   }
 
