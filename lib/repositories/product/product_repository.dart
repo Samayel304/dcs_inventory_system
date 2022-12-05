@@ -168,4 +168,24 @@ class ProductRepository extends BaseProductRepository {
       return left(Failure(e.toString()));
     }
   }
+
+  @override
+  Stream<List<Product>> searchProduct(String query) {
+    return _firebaseFirestore
+        .collection('products')
+        .where(
+          'productName',
+          isGreaterThanOrEqualTo: query.isEmpty ? 0 : query,
+          isLessThan: query.isEmpty
+              ? null
+              : query.substring(0, query.length - 1) +
+                  String.fromCharCode(
+                    query.codeUnitAt(query.length - 1) + 1,
+                  ),
+        )
+        .snapshots()
+        .map((snap) => snap.docs.map((doc) {
+              return Product.fromSnapshot(doc);
+            }).toList());
+  }
 }

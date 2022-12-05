@@ -97,6 +97,7 @@ class MyApp extends StatelessWidget {
                 ..add(LoadSuppliers())),
           BlocProvider(
               create: (context) => NotificationBloc(
+                  authRepository: context.read<AuthRepository>(),
                   notificationRepository:
                       context.read<NotificationRepository>())
                 ..add(LoadNotification())),
