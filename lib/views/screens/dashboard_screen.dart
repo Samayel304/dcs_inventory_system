@@ -148,8 +148,9 @@ class _Cards extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentUser =
-        context.select((ProfileBloc profileBloc) => profileBloc.state.user);
-    bool isAdmin = currentUser!.role == UserRole.admin.name;
+        context.select((AuthBloc authBloc) => authBloc.state.user);
+
+    bool isAdmin = currentUser?.role == UserRole.admin.name;
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 10),
