@@ -18,7 +18,8 @@ class CustomTextField extends StatelessWidget {
       this.onChange,
       this.maxLength,
       this.initialValue,
-      this.focusNode});
+      this.focusNode,
+      this.errorText});
 
   final String hintText;
   final TextInputType? textInputType;
@@ -36,6 +37,7 @@ class CustomTextField extends StatelessWidget {
   final int? maxLength;
   final String? initialValue;
   final FocusNode? focusNode;
+  final String? errorText;
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +60,7 @@ class CustomTextField extends StatelessWidget {
           suffixIcon: suffixIcon,
           prefixIcon: prefixIcon,
           fillColor: fillColor,
+          errorText: errorText,
           filled: true,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15.0),

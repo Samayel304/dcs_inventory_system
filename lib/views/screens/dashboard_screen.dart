@@ -1,5 +1,6 @@
 import 'package:dcs_inventory_system/bloc/bloc.dart';
 import 'package:dcs_inventory_system/bloc/user/user_bloc.dart';
+import 'package:dcs_inventory_system/utils/enums.dart';
 import 'package:dcs_inventory_system/utils/fcm_helper.dart';
 
 import 'package:dcs_inventory_system/utils/utils.dart';
@@ -8,6 +9,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../models/model.dart';
 
@@ -30,8 +32,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    DateTime currentDate = DateTime.now();
-    final user = context.select((ProfileBloc authBloc) => authBloc.state);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: const CustomAppBar(),
@@ -147,6 +147,10 @@ class _Cards extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currentUser =
+        context.select((ProfileBloc profileBloc) => profileBloc.state.user);
+    bool isAdmin = currentUser!.role == UserRole.admin.name;
+
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Column(
@@ -175,7 +179,9 @@ class _Cards extends StatelessWidget {
                               .textTheme
                               .headline1!
                               .copyWith(color: Colors.white),
-                        ));
+                        ), onTap: () {
+                      GoRouter.of(context).go('/inventory');
+                    });
                   } else {
                     return _generateCard(
                       context,
@@ -205,7 +211,9 @@ class _Cards extends StatelessWidget {
                             .textTheme
                             .headline1!
                             .copyWith(color: Colors.white),
-                      ));
+                      ), onTap: () {
+                    GoRouter.of(context).go('/inventory');
+                  });
                 } else {
                   return _generateCard(
                       context, 'Out of Stock Products', const ErrorScreen());
@@ -233,7 +241,12 @@ class _Cards extends StatelessWidget {
                               .textTheme
                               .headline1!
                               .copyWith(color: Colors.white),
-                        ));
+                        ),
+                        onTap: isAdmin
+                            ? () {
+                                GoRouter.of(context).push('/supplier');
+                              }
+                            : null);
                   } else {
                     return _generateCard(
                         context, 'Number of Suppliers', const ErrorScreen());
@@ -260,7 +273,12 @@ class _Cards extends StatelessWidget {
                               .textTheme
                               .headline1!
                               .copyWith(color: Colors.white),
-                        ));
+                        ),
+                        onTap: isAdmin
+                            ? () {
+                                GoRouter.of(context).push('/manage_account');
+                              }
+                            : null);
                   } else {
                     return _generateCard(
                         context, 'Number of Users', const ErrorScreen());
@@ -274,28 +292,32 @@ class _Cards extends StatelessWidget {
     );
   }
 
-  Card _generateCard(BuildContext context, String title, Widget value) {
+  Widget _generateCard(BuildContext context, String title, Widget value,
+      {void Function()? onTap}) {
     double width = MediaQuery.of(context).size.width - 56;
-    return Card(
-      clipBehavior: Clip.antiAliasWithSaveLayer,
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(12))),
-      child: Container(
-        width: width / 2,
-        color: Colors.black,
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          children: [
-            value,
-            const SizedBox(height: 10),
-            Text(title,
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-                style: Theme.of(context)
-                    .textTheme
-                    .headline5!
-                    .copyWith(color: Colors.white))
-          ],
+    return InkWell(
+      onTap: onTap,
+      child: Card(
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(12))),
+        child: Container(
+          width: width / 2,
+          color: Colors.black,
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            children: [
+              value,
+              const SizedBox(height: 10),
+              Text(title,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline5!
+                      .copyWith(color: Colors.white))
+            ],
+          ),
         ),
       ),
     );

@@ -2,6 +2,7 @@ import 'package:dcs_inventory_system/bloc/user/user_bloc.dart';
 import 'package:dcs_inventory_system/models/model.dart';
 import 'package:dcs_inventory_system/views/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AddAccountModal extends StatefulWidget {
@@ -20,6 +21,34 @@ class _AddAccountModalState extends State<AddAccountModal> {
   final TextEditingController confirmPasswordController =
       TextEditingController();
   bool _canSave = false;
+
+  String? get _passwordErroText {
+    // at any time, we can get the text from _controller.value.text
+    final text = passwordController.value.text;
+    // Note: you can do your own custom validation here
+    // Move this logic this outside the widget for more testable code
+    if (text.isEmpty) {
+      return null;
+    }
+    if (text.length < 6) {
+      return 'Password should be atleast 6 characters';
+    }
+    // return null if the text is valid
+    return null;
+  }
+
+  String? get _emailValidator {
+    final value = emailController.value.text;
+    if (value.isEmpty) {
+      return null;
+    }
+    if (!EmailValidator.validate(value)) {
+      return 'Enter a valid email address';
+    } else {
+      return null;
+    }
+  }
+
   //final _formKey = GlobalKey<FormState>();
 
   @override
@@ -41,7 +70,11 @@ class _AddAccountModalState extends State<AddAccountModal> {
         confirmPasswordController.text.isNotEmpty;
     bool isPasswordsSame =
         passwordController.text == confirmPasswordController.text;
-    if (isFieldsNotEmpty && isPasswordsSame) {
+    bool passwordsGreaterThanSix = passwordController.text.length >= 6;
+    if (isFieldsNotEmpty &&
+        isPasswordsSame &&
+        passwordsGreaterThanSix &&
+        EmailValidator.validate(emailController.text)) {
       setState(() {
         _canSave = true;
       });
@@ -127,6 +160,7 @@ class _AddAccountModalState extends State<AddAccountModal> {
                 CustomTextField(
                   hintText: "Email",
                   controller: emailController,
+                  errorText: _emailValidator,
                   onChange: (_) {
                     setCanSave();
                   },
@@ -140,6 +174,8 @@ class _AddAccountModalState extends State<AddAccountModal> {
                 const SizedBox(height: 10),
                 PasswordField(
                   passwordController: passwordController,
+                  hintText: 'Password',
+                  errorText: _passwordErroText,
                   onChange: (_) {
                     setCanSave();
                   },
@@ -152,6 +188,7 @@ class _AddAccountModalState extends State<AddAccountModal> {
                 ),
                 const SizedBox(height: 10),
                 PasswordField(
+                  hintText: 'Confirm Password',
                   passwordController: confirmPasswordController,
                   onChange: (_) {
                     setCanSave();
