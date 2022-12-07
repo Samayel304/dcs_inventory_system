@@ -24,13 +24,12 @@ class NotificationRepository extends BaseNotificationRepository {
   }
 
   @override
-  Stream<List<NotificationModel>> getAllNotifications() {
-    var currentUser = FirebaseAuth.instance.currentUser;
+  Stream<List<NotificationModel>> getAllNotifications(String uid) {
     return _firebaseFirestore
         .collection('notifications')
         .orderBy('userUid')
         .orderBy('dateCreated')
-        .where('userUid', isNotEqualTo: currentUser!.uid)
+        .where('userUid', isNotEqualTo: uid)
         .snapshots()
         .map((snap) => snap.docs.map((doc) {
               return NotificationModel.fromSnapshot(doc);

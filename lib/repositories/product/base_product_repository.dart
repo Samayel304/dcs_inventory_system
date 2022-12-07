@@ -10,4 +10,5 @@ abstract class BaseProductRepository {
   FutureVoid deleteProduct(Product product);
   Future<void> deleteProductByCategory(String category);
   Future<void> updateProductCategory(String category, String newCategory);
+  Stream<List<Product>> searchProduct(String query);
 }
