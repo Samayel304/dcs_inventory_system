@@ -90,7 +90,7 @@ class _InventoryScreenState extends State<InventoryScreen>
 
           final currentUser = context
               .select((ProfileBloc profileBloc) => profileBloc.state.user);
-          bool isAdmin = currentUser!.role == UserRole.admin.name;
+          bool isAdmin = currentUser?.role == UserRole.admin.name;
 
           return DefaultTabController(
               initialIndex: 0,
