@@ -60,7 +60,7 @@ class _ChangePasswordModalState extends State<ChangePasswordModal> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text("Edit Fullname",
+              Text("Edit Password",
                   style: Theme.of(context).textTheme.headline4),
               const SizedBox(height: 20),
               PasswordField(
