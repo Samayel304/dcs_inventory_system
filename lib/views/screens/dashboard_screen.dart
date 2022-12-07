@@ -60,7 +60,7 @@ class _TodaysOrderListView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Today\'s Order',
+            'Today\'s Requested Supplies',
             style: Theme.of(context).textTheme.headline3,
           ),
           const SizedBox(height: 10),
