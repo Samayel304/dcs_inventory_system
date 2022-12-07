@@ -2,8 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:dcs_inventory_system/models/model.dart';
-import 'package:dcs_inventory_system/repositories/auth/auth_repository.dart';
-import 'package:dcs_inventory_system/repositories/notification/notification_repository.dart';
+
 import 'package:dcs_inventory_system/repositories/repository.dart';
 import 'package:dcs_inventory_system/utils/utils.dart';
 import 'package:equatable/equatable.dart';
@@ -34,9 +33,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
 
   void _onLoadNotification(
       LoadNotification event, Emitter<NotificationState> emit) {
-   
-
-    _authSubscription = _authRepository.user.listen((user) {
+    _authStreamSubscription = _authRepository.user.listen((user) {
       if (user != null) {
         _notificationSubscription = _notificationRepository
             .getAllNotifications(user.uid)
@@ -71,7 +68,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   @override
   Future<void> close() async {
     _notificationSubscription?.cancel();
-    _authSubscription?.cancel();
+    _authStreamSubscription?.cancel();
     super.close();
   }
 }
