@@ -11,7 +11,7 @@ export 'supplier_modals/edit_supplier_modal.dart';
 export 'supplier_modals/add_supplier_modal.dart';
 export 'manage_account_modal/add_account_modal.dart';
 
-export 'profile_modals/edit_full_name.dart';
+export 'user_modals/edit_full_name.dart';
 
 export 'category_modals/add_category_modal.dart';
 export 'navigation_drawer.dart';
@@ -24,3 +24,8 @@ export 'labeled_textfield.dart';
 export 'password_field.dart';
 
 export 'error_screen.dart';
+
+export 'order_modals/filter_order.dart';
+export 'labeled_password_field.dart';
+
+export 'user_modals/change_password_modal.dart';

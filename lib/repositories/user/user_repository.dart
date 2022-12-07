@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dcs_inventory_system/models/user_model.dart';
 import 'package:dcs_inventory_system/repositories/user/base_user_repository.dart';
@@ -5,13 +7,20 @@ import 'package:dcs_inventory_system/repositories/user/base_user_repository.dart
 import 'package:dcs_inventory_system/utils/failure.dart';
 import 'package:dcs_inventory_system/utils/type_def.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:image_picker/image_picker.dart';
+
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class UserRepository extends BaseUserRepository {
   final FirebaseFirestore _firebaseFirestore;
+  final firebase_storage.FirebaseStorage _firebaseStorage;
 
-  UserRepository({
-    FirebaseFirestore? firebaseFirestore,
-  }) : _firebaseFirestore = firebaseFirestore ?? FirebaseFirestore.instance;
+  UserRepository(
+      {FirebaseFirestore? firebaseFirestore,
+      firebase_storage.FirebaseStorage? firebaseStorage})
+      : _firebaseFirestore = firebaseFirestore ?? FirebaseFirestore.instance,
+        _firebaseStorage =
+            firebaseStorage ?? firebase_storage.FirebaseStorage.instance;
 
   @override
   FutureVoid createUser(UserModel user, String password) async {
@@ -118,8 +127,26 @@ class UserRepository extends BaseUserRepository {
   }
 
   @override
-  FutureVoid changeProfilePicture(UserModel user) async {
-    // TODO: implement changeProfilePicture
-    throw UnimplementedError();
+  FutureVoid changeProfilePicture(UserModel user, XFile image) async {
+    try {
+      return (right(_firebaseStorage
+          .ref('image/${image.name}')
+          .putFile(File(image.path))
+          .then((_) async {
+        String downLoadUrl = await getDownloadURL(image.name);
+        _firebaseFirestore
+            .collection('users')
+            .doc(user.id)
+            .update({'avatarUrl': downLoadUrl});
+      })));
+    } catch (e) {
+      return (Left(Failure(e.toString())));
+    }
+  }
+
+  Future<String> getDownloadURL(String imageName) async {
+    String downloadURL =
+        await _firebaseStorage.ref('image/$imageName').getDownloadURL();
+    return downloadURL;
   }
 }

@@ -27,3 +27,14 @@ class EditProfile extends ProfileEvent {
   @override
   List<Object> get props => [user, context];
 }
+
+class ChangePassword extends ProfileEvent {
+  final String currentPassword;
+  final String newPassword;
+  final BuildContext context;
+
+  const ChangePassword(this.currentPassword, this.newPassword, this.context);
+
+  @override
+  List<Object> get props => [currentPassword, newPassword, context];
+}

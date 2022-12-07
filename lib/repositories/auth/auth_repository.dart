@@ -58,7 +58,7 @@ class AuthRepository extends BaseAuthRepository {
   }
 
   @override
-  Stream<auth.User?> get user => _firebaseAuth.userChanges();
+  Stream<auth.User?> get user => _firebaseAuth.authStateChanges();
 
   @override
   Future<void> signOut() async {

@@ -14,7 +14,7 @@ import '../../repositories/user/user_repository.dart';
 part 'auth_event.dart';
 part 'auth_state.dart';
 
-class AuthBloc extends Bloc<AuthEvent, AuthState> {
+class AuthBloc extends Bloc<AuthEvent, AuthState> with ChangeNotifier {
   final AuthRepository _authRepository;
   final UserRepository _userRepository;
   StreamSubscription<auth.User?>? _authUserSubscription;
@@ -28,7 +28,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         super(const AuthState.unknown()) {
     on<AuthUserChanged>(_onAuthUserChanged);
     on<AuthLogoutRequested>(_onLogoutRequested);
-    on<ChangePassword>(_onChangePassword);
+
     on<AddDeviceToken>(_onAddDeviceToken);
 
     _authUserSubscription = _authRepository.user.listen((authUser) async {
@@ -59,6 +59,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
               authUser: event.authUser!, user: event.user!))
           : emit(const AuthState.unauthenticated());
     }
+    notifyListeners();
   }
 
   void _onAddDeviceToken(
@@ -74,16 +75,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) {
     unawaited(_authRepository.signOut());
-  }
-
-  void _onChangePassword(ChangePassword event, Emitter<AuthState> emit) async {
-    final res = await _authRepository.changePassword(
-        event.currentPassword, event.newPassword);
-    res.fold((l) {
-      showErrorSnackBar(event.context, l.message);
-    }, (r) {
-      showSuccessSnackBar(event.context, 'Password changed successfully!');
-    });
   }
 
   @override

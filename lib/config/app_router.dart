@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dcs_inventory_system/repositories/category/category_repository.dart';
 import 'package:dcs_inventory_system/views/screens/category_Screen.dart';
+import 'package:dcs_inventory_system/views/screens/profile/edit_password_screen.dart';
 
 import 'package:dcs_inventory_system/views/screens/screens.dart';
 import 'package:flutter/material.dart';
@@ -82,6 +83,11 @@ class AppRouter {
             return const ProfileScreen();
           }),
       GoRoute(
+          path: '/edit_password',
+          builder: (context, state) {
+            return const EditPasswordScreen();
+          }),
+      GoRoute(
           path: '/edit_fullName',
           builder: (context, state) {
             print('refresh edit fullName');
@@ -115,7 +121,7 @@ class AppRouter {
       */
     },
     initialLocation: '/splash',
-    refreshListenable: GoRouterRefreshStream(authBloc.stream),
+    refreshListenable: authBloc,
   );
 }
 
@@ -124,6 +130,7 @@ class GoRouterRefreshStream extends ChangeNotifier {
     notifyListeners();
     _subscription = stream.asBroadcastStream().listen((dynamic _) {
       notifyListeners();
+
       print('go router refresh');
     });
   }

@@ -4,6 +4,7 @@ import 'package:dcs_inventory_system/utils/fcm_helper.dart';
 
 import 'package:dcs_inventory_system/utils/utils.dart';
 import 'package:dcs_inventory_system/views/widgets/widgets.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -39,13 +40,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Greetings(
-                currentDate: currentDate,
-                userFirstName: user.user?.firstName ?? ''),
-            const _Cards(),
-            const _TodaysOrderListView()
-          ],
+          children: const [Greetings(), _Cards(), _TodaysOrderListView()],
         ),
       ),
       bottomNavigationBar: const BottomNavBar(index: 0),
@@ -310,30 +305,37 @@ class _Cards extends StatelessWidget {
 class Greetings extends StatelessWidget {
   const Greetings({
     Key? key,
-    required this.currentDate,
-    required this.userFirstName,
   }) : super(key: key);
-
-  final DateTime currentDate;
-  final String userFirstName;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Hello $userFirstName',
-          style: Theme.of(context).textTheme.headline3,
-        ),
-        Text(
-          currentDate.formatGreetingsDate(),
-          style: Theme.of(context)
-              .textTheme
-              .headline5!
-              .copyWith(fontWeight: FontWeight.normal),
-        ),
-      ],
-    );
+    return BlocBuilder<UserBloc, UserState>(builder: (context, state) {
+      if (state is UserLoading) {
+        return const Loader();
+      }
+      if (state is UserLoaded) {
+        final uid = FirebaseAuth.instance.currentUser!.uid;
+        UserModel user = state.users.where((user) => user.id == uid).first;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Hello ${user.firstName}',
+              style: Theme.of(context).textTheme.headline3,
+            ),
+            Text(
+              DateTime.now().formatGreetingsDate(),
+              style: Theme.of(context)
+                  .textTheme
+                  .headline5!
+                  .copyWith(fontWeight: FontWeight.normal),
+            ),
+          ],
+        );
+      } else {
+        return const ErrorScreen();
+      }
+    });
   }
 }

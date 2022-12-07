@@ -5,6 +5,7 @@ import 'package:dcs_inventory_system/repositories/repository.dart';
 import 'package:dcs_inventory_system/utils/utils.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:to_csv/to_csv.dart' as exportcsv;
 
 import '../../models/supplier_model.dart';
 
@@ -22,6 +23,7 @@ class SupplierBloc extends Bloc<SupplierEvent, SupplierState> {
     on<AddSupplier>(_onAddSupplier);
     on<EditSupplier>(_onEditSupplier);
     on<DeleteSupplier>(_onDeleteSupplier);
+    on<ExportSupplier>(_onExportToExcel);
   }
 
   void _onLoadSuppliers(LoadSuppliers event, Emitter<SupplierState> emit) {
@@ -68,6 +70,39 @@ class SupplierBloc extends Bloc<SupplierEvent, SupplierState> {
     }, (r) {
       showSuccessSnackBar(event.context, 'Supplier deleted successfully!');
     });
+  }
+
+  void _onExportToExcel(
+      ExportSupplier event, Emitter<SupplierState> emit) async {
+    try {
+      final state = this.state;
+      if (state is SupplierLoaded) {
+        List<String> header = [];
+
+        header.add('Supplier Name');
+        header.add('Supply Type');
+        header.add('Contact Person');
+        header.add('Contact Number');
+        header.add('Address');
+
+        List<List<String>> listOfLists = [];
+        listOfLists.add(header);
+        for (var item in state.suppliers) {
+          List<String> data = [];
+          data.add(item.supplierName.toTitleCase());
+          data.add(item.category.toTitleCase());
+          data.add(item.contactPerson.toTitleCase());
+          data.add(item.contactNumber);
+          data.add(item.address);
+          listOfLists.add(data);
+        }
+
+        await exportcsv.myCSV(header, listOfLists);
+        showSuccessSnackBar(event.context, 'Exported successfully');
+      }
+    } catch (e) {
+      showErrorSnackBar(event.context, e.toString());
+    }
   }
 
   @override

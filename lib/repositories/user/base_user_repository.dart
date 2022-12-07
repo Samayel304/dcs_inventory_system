@@ -1,4 +1,5 @@
 import 'package:dcs_inventory_system/utils/type_def.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../models/user_model.dart';
 
@@ -9,5 +10,5 @@ abstract class BaseUserRepository {
   FutureVoid editUserDetails(UserModel user);
   FutureVoid changeUserPassword(String userUid, String password);
   Future<void> addDeviceToken(UserModel user, String deviceToken);
-  FutureVoid changeProfilePicture(UserModel user);
+  FutureVoid changeProfilePicture(UserModel user, XFile image);
 }

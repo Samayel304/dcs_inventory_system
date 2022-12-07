@@ -49,7 +49,7 @@ class _EditFullNameScreenState extends State<EditFullNameScreen> {
         firstName: firstNameController.text,
         middleName: middleNameController.text,
         lastName: lastNameController.text);
-    BlocProvider.of<UserBloc>(context).add(EditUser(editedUser, context));
+    BlocProvider.of<ProfileBloc>(context).add(EditProfile(editedUser, context));
     user = editedUser;
     checkChanges();
     firstNameFocusNode.unfocus();

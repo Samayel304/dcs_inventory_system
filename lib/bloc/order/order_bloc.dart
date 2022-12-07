@@ -81,43 +81,48 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
     });
   }
 
-  void _onExportToExcel(ExportOrders event, Emitter<OrderState> emit) {
-    final state = this.state;
-    if (state is OrdersLoaded) {
-      List<String> header = [];
+  void _onExportToExcel(ExportOrders event, Emitter<OrderState> emit) async {
+    try {
+      final state = this.state;
+      if (state is OrdersLoaded) {
+        List<String> header = [];
 
-      header.add('Order Id');
-      header.add('Item Name');
-      header.add('Quantity');
-      header.add('Supplier Name');
-      header.add('Date Ordered');
-      header.add('Date Received/Cancelled');
-      header.add('Status');
+        header.add('Order Id');
+        header.add('Item Name');
+        header.add('Quantity');
+        header.add('Supplier Name');
+        header.add('Date Ordered');
+        header.add('Date Received/Cancelled');
+        header.add('Status');
 
-      List<List<String>> listOfLists = [];
-      listOfLists.add(header);
-      for (var item in state.orders) {
-        List<String> data = [];
-        data.add(item.orderId.toString());
-        data.add(item.product.productName.toTitleCase());
-        data.add(item.quantity.toString());
-        data.add(item.supplier.supplierName);
-        data.add(item.orderedDate.formatDate());
-        switch (item.status) {
-          case 'received':
-            data.add(item.dateReceived.formatDate());
-            break;
-          case 'cancelled':
-            data.add(item.dateCancelled.formatDate());
-            break;
-          case 'pending':
-            data.add('');
+        List<List<String>> listOfLists = [];
+        listOfLists.add(header);
+        for (var item in state.orders) {
+          List<String> data = [];
+          data.add(item.orderId.toString());
+          data.add(item.product.productName.toTitleCase());
+          data.add(item.quantity.toString());
+          data.add(item.supplier.supplierName);
+          data.add(item.orderedDate.formatDate());
+          switch (item.status) {
+            case 'received':
+              data.add(item.dateReceived.formatDate());
+              break;
+            case 'cancelled':
+              data.add(item.dateCancelled.formatDate());
+              break;
+            case 'pending':
+              data.add('');
+          }
+          data.add(item.status);
+          listOfLists.add(data);
         }
-        data.add(item.status);
-        listOfLists.add(data);
-      }
 
-      exportcsv.myCSV(header, listOfLists);
+        await exportcsv.myCSV(header, listOfLists);
+        showSuccessSnackBar(event.context, 'Exported Successfully');
+      }
+    } catch (e) {
+      showErrorSnackBar(event.context, e.toString());
     }
   }
 

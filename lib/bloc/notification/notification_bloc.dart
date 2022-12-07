@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:dcs_inventory_system/models/model.dart';
 import 'package:dcs_inventory_system/repositories/notification/notification_repository.dart';
+import 'package:dcs_inventory_system/repositories/repository.dart';
 import 'package:dcs_inventory_system/utils/utils.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,9 +14,14 @@ part 'notification_state.dart';
 
 class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   final NotificationRepository _notificationRepository;
+  final AuthRepository _authRepository;
   late StreamSubscription? _notificationSubscription;
-  NotificationBloc({required NotificationRepository notificationRepository})
+  late StreamSubscription? _authStreamSubscription;
+  NotificationBloc(
+      {required NotificationRepository notificationRepository,
+      required AuthRepository authRepository})
       : _notificationRepository = notificationRepository,
+        _authRepository = authRepository,
         super(NotificationLoading()) {
     on<LoadNotification>(_onLoadNotification);
     on<UpdateNotification>(_onUpdateNotification);
@@ -25,9 +31,14 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
 
   void _onLoadNotification(
       LoadNotification event, Emitter<NotificationState> emit) {
-    _notificationSubscription =
-        _notificationRepository.getAllNotifications().listen((notifcations) {
-      add(UpdateNotification(notifcations));
+    _authStreamSubscription = _authRepository.user.listen((event) {
+      if (event != null) {
+        _notificationSubscription = _notificationRepository
+            .getAllNotifications()
+            .listen((notifcations) {
+          add(UpdateNotification(notifcations));
+        });
+      }
     });
   }
 

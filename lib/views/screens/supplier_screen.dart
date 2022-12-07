@@ -1,4 +1,5 @@
 import 'package:dcs_inventory_system/bloc/bloc.dart';
+import 'package:dcs_inventory_system/utils/enums.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,6 +19,7 @@ class SupplierScreen extends StatefulWidget {
 class _SupplierScreenState extends State<SupplierScreen> {
   late ScrollController _scrollController;
   bool _onTop = true;
+  String keyword = '';
 
   @override
   void initState() {
@@ -41,35 +43,42 @@ class _SupplierScreenState extends State<SupplierScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print('reload');
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: const BackAppBar(),
         floatingActionButton: Visibility(
-          visible: _onTop,
-          child: CustomFloatingActionButton(children: [
-            SpeedDialChild(
-              child: const Icon(Icons.file_download),
-              label: "Export",
-              onTap: () => {},
-            ),
-            SpeedDialChild(
-              child: const Icon(Icons.add),
-              label: "Add",
-              onTap: () => {showBottomModal(context, const AddSupplierModal())},
-            )
-          ]),
-        ),
+            visible: _onTop,
+            child: CustomFloatingActionButton(children: [
+              SpeedDialChild(
+                child: const Icon(Icons.file_download),
+                label: "Export",
+                onTap: () => {
+                  BlocProvider.of<SupplierBloc>(context)
+                      .add(ExportSupplier(context))
+                },
+              ),
+              SpeedDialChild(
+                child: const Icon(Icons.add),
+                label: "Add",
+                onTap: () =>
+                    {showBottomModal(context, const AddSupplierModal())},
+              )
+            ])),
         body: Container(
             padding: const EdgeInsets.only(left: 15, right: 15),
             child: Column(
               children: [
-                const CustomTextField(
+                CustomTextField(
                   hintText: "Search",
-                  prefixIcon: Icon(
+                  prefixIcon: const Icon(
                     Icons.search,
                     color: Colors.grey,
                   ),
+                  onChange: (value) {
+                    setState(() {
+                      keyword = value;
+                    });
+                  },
                 ),
                 const SizedBox(height: 15),
                 Expanded(
@@ -79,12 +88,19 @@ class _SupplierScreenState extends State<SupplierScreen> {
                         return const Loader();
                       }
                       if (state is SupplierLoaded) {
+                        List<Supplier> suppliers = keyword.isEmpty
+                            ? state.suppliers
+                            : state.suppliers
+                                .where((supplier) => supplier.supplierName
+                                    .toLowerCase()
+                                    .contains(keyword.toLowerCase()))
+                                .toList();
                         return ListView.builder(
                             controller: _scrollController,
                             shrinkWrap: true,
-                            itemCount: state.suppliers.length,
+                            itemCount: suppliers.length,
                             itemBuilder: ((context, index) {
-                              Supplier supplier = state.suppliers[index];
+                              Supplier supplier = suppliers[index];
                               return Container(
                                 margin: const EdgeInsets.only(bottom: 10),
                                 decoration: const BoxDecoration(
