@@ -149,4 +149,14 @@ class UserRepository extends BaseUserRepository {
         await _firebaseStorage.ref('image/$imageName').getDownloadURL();
     return downloadURL;
   }
+
+  @override
+  FutureVoid deleteUser(UserModel user) async {
+    try {
+      return right(
+          _firebaseFirestore.collection('users').doc(user.id).delete());
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
+  }
 }

@@ -26,6 +26,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     on<EditUser>(_onEditUser);
     on<ChangeProfilePicture>(_onChangeProfilePicture);
     on<ChangeUserPassword>(_onChangeUserPassword);
+    on<DeleteUser>(_onDeleteUser);
   }
 
   void _onLoadUsers(LoadUsers event, Emitter<UserState> emit) {
@@ -84,6 +85,12 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       Navigator.of(event.context).pop();
       showSuccessSnackBar(event.context, 'Successfully change password');
     });
+  }
+
+  void _onDeleteUser(DeleteUser event, Emitter<UserState> emit) async {
+    var res = await _userRepository.deleteUser(event.user);
+    res.fold((l) => showErrorSnackBar(event.context, l.message),
+        (r) => showSuccessSnackBar(event.context, 'Deleted successfully'));
   }
 
   @override

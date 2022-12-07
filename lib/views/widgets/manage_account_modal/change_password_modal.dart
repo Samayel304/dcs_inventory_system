@@ -28,8 +28,24 @@ class _ChangePasswordModalState extends State<ChangePasswordModal> {
     super.dispose();
   }
 
+  String? get _passwordErrorText {
+    // at any time, we can get the text from _controller.value.text
+    final text = newPasswordController.value.text;
+    // Note: you can do your own custom validation here
+    // Move this logic this outside the widget for more testable code
+    if (text.isEmpty) {
+      return null;
+    }
+    if (text.length < 6) {
+      return 'Password should be atleast 6 characters';
+    }
+    // return null if the text is valid
+    return null;
+  }
+
   void checkChanges() {
-    if (newPasswordController.text.isNotEmpty) {
+    bool passwordsGreaterThanSix = newPasswordController.text.length >= 6;
+    if (newPasswordController.text.isNotEmpty && passwordsGreaterThanSix) {
       setState(() {
         _canSave = true;
       });
@@ -60,11 +76,12 @@ class _ChangePasswordModalState extends State<ChangePasswordModal> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text("Edit Fullname",
+              Text("Change Password",
                   style: Theme.of(context).textTheme.headline4),
               const SizedBox(height: 20),
               PasswordField(
                 passwordController: newPasswordController,
+                errorText: _passwordErrorText,
                 onChange: (value) {
                   checkChanges();
                 },
