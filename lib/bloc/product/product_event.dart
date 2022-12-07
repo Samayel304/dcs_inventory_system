@@ -68,4 +68,9 @@ class SearchProducts extends ProductEvent {
   List<Object> get props => [keyword];
 }
 
-class ExportItems extends ProductEvent {}
+class ExportItems extends ProductEvent {
+  final BuildContext context;
+  const ExportItems(this.context);
+  @override
+  List<Object> get props => [context];
+}

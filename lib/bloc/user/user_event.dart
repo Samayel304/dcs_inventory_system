@@ -32,3 +32,23 @@ class EditUser extends UserEvent {
   @override
   List<Object> get props => [user, context];
 }
+
+class ChangeProfilePicture extends UserEvent {
+  final UserModel user;
+  final XFile image;
+  final BuildContext context;
+
+  const ChangeProfilePicture(this.user, this.context, this.image);
+  @override
+  List<Object> get props => [user, context, image];
+}
+
+class ChangeUserPassword extends UserEvent {
+  final String uid;
+  final String newPassword;
+  final BuildContext context;
+
+  const ChangeUserPassword(this.uid, this.context, this.newPassword);
+  @override
+  List<Object> get props => [uid, context];
+}

@@ -20,17 +20,6 @@ class AuthUserChanged extends AuthEvent {
 
 class AuthLogoutRequested extends AuthEvent {}
 
-class ChangePassword extends AuthEvent {
-  final String currentPassword;
-  final String newPassword;
-  final BuildContext context;
-
-  const ChangePassword(this.currentPassword, this.newPassword, this.context);
-
-  @override
-  List<Object?> get props => [currentPassword, newPassword, context];
-}
-
 class AddDeviceToken extends AuthEvent {
   final UserModel user;
 

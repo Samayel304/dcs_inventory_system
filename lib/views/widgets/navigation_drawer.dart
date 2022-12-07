@@ -1,6 +1,7 @@
 import 'package:dcs_inventory_system/bloc/bloc.dart';
 import 'package:dcs_inventory_system/bloc/user/user_bloc.dart';
 import 'package:dcs_inventory_system/models/user_model.dart';
+import 'package:dcs_inventory_system/utils/enums.dart';
 import 'package:dcs_inventory_system/views/widgets/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -13,47 +14,63 @@ class NavigationDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: Column(
-        children: [
-          const _Header(),
-          CustomListTile(
-            title: "Account Management",
-            icon: Icons.manage_accounts_outlined,
-            onTap: () {
-              Navigator.pop(context);
-              GoRouter.of(context).push('/manage_account');
-            },
-          ),
-          CustomListTile(
-            title: "Supplier",
-            icon: Icons.local_shipping_outlined,
-            onTap: () {
-              Navigator.pop(context);
-              GoRouter.of(context).push('/supplier');
-            },
-          ),
-          CustomListTile(
-            title: "Logs",
-            icon: Icons.note_alt_outlined,
-            onTap: () {
-              Navigator.pop(context);
-              GoRouter.of(context).push('/activity_log');
-            },
-          ),
-          Expanded(
-            child: Align(
-              alignment: FractionalOffset.bottomCenter,
-              child: CustomListTile(
-                title: "Logout",
-                icon: Icons.logout_outlined,
+      child: BlocBuilder<UserBloc, UserState>(builder: (context, state) {
+        if (state is UserLoading) {
+          return const Loader();
+        } else if (state is UserLoaded) {
+          final currentUser = FirebaseAuth.instance.currentUser;
+          UserModel authUser =
+              state.users.where((user) => user.id == currentUser!.uid).first;
+          bool isAdmin = authUser.role == UserRole.admin.name;
+          return Column(
+            children: [
+              const _Header(),
+              CustomListTile(
+                title: "Account Management",
+                icon: Icons.manage_accounts_outlined,
                 onTap: () {
-                  BlocProvider.of<AuthBloc>(context).add(AuthLogoutRequested());
+                  Navigator.pop(context);
+                  GoRouter.of(context).push('/manage_account');
                 },
+                isAdmin: isAdmin,
               ),
-            ),
-          ),
-        ],
-      ),
+              CustomListTile(
+                title: "Supplier",
+                icon: Icons.local_shipping_outlined,
+                onTap: () {
+                  Navigator.pop(context);
+                  GoRouter.of(context).push('/supplier');
+                },
+                isAdmin: isAdmin,
+              ),
+              CustomListTile(
+                title: "Logs",
+                icon: Icons.note_alt_outlined,
+                onTap: () {
+                  Navigator.pop(context);
+                  GoRouter.of(context).push('/activity_log');
+                },
+                isAdmin: isAdmin,
+              ),
+              Expanded(
+                child: Align(
+                  alignment: FractionalOffset.bottomCenter,
+                  child: CustomListTile(
+                    title: "Logout",
+                    icon: Icons.logout_outlined,
+                    onTap: () {
+                      BlocProvider.of<AuthBloc>(context)
+                          .add(AuthLogoutRequested());
+                    },
+                  ),
+                ),
+              ),
+            ],
+          );
+        } else {
+          return const ErrorScreen();
+        }
+      }),
     );
   }
 }
@@ -81,8 +98,10 @@ class _Header extends StatelessWidget {
             String avatarUrl = authUser.avatarUrl;
             return InkWell(
               onTap: () {
-                Navigator.pop(context);
-                GoRouter.of(context).push('/profile');
+                if (authUser.role == UserRole.admin.name) {
+                  Navigator.pop(context);
+                  GoRouter.of(context).push('/profile');
+                }
               },
               child: DrawerHeader(
                 decoration: const BoxDecoration(
@@ -130,19 +149,23 @@ class CustomListTile extends StatelessWidget {
     required this.title,
     required this.icon,
     this.onTap,
+    this.isAdmin = true,
   }) : super(key: key);
   final String title;
   final IconData icon;
   final void Function()? onTap;
+  final bool isAdmin;
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-        leading: Icon(
-          icon,
-          color: Colors.black,
-        ),
-        title: Text(title, style: Theme.of(context).textTheme.headline5),
-        onTap: onTap);
+    return isAdmin
+        ? ListTile(
+            leading: Icon(
+              icon,
+              color: Colors.black,
+            ),
+            title: Text(title, style: Theme.of(context).textTheme.headline5),
+            onTap: onTap)
+        : const SizedBox();
   }
 }

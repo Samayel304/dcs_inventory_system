@@ -1,6 +1,7 @@
 import 'package:dcs_inventory_system/bloc/bloc.dart';
 
 import 'package:dcs_inventory_system/models/model.dart';
+import 'package:dcs_inventory_system/utils/enums.dart';
 
 import 'package:dcs_inventory_system/views/widgets/widgets.dart';
 import "package:flutter/material.dart";
@@ -22,6 +23,7 @@ class _InventoryScreenState extends State<InventoryScreen>
   int _currentTabIndex = 0;
   bool _onTop = true;
   int _tabLength = 0;
+  String keyword = '';
 
   late TabController _tabController;
   late ScrollController _scrollController;
@@ -86,6 +88,10 @@ class _InventoryScreenState extends State<InventoryScreen>
             });
           });
 
+          final currentUser = context
+              .select((ProfileBloc profileBloc) => profileBloc.state.user);
+          bool isAdmin = currentUser!.role == UserRole.admin.name;
+
           return DefaultTabController(
               initialIndex: 0,
               length: length,
@@ -103,9 +109,10 @@ class _InventoryScreenState extends State<InventoryScreen>
                           Icons.search,
                           color: Colors.grey,
                         ),
-                        onChange: (keyword) {
-                          BlocProvider.of<ProductBloc>(context)
-                              .add(SearchProducts(keyword));
+                        onChange: (value) {
+                          setState(() {
+                            keyword = value;
+                          });
                         },
                       ),
                       Expanded(
@@ -137,6 +144,7 @@ class _InventoryScreenState extends State<InventoryScreen>
                                   (tab) {
                                     return SizedBox(
                                         child: _TabBarViewChild(
+                                      keyword: keyword,
                                       headers: Header.headers,
                                       category: tab,
                                       scrollController: _scrollController,
@@ -148,35 +156,47 @@ class _InventoryScreenState extends State<InventoryScreen>
                   ),
                 ),
                 floatingActionButton: Visibility(
-                  visible: _onTop && length > 0,
-                  child: CustomFloatingActionButton(
-                    children: [
-                      SpeedDialChild(
-                        child: const Icon(Icons.file_download),
-                        label: "Export",
-                        onTap: () => {
-                          BlocProvider.of<ProductBloc>(context)
-                              .add(ExportItems())
-                        },
-                      ),
-                      SpeedDialChild(
-                        child: const Icon(Icons.category),
-                        label: "Manage Category",
-                        onTap: () {
-                          GoRouter.of(context).push('/category');
-                        },
-                      ),
-                      SpeedDialChild(
-                        child: const Icon(Icons.add),
-                        label: "Add Item",
-                        onTap: () => {
-                          showBottomModal(context,
-                              AddProductModal(category: tabs[_currentTabIndex]))
-                        },
-                      ),
-                    ],
-                  ),
-                ),
+                    visible: _onTop && length > 0,
+                    child: isAdmin
+                        ? CustomFloatingActionButton(
+                            children: [
+                              SpeedDialChild(
+                                child: const Icon(Icons.file_download),
+                                label: "Export",
+                                onTap: () => {
+                                  BlocProvider.of<ProductBloc>(context)
+                                      .add(ExportItems(context))
+                                },
+                              ),
+                              SpeedDialChild(
+                                child: const Icon(Icons.category),
+                                label: "Manage Category",
+                                onTap: () {
+                                  GoRouter.of(context).push('/category');
+                                },
+                              ),
+                              SpeedDialChild(
+                                child: const Icon(Icons.add),
+                                label: "Add Item",
+                                onTap: () => {
+                                  showBottomModal(
+                                      context,
+                                      AddProductModal(
+                                          category: tabs[_currentTabIndex]))
+                                },
+                              ),
+                            ],
+                          )
+                        : FloatingActionButton(
+                            onPressed: () {
+                              showBottomModal(
+                                  context,
+                                  AddProductModal(
+                                      category: tabs[_currentTabIndex]));
+                            },
+                            backgroundColor: Colors.black,
+                            child: const Icon(Icons.add),
+                          )),
                 bottomNavigationBar: const BottomNavBar(index: 1),
               ));
         } else {
@@ -193,10 +213,12 @@ class _TabBarViewChild extends StatelessWidget {
     required this.headers,
     required this.category,
     required this.scrollController,
+    required this.keyword,
   }) : super(key: key);
   final ScrollController scrollController;
   final List<Header> headers;
   final String category;
+  final String keyword;
 
   @override
   Widget build(BuildContext context) {
@@ -225,9 +247,15 @@ class _TabBarViewChild extends StatelessWidget {
                 return const Loader();
               }
               if (state is ProductsLoaded) {
-                List<Product> products = state.products
-                    .where((product) => product.category == category)
-                    .toList();
+                List<Product> products = keyword.isEmpty
+                    ? state.products
+                        .where((product) => product.category == category)
+                        .toList()
+                    : state.products
+                        .where(
+                            (product) => product.productName.contains(keyword))
+                        .where((product) => product.category == category)
+                        .toList();
                 return ListView.builder(
                   controller: scrollController,
                   shrinkWrap: true,

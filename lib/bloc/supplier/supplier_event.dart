@@ -40,3 +40,11 @@ class DeleteSupplier extends SupplierEvent {
   @override
   List<Object> get props => [supplier, context];
 }
+
+class ExportSupplier extends SupplierEvent {
+  final BuildContext context;
+
+  const ExportSupplier(this.context);
+  @override
+  List<Object> get props => [context];
+}

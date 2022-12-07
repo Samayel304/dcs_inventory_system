@@ -5,6 +5,7 @@ import 'package:dcs_inventory_system/repositories/repository.dart';
 import 'package:dcs_inventory_system/utils/utils.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../models/model.dart';
 
@@ -23,6 +24,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     on<UpdateUsers>(_onUpdateUsers);
     on<CreateUser>(_onCreateUser);
     on<EditUser>(_onEditUser);
+    on<ChangeProfilePicture>(_onChangeProfilePicture);
+    on<ChangeUserPassword>(_onChangeUserPassword);
   }
 
   void _onLoadUsers(LoadUsers event, Emitter<UserState> emit) {
@@ -56,8 +59,31 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       final res = await _userRepository.editUserDetails(event.user);
       res.fold((l) {}, (r) {
         showSuccessSnackBar(event.context, 'Edited successfully!');
+        Navigator.of(event.context).pop();
       });
     }
+  }
+
+  void _onChangeProfilePicture(
+      ChangeProfilePicture event, Emitter<UserState> emit) async {
+    var res =
+        await _userRepository.changeProfilePicture(event.user, event.image);
+    res.fold(
+        (l) => showErrorSnackBar(event.context, l.message),
+        (r) => showSuccessSnackBar(
+            event.context, 'Successfully changed display picture!'));
+  }
+
+  void _onChangeUserPassword(
+      ChangeUserPassword event, Emitter<UserState> emit) async {
+    var res =
+        await _userRepository.changeUserPassword(event.uid, event.newPassword);
+    res.fold((l) {
+      showErrorSnackBar(event.context, l.message);
+    }, (r) {
+      Navigator.of(event.context).pop();
+      showSuccessSnackBar(event.context, 'Successfully change password');
+    });
   }
 
   @override

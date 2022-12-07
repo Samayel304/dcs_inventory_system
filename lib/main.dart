@@ -5,7 +5,6 @@ import 'package:dcs_inventory_system/cubits/login/login_cubit.dart';
 import 'package:dcs_inventory_system/config/theme.dart';
 import 'package:dcs_inventory_system/repositories/order/order_repository.dart';
 import 'package:dcs_inventory_system/repositories/repository.dart';
-import 'package:dcs_inventory_system/utils/fcm_helper.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -101,6 +100,11 @@ class MyApp extends StatelessWidget {
                   notificationRepository:
                       context.read<NotificationRepository>())
                 ..add(LoadNotification())),
+          BlocProvider(
+              create: (context) => OrderFilterBloc(
+                  orderBloc: context.read<OrderBloc>(),
+                  supplierRepository: context.read<SupplierRepository>())
+                ..add(LoadSupplierFilter())),
         ],
         child: Builder(builder: (context) {
           return MaterialApp.router(

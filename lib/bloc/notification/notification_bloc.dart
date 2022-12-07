@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:dcs_inventory_system/models/model.dart';
 import 'package:dcs_inventory_system/repositories/auth/auth_repository.dart';
 import 'package:dcs_inventory_system/repositories/notification/notification_repository.dart';
+import 'package:dcs_inventory_system/repositories/repository.dart';
 import 'package:dcs_inventory_system/utils/utils.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,7 +17,9 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   final NotificationRepository _notificationRepository;
   final AuthRepository _authRepository;
   late StreamSubscription? _notificationSubscription;
-  late StreamSubscription? _authSubscription;
+
+  late StreamSubscription? _authStreamSubscription;
+
   NotificationBloc(
       {required NotificationRepository notificationRepository,
       required AuthRepository authRepository})
@@ -31,6 +34,8 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
 
   void _onLoadNotification(
       LoadNotification event, Emitter<NotificationState> emit) {
+   
+
     _authSubscription = _authRepository.user.listen((user) {
       if (user != null) {
         _notificationSubscription = _notificationRepository

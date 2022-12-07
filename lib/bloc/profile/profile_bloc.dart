@@ -5,8 +5,9 @@ import 'package:bloc/bloc.dart';
 import 'package:dcs_inventory_system/models/model.dart';
 import 'package:dcs_inventory_system/repositories/repository.dart';
 import 'package:dcs_inventory_system/utils/utils.dart';
+
 import 'package:equatable/equatable.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 
 part 'profile_event.dart';
@@ -25,6 +26,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         _userRepository = userRepository,
         super(const ProfileState.loading()) {
     on<UpdateProfile>(_onUpdateProfile);
+    on<EditProfile>(_onEditProfile);
+    on<ChangePassword>(_onChangePassword);
 
     _authSubscription = _authRepository.user.listen((user) {
       if (user != null) {
@@ -43,6 +46,26 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   void _onUpdateProfile(UpdateProfile event, Emitter<ProfileState> emit) {
     emit(ProfileState.loaded(
         user: event.user, profileStatus: ProfileStatus.loaded));
+  }
+
+  void _onEditProfile(EditProfile event, Emitter<ProfileState> emit) async {
+    final res = await _userRepository.editUserDetails(event.user);
+    res.fold((l) {}, (r) {
+      showSuccessSnackBar(event.context, 'Edited successfully!');
+      Navigator.of(event.context).pop();
+    });
+  }
+
+  void _onChangePassword(
+      ChangePassword event, Emitter<ProfileState> emit) async {
+    final res = await _authRepository.changePassword(
+        event.currentPassword, event.newPassword);
+    res.fold((l) {
+      showErrorSnackBar(event.context, l.message);
+    }, (r) {
+      showSuccessSnackBar(event.context, 'Password changed successfully!');
+      Navigator.of(event.context).pop();
+    });
   }
 
   @override

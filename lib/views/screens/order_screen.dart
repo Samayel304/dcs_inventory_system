@@ -37,7 +37,9 @@ class _OrderScreenState extends State<OrderScreen>
   @override
   Widget build(BuildContext context) {
     List<String> tabs = ["All", "Pending", "Received", "Cancelled"];
-
+    final currentUser =
+        context.select((ProfileBloc profileBloc) => profileBloc.state.user);
+    bool isAdmin = currentUser!.role == UserRole.admin.name;
     return DefaultTabController(
       initialIndex: 0,
       length: tabs.length,
@@ -50,13 +52,6 @@ class _OrderScreenState extends State<OrderScreen>
             padding: const EdgeInsets.only(left: 15, right: 15),
             child: Column(
               children: [
-                const CustomTextField(
-                  hintText: "Search",
-                  prefixIcon: Icon(
-                    Icons.search,
-                    color: Colors.grey,
-                  ),
-                ),
                 Expanded(
                   child: CustomTabBar(
                     tabs: tabs,
@@ -80,19 +75,35 @@ class _OrderScreenState extends State<OrderScreen>
               ],
             ),
           ),
-          floatingActionButton: CustomFloatingActionButton(children: [
-            SpeedDialChild(
-              child: const Icon(Icons.file_download),
-              label: "Export",
-              onTap: () =>
-                  {BlocProvider.of<OrderBloc>(context).add(ExportOrders())},
-            ),
-            SpeedDialChild(
-              child: const Icon(Icons.add),
-              label: "Add",
-              onTap: () => {showBottomModal(context, const AddOrderModal())},
-            )
-          ])),
+          floatingActionButton: isAdmin
+              ? CustomFloatingActionButton(children: [
+                  SpeedDialChild(
+                    child: const Icon(Icons.file_download),
+                    label: "Export",
+                    onTap: () => {
+                      BlocProvider.of<OrderBloc>(context)
+                          .add(ExportOrders(context))
+                    },
+                  ),
+                  SpeedDialChild(
+                    child: const Icon(Icons.add),
+                    label: "Add",
+                    onTap: () =>
+                        {showBottomModal(context, const AddOrderModal())},
+                  ),
+                  /* SpeedDialChild(
+              child: const Icon(Icons.filter_alt),
+              label: "Filter",
+              onTap: () => {showBottomModal(context, const FilterOrder())},
+            ) */
+                ])
+              : FloatingActionButton(
+                  onPressed: () {
+                    showBottomModal(context, const AddOrderModal());
+                  },
+                  backgroundColor: Colors.black,
+                  child: const Icon(Icons.add),
+                )),
     );
   }
 }

@@ -15,10 +15,10 @@ class ActivityLogScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: BackAppBar(
-          actions: [
+            /* actions: [
             IconButton(onPressed: () {}, icon: const Icon(Icons.filter_alt))
-          ],
-        ),
+          ], */
+            ),
         body: Column(
           children: [
             Expanded(

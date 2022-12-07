@@ -12,7 +12,6 @@ import 'package:dcs_inventory_system/utils/enums.dart';
 import 'package:equatable/equatable.dart';
 import 'package:to_csv/to_csv.dart' as exportcsv;
 import 'package:flutter/cupertino.dart';
-import 'package:path_provider/path_provider.dart';
 
 import '../../models/model.dart';
 
@@ -201,27 +200,32 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   }
 
   void _onExportToExcel(ExportItems event, Emitter<ProductState> emit) async {
-    final state = this.state;
-    if (state is ProductsLoaded) {
-      List<String> header = [];
+    try {
+      final state = this.state;
+      if (state is ProductsLoaded) {
+        List<String> header = [];
 
-      header.add('Item Name');
-      header.add('Quantity');
-      header.add('Category');
-      header.add('Date Created');
+        header.add('Item Name');
+        header.add('Quantity');
+        header.add('Category');
+        header.add('Date Created');
 
-      List<List<String>> listOfLists = [];
-      listOfLists.add(header);
-      for (var item in state.products) {
-        List<String> data = [];
-        data.add(item.productName.toTitleCase());
-        data.add(item.quantity.toString());
-        data.add(item.category.toTitleCase());
-        data.add(item.dateCreated.formatDate());
-        listOfLists.add(data);
+        List<List<String>> listOfLists = [];
+        listOfLists.add(header);
+        for (var item in state.products) {
+          List<String> data = [];
+          data.add(item.productName.toTitleCase());
+          data.add(item.quantity.toString());
+          data.add(item.category.toTitleCase());
+          data.add(item.dateCreated.formatDate());
+          listOfLists.add(data);
+        }
+
+        await exportcsv.myCSV(header, listOfLists);
+        showSuccessSnackBar(event.context, 'Exported Successfully');
       }
-
-      exportcsv.myCSV(header, listOfLists);
+    } catch (e) {
+      showErrorSnackBar(event.context, e.toString());
     }
   }
 

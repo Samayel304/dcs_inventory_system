@@ -1,4 +1,5 @@
 import 'package:dcs_inventory_system/bloc/auth/auth_bloc.dart';
+import 'package:dcs_inventory_system/bloc/bloc.dart';
 import 'package:dcs_inventory_system/views/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,8 +18,11 @@ class _EditPasswordScreenState extends State<EditPasswordScreen> {
   bool _canSave = false;
 
   void setCanSave() {
+    bool isPasswordNotSame =
+        currentPasswordController.text != newPasswordController.text;
     if (currentPasswordController.text.isNotEmpty &&
-        newPasswordController.text.isNotEmpty) {
+        newPasswordController.text.isNotEmpty &&
+        isPasswordNotSame) {
       setState(() {
         _canSave = true;
       });
@@ -30,7 +34,7 @@ class _EditPasswordScreenState extends State<EditPasswordScreen> {
   }
 
   void changePassword(BuildContext context) {
-    BlocProvider.of<AuthBloc>(context).add(ChangePassword(
+    BlocProvider.of<ProfileBloc>(context).add(ChangePassword(
         currentPasswordController.text, newPasswordController.text, context));
   }
 
@@ -43,14 +47,14 @@ class _EditPasswordScreenState extends State<EditPasswordScreen> {
             padding: const EdgeInsets.all(20),
             child: Column(
               children: [
-                LabeledTextfield(
+                LabeledPasswordField(
                   hintText: "Current Password",
                   controller: currentPasswordController,
                   onChange: (_) {
                     setCanSave();
                   },
                 ),
-                LabeledTextfield(
+                LabeledPasswordField(
                   hintText: "New Password",
                   controller: newPasswordController,
                   onChange: (_) {

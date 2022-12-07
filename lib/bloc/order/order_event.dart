@@ -50,4 +50,11 @@ class CancelOrder extends OrderEvent {
   List<Object> get props => [order, context];
 }
 
-class ExportOrders extends OrderEvent {}
+class ExportOrders extends OrderEvent {
+  final BuildContext context;
+
+  const ExportOrders(this.context);
+
+  @override
+  List<Object> get props => [context];
+}
