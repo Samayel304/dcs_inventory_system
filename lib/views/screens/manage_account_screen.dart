@@ -145,8 +145,24 @@ class _ManageAccountScreenState extends State<ManageAccountScreen> {
                                                         selectedUser: user,
                                                       ));
                                                   break;
-                                                default:
+
+                                                case 2:
                                                   changeProfilePicture(user);
+                                                  break;
+                                                default:
+                                                  showAlertDialog(
+                                                      context: context,
+                                                      title: "Delete Product",
+                                                      content:
+                                                          "Are you sure do you want to delete this user?",
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                        BlocProvider.of<
+                                                                    UserBloc>(
+                                                                context)
+                                                            .add(DeleteUser(
+                                                                user, context));
+                                                      });
                                                   break;
                                               }
                                             },
@@ -166,6 +182,10 @@ class _ManageAccountScreenState extends State<ManageAccountScreen> {
                                                     value: 2,
                                                     child: Text(
                                                         "Change Display Picture"),
+                                                  ),
+                                                  const PopupMenuItem(
+                                                    value: 3,
+                                                    child: Text("Delete"),
                                                   )
                                                 ]))
                                   ],

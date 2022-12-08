@@ -9,6 +9,7 @@ abstract class BaseUserRepository {
   FutureVoid createUser(UserModel user, String password);
   FutureVoid editUserDetails(UserModel user);
   FutureVoid changeUserPassword(String userUid, String password);
+  FutureVoid deleteUser(UserModel user);
   Future<void> addDeviceToken(UserModel user, String deviceToken);
   FutureVoid changeProfilePicture(UserModel user, XFile image);
 }

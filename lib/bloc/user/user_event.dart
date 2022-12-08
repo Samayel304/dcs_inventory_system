@@ -52,3 +52,12 @@ class ChangeUserPassword extends UserEvent {
   @override
   List<Object> get props => [uid, context];
 }
+
+class DeleteUser extends UserEvent {
+  final UserModel user;
+  final BuildContext context;
+
+  const DeleteUser(this.user, this.context);
+  @override
+  List<Object> get props => [user, context];
+}

@@ -34,8 +34,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with ChangeNotifier {
     _authUserSubscription = _authRepository.user.listen((authUser) async {
       if (authUser != null) {
         UserModel user = await _userRepository.getUser(authUser.uid).first;
-        print('get User');
+        
         add(AuthUserChanged(authUser: authUser, user: user, isInialized: true));
+        
         add(AddDeviceToken(user));
       } else {
         add(AuthUserChanged(authUser: authUser, isInialized: true));
