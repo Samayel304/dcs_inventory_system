@@ -182,24 +182,37 @@ class _TabBarViewChild extends StatelessWidget {
                                           fontColor: Colors.white,
                                           backgroundColor: Colors.black,
                                           onPressed: () {
-                                            OrderModel editedOrder =
-                                                order.copyWith(
-                                                    dateReceived:
-                                                        Timestamp.now()
-                                                            .toDate(),
-                                                    status: OrderStatus
-                                                        .received.name);
-                                            int addedQuantity = order.quantity;
-                                            Product product = order.product
-                                                .copyWith(
-                                                    quantity:
-                                                        order.product.quantity +
-                                                            addedQuantity,
-                                                    isNew: false);
+                                            showAlertDialog(
+                                                context: context,
+                                                title: "Delete Product",
+                                                content:
+                                                    "Are you sure do you want to receive this order?",
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                  OrderModel editedOrder =
+                                                      order.copyWith(
+                                                          dateReceived:
+                                                              Timestamp.now()
+                                                                  .toDate(),
+                                                          status: OrderStatus
+                                                              .received.name);
+                                                  int addedQuantity =
+                                                      order.quantity;
+                                                  Product product =
+                                                      order.product.copyWith(
+                                                          quantity: order
+                                                                  .product
+                                                                  .quantity +
+                                                              addedQuantity,
+                                                          isNew: false);
 
-                                            BlocProvider.of<OrderBloc>(context)
-                                                .add(ReceiveOrder(product,
-                                                    editedOrder, context));
+                                                  BlocProvider.of<OrderBloc>(
+                                                          context)
+                                                      .add(ReceiveOrder(
+                                                          product,
+                                                          editedOrder,
+                                                          context));
+                                                });
                                           }),
                                     ),
                                     const SizedBox(width: 5),
@@ -208,17 +221,25 @@ class _TabBarViewChild extends StatelessWidget {
                                             text: "Cancel",
                                             backgroundColor: Colors.white,
                                             onPressed: () {
-                                              OrderModel order = orders[index]
-                                                  .copyWith(
-                                                      status: OrderStatus
-                                                          .cancelled.name,
-                                                      dateCancelled:
-                                                          Timestamp.now()
-                                                              .toDate());
-                                              BlocProvider.of<OrderBloc>(
-                                                      context)
-                                                  .add(CancelOrder(
-                                                      order, context));
+                                              showAlertDialog(
+                                                  context: context,
+                                                  title: "Delete Product",
+                                                  content:
+                                                      "Are you sure do you want to cancel this order?",
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                    OrderModel order =
+                                                        orders[index].copyWith(
+                                                            status: OrderStatus
+                                                                .cancelled.name,
+                                                            dateCancelled:
+                                                                Timestamp.now()
+                                                                    .toDate());
+                                                    BlocProvider.of<OrderBloc>(
+                                                            context)
+                                                        .add(CancelOrder(
+                                                            order, context));
+                                                  });
                                             }))
                                   ],
                                 ),

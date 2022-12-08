@@ -266,6 +266,7 @@ class _TabBarViewChild extends StatelessWidget {
                         product.isNew == false && product.quantity == 0;
                     bool isNew = product.isNew == true;
                     bool isDeductMenuVisible = product.quantity == 0;
+                    bool isQuantityZero = product.quantity == 0;
                     return Stack(children: [
                       Container(
                         margin: const EdgeInsets.only(bottom: 7),
@@ -337,9 +338,10 @@ class _TabBarViewChild extends StatelessWidget {
                                           value: 1,
                                           child: const Text("Deduct"),
                                         ),
-                                        const PopupMenuItem(
+                                        PopupMenuItem(
+                                          enabled: isQuantityZero,
                                           value: 2,
-                                          child: Text("Delete"),
+                                          child: const Text("Delete"),
                                         )
                                       ])),
                         ]),
