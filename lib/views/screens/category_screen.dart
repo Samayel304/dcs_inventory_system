@@ -41,6 +41,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    List<Product> products = context
+        .select(
+            (ProductBloc productBloc) => productBloc.state as ProductsLoaded)
+        .products;
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: const BackAppBar(),
@@ -88,6 +92,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
                             itemCount: state.categories.length,
                             itemBuilder: ((context, index) {
                               Category category = state.categories[index];
+
+                              List<Product> prod = products
+                                  .where((product) =>
+                                      product.category == category.categoryName)
+                                  .toList();
                               return Container(
                                 margin: const EdgeInsets.only(bottom: 10),
                                 decoration: const BoxDecoration(
@@ -126,7 +135,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                                       context: context,
                                                       title: 'Delete Category',
                                                       content:
-                                                          'All of the supplies and supplier under this category will also be deleted. Are you sure do you to delete this category?',
+                                                          'All of the supplier under this category will also be deleted. Are you sure do you to delete this category?',
                                                       onPressed: () {
                                                         Navigator.pop(context);
                                                         BlocProvider.of<
@@ -145,9 +154,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                                 const PopupMenuItem(
                                                     value: 0,
                                                     child: Text("Edit")),
-                                                const PopupMenuItem(
+                                                PopupMenuItem(
+                                                    enabled: prod.isEmpty,
                                                     value: 1,
-                                                    child: Text("Delete"))
+                                                    child: const Text("Delete"))
                                               ];
                                             },
                                           ),
