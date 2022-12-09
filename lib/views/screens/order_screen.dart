@@ -184,7 +184,7 @@ class _TabBarViewChild extends StatelessWidget {
                                           onPressed: () {
                                             showAlertDialog(
                                                 context: context,
-                                                title: "Delete Product",
+                                                title: "Recieve Supply?",
                                                 content:
                                                     "Are you sure do you want to receive this order?",
                                                 onPressed: () {
@@ -223,7 +223,7 @@ class _TabBarViewChild extends StatelessWidget {
                                             onPressed: () {
                                               showAlertDialog(
                                                   context: context,
-                                                  title: "Delete Product",
+                                                  title: "Cancel Supply?",
                                                   content:
                                                       "Are you sure do you want to cancel this order?",
                                                   onPressed: () {
