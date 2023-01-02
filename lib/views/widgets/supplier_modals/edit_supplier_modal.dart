@@ -20,7 +20,7 @@ class _EditSupplierModalState extends State<EditSupplierModal> {
   final TextEditingController contactPersonController = TextEditingController();
   final TextEditingController contactNumberController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
-  //final _formKey = GlobalKey<FormState>();
+
   bool _canSave = false;
   String? selectedCategory;
 

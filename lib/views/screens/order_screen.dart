@@ -24,8 +24,6 @@ class _OrderScreenState extends State<OrderScreen>
 
   @override
   void initState() {
-    BlocProvider.of<OrderFilterBloc>(context).add(
-        SetDateRange(DateTime(2022, 12, 8), DateTime(2022, 12, 10), context));
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
   }

@@ -73,7 +73,7 @@ class _FilterOrderState extends State<FilterOrder> {
             2000), //DateTime.now() - not to allow to choose before today.
         lastDate: end != null
             ? DateTime(end!.year, end!.month, end!.day - 1)
-            : DateTime(currentDate.year));
+            : currentDate);
     if (pickedDate != null) {
       String startDate = pickedDate.formatDate();
       setState(() {
@@ -94,7 +94,7 @@ class _FilterOrderState extends State<FilterOrder> {
             start!.month,
             start!.day +
                 1), //DateTime.now() - not to allow to choose before today.
-        lastDate: DateTime(currentDate.year));
+        lastDate: currentDate);
     if (pickedDate != null) {
       String endDate = pickedDate.formatDate();
       setState(() {
