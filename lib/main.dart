@@ -102,9 +102,12 @@ class MyApp extends StatelessWidget {
                 ..add(LoadNotification())),
           BlocProvider(
               create: (context) => OrderFilterBloc(
-                  orderBloc: context.read<OrderBloc>(),
-                  supplierRepository: context.read<SupplierRepository>())
-                ..add(LoadSupplierFilter())),
+                    orderBloc: context.read<OrderBloc>(),
+                  )),
+          BlocProvider(
+            create: (context) =>
+                ProductSearchBloc(productBloc: context.read<ProductBloc>()),
+          ),
         ],
         child: Builder(builder: (context) {
           return MaterialApp.router(

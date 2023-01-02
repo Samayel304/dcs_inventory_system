@@ -22,10 +22,16 @@ Color statusFormatColor(String status) {
 
 const String dateFormatter = 'MMMM dd, y';
 const String greetingsDateFormatter = 'EEEE, dd MMMM';
+const String dateTimeFormatter = 'MMMM dd, y kk:mm:a';
 
 extension DateHelper on DateTime {
   String formatDate() {
     final formatter = DateFormat(dateFormatter);
+    return formatter.format(this);
+  }
+
+  String formatDateTime() {
+    final formatter = DateFormat(dateTimeFormatter);
     return formatter.format(this);
   }
 

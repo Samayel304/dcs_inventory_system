@@ -24,6 +24,8 @@ class _OrderScreenState extends State<OrderScreen>
 
   @override
   void initState() {
+    BlocProvider.of<OrderFilterBloc>(context).add(
+        SetDateRange(DateTime(2022, 12, 8), DateTime(2022, 12, 10), context));
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
   }
@@ -39,7 +41,10 @@ class _OrderScreenState extends State<OrderScreen>
     List<String> tabs = ["All", "Pending", "Received", "Cancelled"];
     final currentUser =
         context.select((ProfileBloc profileBloc) => profileBloc.state.user);
-    bool isAdmin = currentUser!.role == UserRole.admin.name;
+    bool isAdmin = currentUser?.role == UserRole.admin.name;
+    final orderFilter = context.select((OrderFilterBloc orderFilterBloc) =>
+        (orderFilterBloc.state as OrderFilterLoaded));
+
     return DefaultTabController(
       initialIndex: 0,
       length: tabs.length,
@@ -91,11 +96,17 @@ class _OrderScreenState extends State<OrderScreen>
                     onTap: () =>
                         {showBottomModal(context, const AddOrderModal())},
                   ),
-                  /* SpeedDialChild(
-              child: const Icon(Icons.filter_alt),
-              label: "Filter",
-              onTap: () => {showBottomModal(context, const FilterOrder())},
-            ) */
+                  SpeedDialChild(
+                    child: const Icon(Icons.filter_alt),
+                    label: "Filter",
+                    onTap: () => {
+                      showBottomModal(
+                          context,
+                          FilterOrder(
+                              startDate: orderFilter.start,
+                              endDate: orderFilter.end))
+                    },
+                  )
                 ])
               : FloatingActionButton(
                   onPressed: () {
@@ -117,17 +128,18 @@ class _TabBarViewChild extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<OrderBloc, OrderState>(
+    return BlocBuilder<OrderFilterBloc, OrderFilterState>(
       builder: (context, state) {
-        if (state is OrdersLoading) {
+        if (state is OrderFilterLoading) {
           return const Center(child: CircularProgressIndicator());
         }
-        if (state is OrdersLoaded) {
+        if (state is OrderFilterLoaded) {
           List<OrderModel> orders = orderStatus == OrderStatus.all
               ? state.orders
               : state.orders
                   .where((order) => order.status == orderStatus.name)
                   .toList();
+
           return Padding(
             padding: const EdgeInsets.only(top: 10),
             child: ListView.builder(
@@ -155,16 +167,16 @@ class _TabBarViewChild extends StatelessWidget {
                             title: "SupplierName"),
                         _OrderDetailContainer(
                             title: "Ordered Date",
-                            text: order.orderedDate.formatDate()),
+                            text: order.orderedDate.formatDateTime()),
                         order.status == OrderStatus.received.name
                             ? _OrderDetailContainer(
                                 title: "Date Received",
-                                text: order.dateReceived.formatDate())
+                                text: order.dateReceived.formatDateTime())
                             : const SizedBox.shrink(),
                         order.status == OrderStatus.cancelled.name
                             ? _OrderDetailContainer(
                                 title: "Date Cancelled",
-                                text: order.dateCancelled.formatDate())
+                                text: order.dateCancelled.formatDateTime())
                             : const SizedBox.shrink(),
                         _OrderDetailContainer(
                           title: "Status",

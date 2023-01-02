@@ -3,71 +3,70 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:dcs_inventory_system/bloc/bloc.dart';
 import 'package:dcs_inventory_system/models/model.dart';
-import 'package:dcs_inventory_system/repositories/repository.dart';
+import 'package:dcs_inventory_system/utils/utils.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 
 part 'order_filter_event.dart';
 part 'order_filter_state.dart';
 
 class OrderFilterBloc extends Bloc<OrderFilterEvent, OrderFilterState> {
-  final SupplierRepository _supplierRepository;
   final OrderBloc _orderBloc;
-  late StreamSubscription _supplierSubscription;
-  OrderFilterBloc(
-      {required SupplierRepository supplierRepository,
-      required OrderBloc orderBloc})
-      : _supplierRepository = supplierRepository,
-        _orderBloc = orderBloc,
-        super(OrderFilterLoading()) {
-    on<LoadSupplierFilter>(_onLoadFilter);
-    on<UpdateOrderDateFilter>(_onUpdateOrderDateFilter);
-  }
+  late StreamSubscription _orderStreamSubscription;
+  OrderFilterBloc({required OrderBloc orderBloc})
+      : _orderBloc = orderBloc,
+        super(orderBloc.state is OrdersLoaded
+            ? OrderFilterLoaded(
+                (orderBloc.state as OrdersLoaded).orders, null, null)
+            : OrderFilterLoading()) {
+    on<UpdateOrder>(_onUpdateOrder);
+    on<SetDateRange>(_onSetDateRange);
 
-  void _onLoadFilter(
-      LoadSupplierFilter event, Emitter<OrderFilterState> emit) async {
-    List<SupplierFilter> supplierFilters = [];
-    _supplierSubscription =
-        _supplierRepository.getAllSuppliers().listen((event) {
-      for (var supply in event) {
-        supplierFilters.add(SupplierFilter(supplierName: supply.supplierName));
+    _orderStreamSubscription = _orderBloc.stream.listen((state) {
+      if (state is OrdersLoaded) {
+        add(UpdateOrder(state.orders, null, null));
       }
     });
-
-    OrderDateFilter orderDateFilter = OrderDateFilter(
-        startDate: DateTime.now(), endDate: DateTime(2021, 1, 1));
-    List<OrderModel> filteredOrders = (_orderBloc.state as OrdersLoaded).orders;
-    emit(OrderFilterLoaded(
-        selectedSuppliers: supplierFilters,
-        orderDateFilter: orderDateFilter,
-        filteredOrders: filteredOrders));
   }
 
-  void _onUpdateOrderDateFilter(
-      UpdateOrderDateFilter event, Emitter<OrderFilterState> emit) {
-    final state = this.state;
-    if (state is OrderFilterLoaded) {}
+  void _onUpdateOrder(UpdateOrder event, Emitter<OrderFilterState> emit) {
+    emit(OrderFilterLoaded(event.orders, event.start, event.end));
   }
 
-  List<OrderModel> _getOrders(
-      List<SupplierFilter> supplierFilters, OrderDateFilter orderDateFilter) {
-    List<OrderModel> filteredOrders = [];
-    List<OrderModel> orders = (_orderBloc.state as OrdersLoaded).orders;
-    for (var order in orders) {
-      if (order.orderedDate.compareTo(orderDateFilter.startDate) >= 0 &&
-          order.orderedDate.compareTo(orderDateFilter.endDate) <= 0) {
-        filteredOrders.add(order);
+  void _onSetDateRange(SetDateRange event, Emitter<OrderFilterState> emit) {
+    try {
+      DateTime? start = event.start;
+      DateTime? end = event.end;
+      List<OrderModel> orders = (_orderBloc.state as OrdersLoaded).orders;
+      if (start == null || end == null) {
+        add(UpdateOrder(orders, start, end));
+      } else {
+        List<OrderModel> filteredOrders = orders
+            .where((order) =>
+                DateTime.utc(order.orderedDate.year, order.orderedDate.month,
+                            order.orderedDate.day)
+                        .difference(
+                            DateTime.utc(start.year, start.month, start.day)) >=
+                    const Duration(days: 0) &&
+                DateTime.utc(order.orderedDate.year, order.orderedDate.month,
+                            order.orderedDate.day)
+                        .difference(
+                            DateTime.utc(end.year, end.month, end.day)) <=
+                    const Duration(days: 0))
+            .toList();
+        add(UpdateOrder(filteredOrders, start, end));
+        showSuccessSnackBar(event.context, 'Filter Added!');
+        Navigator.of(event.context).pop();
       }
+    } catch (e) {
+      showErrorSnackBar(event.context, e.toString());
+      Navigator.of(event.context).pop();
     }
-
-    return filteredOrders
-        .where((order) => supplierFilters.any((filter) =>
-            order.supplier.supplierName.contains(filter.supplierName)))
-        .toList();
   }
 
   @override
   Future<void> close() async {
-    _supplierSubscription.cancel();
+    _orderStreamSubscription.cancel();
 
     super.close();
   }

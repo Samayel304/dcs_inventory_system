@@ -4,27 +4,24 @@ abstract class OrderFilterEvent extends Equatable {
   const OrderFilterEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
-class LoadSupplierFilter extends OrderFilterEvent {}
-
-class UpdateSupplierFilter extends OrderFilterEvent {
-  final List<SupplierFilter> supplierFilters;
-  final OrderDateFilter orderDateFilter;
-
-  const UpdateSupplierFilter(
-      {required this.supplierFilters, required this.orderDateFilter});
+class UpdateOrder extends OrderFilterEvent {
+  final List<OrderModel> orders;
+  final DateTime? start;
+  final DateTime? end;
+  const UpdateOrder(this.orders, this.start, this.end);
   @override
-  List<Object> get props => [supplierFilters, orderDateFilter];
+  List<Object?> get props => [orders, start, end];
 }
 
-class UpdateOrderDateFilter extends OrderFilterEvent {
-  final OrderDateFilter orderDateFilter;
-  final List<SupplierFilter> supplierFilters;
+class SetDateRange extends OrderFilterEvent {
+  final DateTime? start;
+  final DateTime? end;
+  final BuildContext context;
 
-  const UpdateOrderDateFilter(
-      {required this.orderDateFilter, required this.supplierFilters});
+  const SetDateRange(this.start, this.end, this.context);
   @override
-  List<Object> get props => [orderDateFilter, supplierFilters];
+  List<Object?> get props => [start, end, context];
 }

@@ -23,7 +23,6 @@ class _InventoryScreenState extends State<InventoryScreen>
   int _currentTabIndex = 0;
   bool _onTop = true;
   int _tabLength = 0;
-  String keyword = '';
 
   late TabController _tabController;
   late ScrollController _scrollController;
@@ -32,7 +31,7 @@ class _InventoryScreenState extends State<InventoryScreen>
   void initState() {
     /* final category = context
         .select((CategoryBloc category) => category.state as CategoryLoaded); */
-
+    //BlocProvider.of<ProductSearchBloc>(context).add(const SearchProduct(''));
     _tabController = TabController(length: _tabLength, vsync: this);
     _tabController.addListener(() {
       setState(() {
@@ -52,10 +51,20 @@ class _InventoryScreenState extends State<InventoryScreen>
   }
 
   @override
+  void deactivate() {
+    resetProduct();
+    super.deactivate();
+  }
+
+  @override
   void dispose() {
     _tabController.dispose();
     _scrollController.dispose();
     super.dispose();
+  }
+
+  void resetProduct() {
+    BlocProvider.of<ProductSearchBloc>(context).add(const SearchProduct(''));
   }
 
   @override
@@ -110,9 +119,8 @@ class _InventoryScreenState extends State<InventoryScreen>
                           color: Colors.grey,
                         ),
                         onChange: (value) {
-                          setState(() {
-                            keyword = value;
-                          });
+                          BlocProvider.of<ProductSearchBloc>(context)
+                              .add(SearchProduct(value));
                         },
                       ),
                       Expanded(
@@ -144,7 +152,6 @@ class _InventoryScreenState extends State<InventoryScreen>
                                   (tab) {
                                     return SizedBox(
                                         child: _TabBarViewChild(
-                                      keyword: keyword,
                                       headers: Header.headers,
                                       category: tab,
                                       scrollController: _scrollController,
@@ -213,12 +220,10 @@ class _TabBarViewChild extends StatelessWidget {
     required this.headers,
     required this.category,
     required this.scrollController,
-    required this.keyword,
   }) : super(key: key);
   final ScrollController scrollController;
   final List<Header> headers;
   final String category;
-  final String keyword;
 
   @override
   Widget build(BuildContext context) {
@@ -241,21 +246,16 @@ class _TabBarViewChild extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: BlocBuilder<ProductBloc, ProductState>(
+          child: BlocBuilder<ProductSearchBloc, ProductSearchState>(
             builder: (context, state) {
-              if (state is ProductsLoading) {
+              if (state is ProductSearchLoading) {
                 return const Loader();
               }
-              if (state is ProductsLoaded) {
-                List<Product> products = keyword.isEmpty
-                    ? state.products
-                        .where((product) => product.category == category)
-                        .toList()
-                    : state.products
-                        .where(
-                            (product) => product.productName.contains(keyword))
-                        .where((product) => product.category == category)
-                        .toList();
+              if (state is ProductSearchLoaded) {
+                List<Product> products = state.products
+                    .where((product) => product.category == category)
+                    .toList();
+
                 return ListView.builder(
                   controller: scrollController,
                   shrinkWrap: true,

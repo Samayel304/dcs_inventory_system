@@ -19,7 +19,10 @@ class CustomTextField extends StatelessWidget {
       this.maxLength,
       this.initialValue,
       this.focusNode,
-      this.errorText});
+      this.errorText,
+      this.readOnly = false,
+      this.onTap,
+      this.enabled = true});
 
   final String hintText;
   final TextInputType? textInputType;
@@ -38,6 +41,9 @@ class CustomTextField extends StatelessWidget {
   final String? initialValue;
   final FocusNode? focusNode;
   final String? errorText;
+  final bool readOnly;
+  final void Function()? onTap;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +59,9 @@ class CustomTextField extends StatelessWidget {
       autocorrect: isAutoCorrect,
       keyboardType: textInputType,
       focusNode: focusNode,
+      readOnly: readOnly,
+      onTap: onTap,
+      enabled: enabled,
       decoration: InputDecoration(
           contentPadding: const EdgeInsets.all(10),
           hintText: hintText,

@@ -213,6 +213,8 @@ class _Cards extends StatelessWidget {
                             .headline1!
                             .copyWith(color: Colors.white),
                       ), onTap: () {
+                    BlocProvider.of<ProductSearchBloc>(context)
+                        .add(GetAllOutOfStock());
                     GoRouter.of(context).go('/inventory');
                   });
                 } else {
