@@ -1,12 +1,16 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dcs_inventory_system/bloc/bloc.dart';
 import 'package:dcs_inventory_system/models/model.dart';
+import 'package:dcs_inventory_system/utils/constants.dart';
+import 'package:dcs_inventory_system/utils/utils.dart';
 import 'package:dcs_inventory_system/views/widgets/custom_elevated_button.dart';
 import 'package:dcs_inventory_system/views/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../utils/enums.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart';
 
 class AddProductModal extends StatefulWidget {
   const AddProductModal({
@@ -22,19 +26,22 @@ class AddProductModal extends StatefulWidget {
 
 class _AddProductModalState extends State<AddProductModal> {
   TextEditingController itemNameController = TextEditingController();
-
+  TextEditingController lifeSpanController = TextEditingController();
   //final _formKey = GlobalKey<FormState>();
   bool _canSave = false;
+  File? _productImage;
 
   @override
   void dispose() {
     itemNameController.dispose();
-
+    lifeSpanController.dispose();
     super.dispose();
   }
 
   void setCanSave() {
-    if (itemNameController.text.isNotEmpty) {
+    if (itemNameController.text.isNotEmpty &&
+        lifeSpanController.text.isNotEmpty &&
+        _productImage != null) {
       setState(() {
         _canSave = true;
       });
@@ -51,8 +58,10 @@ class _AddProductModalState extends State<AddProductModal> {
         productName: itemNameController.text.toLowerCase(),
         category: category,
         quantity: quantity,
-        dateCreated: Timestamp.now().toDate());
-    BlocProvider.of<ProductBloc>(context).add(AddProduct(product, context));
+        dateCreated: Timestamp.now().toDate(),
+        lifeSpan: lifeSpanController.text);
+    BlocProvider.of<ProductBloc>(context)
+        .add(AddProduct(product, _productImage!, context));
   }
 
   @override
@@ -73,6 +82,46 @@ class _AddProductModalState extends State<AddProductModal> {
             children: [
               Text("Add Item", style: Theme.of(context).textTheme.headline4),
               const SizedBox(height: 20),
+              Stack(
+                children: [
+                  CircleAvatar(
+                      radius: (50),
+                      backgroundColor: Colors.white,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(70),
+                        child: _productImage == null
+                            ? Image.network(Constant.defaultProductImageUrl)
+                            : Image.file(_productImage!),
+                      )),
+                  Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: Container(
+                        width: 45,
+                        height: 45,
+                        padding: EdgeInsets.zero,
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.grey.withOpacity(0.6)),
+                        alignment: Alignment.center,
+                        child: IconButton(
+                          icon: const Icon(Icons.add),
+                          onPressed: () async {
+                            XFile? image = await getImage();
+                            if (image != null) {
+                              setState(() {
+                                _productImage = File(image.path);
+                              });
+                              setCanSave();
+                            }
+                          },
+                        ),
+                      ))
+                ],
+              ),
+              const SizedBox(
+                height: 15,
+              ),
               CustomTextField(
                 onChange: (_) {
                   setCanSave();
@@ -80,6 +129,15 @@ class _AddProductModalState extends State<AddProductModal> {
                 },
                 controller: itemNameController,
                 hintText: "Item Name",
+              ),
+              const SizedBox(height: 15),
+              CustomTextField(
+                onChange: (_) {
+                  setCanSave();
+                  //print(_formKey.currentState!.validate());
+                },
+                controller: lifeSpanController,
+                hintText: "Life Span",
               ),
               const SizedBox(height: 15),
               SizedBox(

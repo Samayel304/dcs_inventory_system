@@ -21,8 +21,7 @@ class UserModel extends Equatable {
       required this.lastName,
       required this.email,
       this.role = Constant.defaultUserRole,
-      this.avatarUrl =
-          "https://firebasestorage.googleapis.com/v0/b/dcsims-2772c.appspot.com/o/default_profile.png?alt=media&token=9c83c05f-2d6b-4def-8c08-cf212738605d"});
+      this.avatarUrl = Constant.defaultUserProfileUrl});
 
   UserModel copyWith(
       {String? id,

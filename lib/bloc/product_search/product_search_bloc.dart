@@ -20,7 +20,7 @@ class ProductSearchBloc extends Bloc<ProductSearchEvent, ProductSearchState> {
     on<UpdateProduct>(_onUpdateProduct);
     on<SearchProduct>(_onSearchProduct);
     on<GetAllOutOfStock>(_onGetAllOutOfStock);
-
+    on<SearchOutOfStock>(_onSearchOutOfStock);
     _productBlocSteamSubscription = _productBloc.stream.listen((state) {
       if (state is ProductsLoaded) {
         add(UpdateProduct(state.products));
@@ -38,6 +38,22 @@ class ProductSearchBloc extends Bloc<ProductSearchEvent, ProductSearchState> {
       add(UpdateProduct(products));
     } else {
       List<Product> result = products
+          .where((product) => product.productName.contains(event.keyword))
+          .toList();
+      add(UpdateProduct(result));
+    }
+  }
+
+  void _onSearchOutOfStock(
+      SearchOutOfStock event, Emitter<ProductSearchState> emit) {
+    List<Product> products = (_productBloc.state as ProductsLoaded).products;
+    List<Product> outOfStockProducts = products
+        .where((product) => product.isNew == false && product.quantity == 0)
+        .toList();
+    if (event.keyword.isEmpty) {
+      add(UpdateProduct(outOfStockProducts));
+    } else {
+      List<Product> result = outOfStockProducts
           .where((product) => product.productName.contains(event.keyword))
           .toList();
       add(UpdateProduct(result));

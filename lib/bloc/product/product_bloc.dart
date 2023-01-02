@@ -65,7 +65,8 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   void _onAddProduct(AddProduct event, Emitter<ProductState> emit) async {
     final state = this.state;
     if (state is ProductsLoaded) {
-      final res = await _productRepository.createProduct(event.product);
+      final res =
+          await _productRepository.createProduct(event.product, event.image);
       res.fold((l) {
         showErrorSnackBar(event.context, l.message);
         Navigator.of(event.context).pop();
@@ -146,7 +147,8 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
 
   void _onEditProduct(EditProduct event, Emitter<ProductState> emit) async {
     if (state is ProductsLoaded) {
-      final res = await _productRepository.editProductDetails(event.product);
+      final res = await _productRepository.editProductDetails(
+          event.product, event.image);
       res.fold((l) {
         showErrorSnackBar(event.context, l.message);
         Navigator.of(event.context).pop();

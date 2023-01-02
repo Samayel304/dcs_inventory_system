@@ -105,6 +105,11 @@ class _FilterOrderState extends State<FilterOrder> {
     }
   }
 
+  void clearFilter(BuildContext context) {
+    BlocProvider.of<OrderFilterBloc>(context)
+        .add(SetDateRange(null, null, context));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -121,7 +126,25 @@ class _FilterOrderState extends State<FilterOrder> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text("Filter", style: Theme.of(context).textTheme.headline4),
+              Stack(
+                children: [
+                  Align(
+                    alignment: Alignment.center,
+                    child: Text("Filter",
+                        style: Theme.of(context).textTheme.headline4),
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: InkWell(
+                      child: Text("Clear Filter",
+                          style: Theme.of(context).textTheme.headline4),
+                      onTap: () {
+                        clearFilter(context);
+                      },
+                    ),
+                  )
+                ],
+              ),
               const SizedBox(height: 20),
               CustomTextField(
                 hintText: 'Enter Start Date',

@@ -215,7 +215,7 @@ class _Cards extends StatelessWidget {
                       ), onTap: () {
                     BlocProvider.of<ProductSearchBloc>(context)
                         .add(GetAllOutOfStock());
-                    GoRouter.of(context).go('/inventory');
+                    GoRouter.of(context).push('/out_of_stock');
                   });
                 } else {
                   return _generateCard(

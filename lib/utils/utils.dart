@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 String formatCurrency(double value) {
@@ -110,4 +111,11 @@ Future<dynamic> showAlertDialog(
               ),
             ],
           ));
+}
+
+Future<XFile?> getImage() async {
+  ImagePicker picker = ImagePicker();
+
+  XFile? image = await picker.pickImage(source: ImageSource.gallery);
+  return image;
 }

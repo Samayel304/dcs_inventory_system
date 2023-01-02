@@ -23,4 +23,12 @@ class SearchProduct extends ProductSearchEvent {
   List<Object> get props => [keyword];
 }
 
+class SearchOutOfStock extends ProductSearchEvent {
+  final String keyword;
+
+  const SearchOutOfStock(this.keyword);
+  @override
+  List<Object> get props => [keyword];
+}
+
 class GetAllOutOfStock extends ProductSearchEvent {}

@@ -4,7 +4,7 @@ abstract class ProductEvent extends Equatable {
   const ProductEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class LoadProducts extends ProductEvent {}
@@ -22,12 +22,17 @@ class UpdateProducts extends ProductEvent {
 
 class AddProduct extends ProductEvent {
   final Product product;
+  final File image;
   final BuildContext context;
 
-  const AddProduct(this.product, this.context);
+  const AddProduct(
+    this.product,
+    this.image,
+    this.context,
+  );
 
   @override
-  List<Object> get props => [product, context];
+  List<Object> get props => [product, context, image];
 }
 
 class DeductProductQuantity extends ProductEvent {
@@ -43,11 +48,12 @@ class DeductProductQuantity extends ProductEvent {
 
 class EditProduct extends ProductEvent {
   final Product product;
+  final File? image;
   final BuildContext context;
-  const EditProduct(this.product, this.context);
+  const EditProduct(this.product, this.image, this.context);
 
   @override
-  List<Object> get props => [product, context];
+  List<Object?> get props => [product, image, context];
 }
 
 class DeleteProduct extends ProductEvent {

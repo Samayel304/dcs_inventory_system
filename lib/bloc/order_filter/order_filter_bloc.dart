@@ -40,6 +40,8 @@ class OrderFilterBloc extends Bloc<OrderFilterEvent, OrderFilterState> {
       List<OrderModel> orders = (_orderBloc.state as OrdersLoaded).orders;
       if (start == null || end == null) {
         add(UpdateOrder(orders, start, end));
+        showSuccessSnackBar(event.context, 'Filter Cleared!');
+        Navigator.of(event.context).pop();
       } else {
         List<OrderModel> filteredOrders = orders
             .where((order) =>
