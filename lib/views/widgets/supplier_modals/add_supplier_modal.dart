@@ -6,8 +6,6 @@ import 'package:dcs_inventory_system/views/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../bloc/supplier/supplier_bloc.dart';
-
 class AddSupplierModal extends StatefulWidget {
   const AddSupplierModal({super.key});
 

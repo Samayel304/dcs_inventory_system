@@ -7,3 +7,4 @@ export 'profile/profile_bloc.dart';
 export 'category/category_bloc.dart';
 export 'notification/notification_bloc.dart';
 export 'order_filter/order_filter_bloc.dart';
+export 'product_search/product_search_bloc.dart';

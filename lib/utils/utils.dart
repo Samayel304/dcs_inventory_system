@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 String formatCurrency(double value) {
@@ -22,10 +23,16 @@ Color statusFormatColor(String status) {
 
 const String dateFormatter = 'MMMM dd, y';
 const String greetingsDateFormatter = 'EEEE, dd MMMM';
+const String dateTimeFormatter = 'MMMM dd, y kk:mm:a';
 
 extension DateHelper on DateTime {
   String formatDate() {
     final formatter = DateFormat(dateFormatter);
+    return formatter.format(this);
+  }
+
+  String formatDateTime() {
+    final formatter = DateFormat(dateTimeFormatter);
     return formatter.format(this);
   }
 
@@ -104,4 +111,11 @@ Future<dynamic> showAlertDialog(
               ),
             ],
           ));
+}
+
+Future<XFile?> getImage() async {
+  ImagePicker picker = ImagePicker();
+
+  XFile? image = await picker.pickImage(source: ImageSource.gallery);
+  return image;
 }

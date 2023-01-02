@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dcs_inventory_system/utils/constants.dart';
 import 'package:equatable/equatable.dart';
 
 class Product extends Equatable {
@@ -8,6 +9,8 @@ class Product extends Equatable {
   final String category;
   final DateTime dateCreated;
   final bool isNew;
+  final String productImageUrl;
+  final String lifeSpan;
 
   const Product(
       {this.productId,
@@ -15,7 +18,9 @@ class Product extends Equatable {
       this.quantity = 0,
       this.category = "",
       required this.dateCreated,
-      this.isNew = true});
+      this.isNew = true,
+      this.productImageUrl = Constant.defaultProductImageUrl,
+      this.lifeSpan = ""});
 
   Product copyWith(
       {String? productId,
@@ -24,14 +29,18 @@ class Product extends Equatable {
       String? category,
       double? unitPrice,
       DateTime? dateCreated,
-      bool? isNew}) {
+      bool? isNew,
+      String? productImageUrl,
+      String? lifeSpan}) {
     return Product(
         productId: productId ?? this.productId,
         productName: productName ?? this.productName,
         quantity: quantity ?? this.quantity,
         category: category ?? this.category,
         dateCreated: dateCreated ?? this.dateCreated,
-        isNew: isNew ?? this.isNew);
+        isNew: isNew ?? this.isNew,
+        productImageUrl: productImageUrl ?? this.productImageUrl,
+        lifeSpan: lifeSpan ?? this.lifeSpan);
   }
 
   factory Product.fromSnapshot(DocumentSnapshot snap) {
@@ -42,7 +51,9 @@ class Product extends Equatable {
         category: snap['category'],
         dateCreated: DateTime.parse(
             ((snap['dateCreated']) as Timestamp).toDate().toString()),
-        isNew: snap['isNew']);
+        isNew: snap['isNew'],
+        productImageUrl: snap['productImageUrl'],
+        lifeSpan: snap['lifeSpan']);
   }
 
   factory Product.fromOrderSnapshot(Map<String, dynamic> snap) {
@@ -62,7 +73,9 @@ class Product extends Equatable {
       'quantity': quantity,
       'category': category,
       'dateCreated': dateCreated,
-      'isNew': isNew
+      'isNew': isNew,
+      'productImageUrl': productImageUrl,
+      'lifeSpan': lifeSpan
     };
   }
 
@@ -78,6 +91,14 @@ class Product extends Equatable {
   }
 
   @override
-  List<Object?> get props =>
-      [productId, productName, quantity, category, dateCreated, isNew];
+  List<Object?> get props => [
+        productId,
+        productName,
+        quantity,
+        category,
+        dateCreated,
+        isNew,
+        productImageUrl,
+        lifeSpan
+      ];
 }

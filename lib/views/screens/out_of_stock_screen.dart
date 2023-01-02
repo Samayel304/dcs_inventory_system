@@ -1,24 +1,23 @@
 import 'package:dcs_inventory_system/bloc/bloc.dart';
 
 import 'package:dcs_inventory_system/models/model.dart';
-import 'package:dcs_inventory_system/utils/enums.dart';
 
 import 'package:dcs_inventory_system/views/widgets/widgets.dart';
 import "package:flutter/material.dart";
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+
 import 'package:go_router/go_router.dart';
 
 import '../../utils/utils.dart';
 
-class InventoryScreen extends StatefulWidget {
-  const InventoryScreen({super.key});
+class OutOfStockScreen extends StatefulWidget {
+  const OutOfStockScreen({super.key});
 
   @override
-  State<InventoryScreen> createState() => _InventoryScreenState();
+  State<OutOfStockScreen> createState() => _OutOfStockScreenState();
 }
 
-class _InventoryScreenState extends State<InventoryScreen>
+class _OutOfStockScreenState extends State<OutOfStockScreen>
     with TickerProviderStateMixin {
   int _currentTabIndex = 0;
   bool _onTop = true;
@@ -97,17 +96,12 @@ class _InventoryScreenState extends State<InventoryScreen>
             });
           });
 
-          final currentUser = context
-              .select((ProfileBloc profileBloc) => profileBloc.state.user);
-          bool isAdmin = currentUser?.role == UserRole.admin.name;
-
           return DefaultTabController(
               initialIndex: 0,
               length: length,
               child: Scaffold(
                 resizeToAvoidBottomInset: false,
-                appBar: const CustomAppBar(),
-                drawer: const SafeArea(child: NavigationDrawer()),
+                appBar: const BackAppBar(),
                 body: Container(
                   padding: const EdgeInsets.only(left: 15, right: 15),
                   child: Column(
@@ -120,7 +114,7 @@ class _InventoryScreenState extends State<InventoryScreen>
                         ),
                         onChange: (value) {
                           BlocProvider.of<ProductSearchBloc>(context)
-                              .add(SearchProduct(value));
+                              .add(SearchOutOfStock(value));
                         },
                       ),
                       Expanded(
@@ -162,49 +156,6 @@ class _InventoryScreenState extends State<InventoryScreen>
                     ],
                   ),
                 ),
-                floatingActionButton: Visibility(
-                    visible: _onTop && length > 0,
-                    child: isAdmin
-                        ? CustomFloatingActionButton(
-                            children: [
-                              SpeedDialChild(
-                                child: const Icon(Icons.file_download),
-                                label: "Export",
-                                onTap: () => {
-                                  BlocProvider.of<ProductBloc>(context)
-                                      .add(ExportItems(context))
-                                },
-                              ),
-                              SpeedDialChild(
-                                child: const Icon(Icons.category),
-                                label: "Manage Category",
-                                onTap: () {
-                                  GoRouter.of(context).push('/category');
-                                },
-                              ),
-                              SpeedDialChild(
-                                child: const Icon(Icons.add),
-                                label: "Add Item",
-                                onTap: () => {
-                                  showBottomModal(
-                                      context,
-                                      AddProductModal(
-                                          category: tabs[_currentTabIndex]))
-                                },
-                              ),
-                            ],
-                          )
-                        : FloatingActionButton(
-                            onPressed: () {
-                              showBottomModal(
-                                  context,
-                                  AddProductModal(
-                                      category: tabs[_currentTabIndex]));
-                            },
-                            backgroundColor: Colors.black,
-                            child: const Icon(Icons.add),
-                          )),
-                bottomNavigationBar: const BottomNavBar(index: 1),
               ));
         } else {
           return const ErrorScreen();

@@ -64,7 +64,6 @@ class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
       res.fold((l) {
         showErrorSnackBar(event.context, l.message);
       }, (r) {
-        _productRepository.deleteProductByCategory(event.category.categoryName);
         _supplierRepository
             .deleteSupplierByCategory(event.category.categoryName);
         showSuccessSnackBar(event.context, 'Category deleted successfully!');

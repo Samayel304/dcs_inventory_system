@@ -44,9 +44,13 @@ class AppRouter {
             return const InventoryScreen();
           }),
       GoRoute(
+          path: '/out_of_stock',
+          builder: (BuildContext context, GoRouterState state) {
+            return const OutOfStockScreen();
+          }),
+      GoRoute(
           path: '/category',
           builder: (BuildContext context, GoRouterState state) {
-            print('refresh category');
             return const CategoryScreen();
           }),
       GoRoute(

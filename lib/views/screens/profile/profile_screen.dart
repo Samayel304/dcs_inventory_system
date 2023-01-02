@@ -1,5 +1,5 @@
-import 'package:dcs_inventory_system/bloc/bloc.dart';
 import 'package:dcs_inventory_system/bloc/user/user_bloc.dart';
+import 'package:dcs_inventory_system/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
@@ -161,10 +161,7 @@ class _ProfilePicture extends StatelessWidget {
               child: IconButton(
                 icon: const Icon(Icons.edit),
                 onPressed: () async {
-                  ImagePicker picker = ImagePicker();
-
-                  XFile? image =
-                      await picker.pickImage(source: ImageSource.gallery);
+                  XFile? image = await getImage();
                   if (image != null) {
                     BlocProvider.of<UserBloc>(context)
                         .add(ChangeProfilePicture(user, context, image));

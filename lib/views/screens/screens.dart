@@ -10,3 +10,4 @@ export 'profile/edit_email_screen.dart';
 export 'manage_account_screen.dart';
 export 'activity_log_screen.dart';
 export 'notification_screen.dart';
+export 'out_of_stock_screen.dart';
