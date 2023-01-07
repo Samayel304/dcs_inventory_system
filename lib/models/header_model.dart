@@ -5,10 +5,11 @@ class Header {
   Header({required this.title, required this.flex});
 
   static List<Header> headers = [
-    Header(title: "Image", flex: 1),
+    Header(title: "", flex: 1),
     Header(title: "Item Name", flex: 3),
     Header(title: "Quantity", flex: 2),
     Header(title: "Life Span", flex: 2),
+    Header(title: 'Unit Price', flex: 2),
     Header(title: "", flex: 1)
   ];
 

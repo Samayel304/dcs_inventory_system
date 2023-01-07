@@ -229,22 +229,6 @@ class _TabBarViewChild extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Padding(
-          padding:
-              const EdgeInsets.only(right: 15, left: 15, top: 15, bottom: 10),
-          child: Row(
-            children: headers
-                .map(
-                  (header) => Expanded(
-                      flex: header.flex,
-                      child: Text(
-                        header.title,
-                        style: Theme.of(context).textTheme.bodyText1,
-                      )),
-                )
-                .toList(),
-          ),
-        ),
         Expanded(
           child: BlocBuilder<ProductSearchBloc, ProductSearchState>(
             builder: (context, state) {
@@ -257,6 +241,7 @@ class _TabBarViewChild extends StatelessWidget {
                     .toList();
 
                 return ListView.builder(
+                  padding: const EdgeInsets.only(top: 8),
                   controller: scrollController,
                   shrinkWrap: true,
                   itemCount: products.length,
@@ -276,40 +261,43 @@ class _TabBarViewChild extends StatelessWidget {
                           borderRadius: BorderRadius.all(Radius.circular(15)),
                           color: Color(0xEEEBE6E6),
                         ),
-                        child: Row(children: [
-                          Expanded(
-                              child: Align(
+                        child: Stack(children: [
+                          Row(
+                            children: [
+                              Align(
                                   alignment: Alignment.centerLeft,
                                   child: CircleAvatar(
-                                      radius: (20),
+                                      radius: (30),
                                       backgroundColor: Colors.white,
                                       child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(20),
+                                        borderRadius: BorderRadius.circular(30),
                                         child: Image.network(
                                             product.productImageUrl),
-                                      )))),
-                          Expanded(
-                              flex: 3,
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 4),
-                                child: Text(
-                                  product.productName.toTitleCase(),
-                                  style: Theme.of(context).textTheme.headline5,
-                                  maxLines: 2,
+                                      ))),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 10),
+                                  child: Column(
+                                    children: [
+                                      buildDetailText(context, 'Item Name',
+                                          product.productName.toTitleCase()),
+                                      buildDetailText(
+                                          context,
+                                          'Product Quantity',
+                                          product.quantity.toString()),
+                                      buildDetailText(context, 'Life Span',
+                                          product.lifeSpan),
+                                      buildDetailText(context, 'Unit Price',
+                                          formatCurrency(product.unitPrice))
+                                    ],
+                                  ),
                                 ),
-                              )),
-                          Expanded(
-                              flex: 2,
-                              child: Text(product.quantity.toString(),
-                                  style:
-                                      Theme.of(context).textTheme.headline5)),
-                          Expanded(
-                              flex: 2,
-                              child: Text(product.lifeSpan,
-                                  style:
-                                      Theme.of(context).textTheme.headline5)),
-                          Expanded(
-                              flex: 1,
+                              )
+                            ],
+                          ),
+                          Positioned(
+                              top: 0,
+                              right: 0,
                               child: PopupMenuButton(
                                   onSelected: (value) {
                                     switch (value) {
@@ -393,6 +381,22 @@ class _TabBarViewChild extends StatelessWidget {
             },
           ),
         )
+      ],
+    );
+  }
+
+  Widget buildDetailText(BuildContext context, String title, String text) {
+    return Row(
+      children: [
+        Text("$title :", style: Theme.of(context).textTheme.headline5),
+        const SizedBox(
+          width: 5,
+        ),
+        Text(text,
+            style: Theme.of(context)
+                .textTheme
+                .headline5!
+                .copyWith(color: Colors.black, fontWeight: FontWeight.normal))
       ],
     );
   }

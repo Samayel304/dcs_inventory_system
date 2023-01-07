@@ -168,6 +168,11 @@ class _TabBarViewChild extends StatelessWidget {
                             text: order.orderedDate.formatDateTime()),
                         order.status == OrderStatus.received.name
                             ? _OrderDetailContainer(
+                                title: "Total Cost",
+                                text: formatCurrency(order.totalCost))
+                            : const SizedBox.shrink(),
+                        order.status == OrderStatus.received.name
+                            ? _OrderDetailContainer(
                                 title: "Date Received",
                                 text: order.dateReceived.formatDateTime())
                             : const SizedBox.shrink(),

@@ -11,6 +11,7 @@ class OrderModel extends Equatable {
   final int quantity;
   final String status;
   final Supplier supplier;
+  final double totalCost;
 
   const OrderModel(
       {this.orderId,
@@ -20,7 +21,8 @@ class OrderModel extends Equatable {
       this.quantity = 0,
       required this.status,
       required this.supplier,
-      required this.dateCancelled});
+      required this.dateCancelled,
+      this.totalCost = 0});
 
   OrderModel copyWith(
       {String? orderId,
@@ -30,7 +32,8 @@ class OrderModel extends Equatable {
       DateTime? orderedDate,
       DateTime? dateReceived,
       Supplier? supplier,
-      DateTime? dateCancelled}) {
+      DateTime? dateCancelled,
+      double? totalCost}) {
     return OrderModel(
         orderId: orderId ?? this.orderId,
         product: product ?? this.product,
@@ -39,23 +42,24 @@ class OrderModel extends Equatable {
         orderedDate: orderedDate ?? this.orderedDate,
         dateReceived: dateReceived ?? this.dateReceived,
         supplier: supplier ?? this.supplier,
-        dateCancelled: dateCancelled ?? this.dateCancelled);
+        dateCancelled: dateCancelled ?? this.dateCancelled,
+        totalCost: totalCost ?? this.totalCost);
   }
 
   factory OrderModel.fromSnapshot(DocumentSnapshot snap) {
     return OrderModel(
-      orderId: snap.id,
-      product: Product.fromOrderSnapshot(snap['product']),
-      quantity: snap['quantity'],
-      status: snap['status'],
-      orderedDate: DateTime.parse(
-          ((snap['orderedDate']) as Timestamp).toDate().toString()),
-      dateReceived: DateTime.parse(
-          ((snap['dateReceived']) as Timestamp).toDate().toString()),
-      dateCancelled: DateTime.parse(
-          ((snap['dateCancelled']) as Timestamp).toDate().toString()),
-      supplier: Supplier.fromOrderSnapshot(snap['supplier']),
-    );
+        orderId: snap.id,
+        product: Product.fromOrderSnapshot(snap['product']),
+        quantity: snap['quantity'],
+        status: snap['status'],
+        orderedDate: DateTime.parse(
+            ((snap['orderedDate']) as Timestamp).toDate().toString()),
+        dateReceived: DateTime.parse(
+            ((snap['dateReceived']) as Timestamp).toDate().toString()),
+        dateCancelled: DateTime.parse(
+            ((snap['dateCancelled']) as Timestamp).toDate().toString()),
+        supplier: Supplier.fromOrderSnapshot(snap['supplier']),
+        totalCost: double.parse(snap['totalCost'].toString()));
   }
 
   Map<String, Object> toDocument() {
@@ -66,11 +70,19 @@ class OrderModel extends Equatable {
       'orderedDate': orderedDate,
       'dateReceived': dateReceived,
       'dateCancelled': dateCancelled,
-      'supplier': supplier.toOrderDocument()
+      'supplier': supplier.toOrderDocument(),
+      'totalCost': totalCost
     };
   }
 
   @override
-  List<Object?> get props =>
-      [orderId, product, quantity, status, orderedDate, dateReceived];
+  List<Object?> get props => [
+        orderId,
+        product,
+        quantity,
+        status,
+        orderedDate,
+        dateReceived,
+        totalCost
+      ];
 }

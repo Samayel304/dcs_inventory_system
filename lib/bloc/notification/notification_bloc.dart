@@ -46,7 +46,9 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
 
   void _onUpdateNotification(
       UpdateNotification event, Emitter<NotificationState> emit) {
-    emit(NotificationLoaded(event.notifications.reversed.toList()));
+    List<NotificationModel> notifications = event.notifications;
+    notifications.sort((a, b) => b.dateCreated.compareTo(a.dateCreated));
+    emit(NotificationLoaded(notifications));
   }
 
   void _onReadNotification(
