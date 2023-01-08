@@ -1,3 +1,4 @@
+import 'package:dcs_inventory_system/bloc/activity_log_filter/activity_log_filter_bloc.dart';
 import 'package:dcs_inventory_system/bloc/bloc.dart';
 import 'package:dcs_inventory_system/bloc/user/user_bloc.dart';
 import 'package:dcs_inventory_system/cubits/login/login_cubit.dart';
@@ -107,6 +108,10 @@ class MyApp extends StatelessWidget {
           BlocProvider(
             create: (context) =>
                 ProductSearchBloc(productBloc: context.read<ProductBloc>()),
+          ),
+          BlocProvider(
+            create: (context) => ActivityLogFilterBloc(
+                activityLogBloc: context.read<ActivityLogBloc>()),
           ),
         ],
         child: Builder(builder: (context) {

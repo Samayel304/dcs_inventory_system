@@ -1,9 +1,11 @@
 import 'package:dcs_inventory_system/bloc/activity_log/activity_log_bloc.dart';
+import 'package:dcs_inventory_system/bloc/activity_log_filter/activity_log_filter_bloc.dart';
 import 'package:dcs_inventory_system/models/activity_log_model.dart';
 
 import 'package:dcs_inventory_system/utils/utils.dart';
 import 'package:dcs_inventory_system/views/widgets/back_app_bar.dart';
 import 'package:dcs_inventory_system/views/widgets/loader.dart';
+import 'package:dcs_inventory_system/views/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grouped_list/grouped_list.dart';
@@ -13,35 +15,71 @@ class ActivityLogScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final activityFilter = context.select(
+        (ActivityLogFilterBloc activityLogFilterBloc) =>
+            (activityLogFilterBloc.state as ActivityLogFilterLoaded));
     return Scaffold(
         appBar: BackAppBar(
-            /* actions: [
-            IconButton(onPressed: () {}, icon: const Icon(Icons.filter_alt))
-          ], */
-            ),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  showBottomModal(
+                      context,
+                      FilterActivityLog(
+                          startDate: activityFilter.startDate,
+                          endDate: activityFilter.endDate));
+                },
+                icon: const Icon(Icons.filter_alt))
+          ],
+        ),
         body: Column(
           children: [
             Expanded(
-              child: BlocBuilder<ActivityLogBloc, ActivityLogState>(
+              child: BlocBuilder<ActivityLogFilterBloc, ActivityLogFilterState>(
                   builder: (context, state) {
-                if (state is ActivityLogLoading) {
+                if (state is ActivityLogFilterLoading) {
                   return const Loader();
                 }
-                if (state is ActivityLogLoaded) {
-                  return GroupedListView(
-                    elements: state.activityLogs,
-                    groupBy: (activity) => DateTime(activity.dateCreated.year,
-                        activity.dateCreated.month, activity.dateCreated.day),
-                    groupHeaderBuilder: (activity) =>
-                        _Header(dateCreated: activity.dateCreated.formatDate()),
-                    itemBuilder: (context, activityLog) {
-                      return _Item(
-                        activityLog: activityLog,
-                      );
+                if (state is ActivityLogFilterLoaded) {
+                  return ListView.builder(
+                    itemCount: state.activityLogs.length,
+                    itemBuilder: (context, index) {
+                      ActivityLog activityLog = state.activityLogs[index];
+                      return Container(
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(15)),
+                            color: Color(0xEEEBE6E6),
+                          ),
+                          margin: const EdgeInsets.all(5),
+                          padding: const EdgeInsets.all(10),
+                          child: Stack(
+                            children: [
+                              SizedBox(
+                                width: double.infinity,
+                                child: Column(
+                                  children: [
+                                    Text(activityLog.activity,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5!
+                                            .copyWith(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.normal)),
+                                    Text(
+                                        activityLog.dateCreated
+                                            .formatDateTime(),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5!
+                                            .copyWith(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.normal))
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ));
                     },
-                    shrinkWrap: true,
-                    //floatingHeader: true,
-                    useStickyGroupSeparators: true,
                   );
                 } else {
                   return const Center(child: Text("Something went wrong"));

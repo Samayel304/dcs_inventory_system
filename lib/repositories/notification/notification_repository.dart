@@ -27,8 +27,6 @@ class NotificationRepository extends BaseNotificationRepository {
   Stream<List<NotificationModel>> getAllNotifications(String uid) {
     return _firebaseFirestore
         .collection('notifications')
-        .orderBy('userUid')
-        .orderBy('dateCreated')
         .where('userUid', isNotEqualTo: uid)
         .snapshots()
         .map((snap) => snap.docs.map((doc) {

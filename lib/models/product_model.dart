@@ -11,6 +11,7 @@ class Product extends Equatable {
   final bool isNew;
   final String productImageUrl;
   final String lifeSpan;
+  final double unitPrice;
 
   const Product(
       {this.productId,
@@ -20,7 +21,8 @@ class Product extends Equatable {
       required this.dateCreated,
       this.isNew = true,
       this.productImageUrl = Constant.defaultProductImageUrl,
-      this.lifeSpan = ""});
+      this.lifeSpan = "",
+      this.unitPrice = 0});
 
   Product copyWith(
       {String? productId,
@@ -40,7 +42,8 @@ class Product extends Equatable {
         dateCreated: dateCreated ?? this.dateCreated,
         isNew: isNew ?? this.isNew,
         productImageUrl: productImageUrl ?? this.productImageUrl,
-        lifeSpan: lifeSpan ?? this.lifeSpan);
+        lifeSpan: lifeSpan ?? this.lifeSpan,
+        unitPrice: unitPrice ?? this.unitPrice);
   }
 
   factory Product.fromSnapshot(DocumentSnapshot snap) {
@@ -53,7 +56,8 @@ class Product extends Equatable {
             ((snap['dateCreated']) as Timestamp).toDate().toString()),
         isNew: snap['isNew'],
         productImageUrl: snap['productImageUrl'],
-        lifeSpan: snap['lifeSpan']);
+        lifeSpan: snap['lifeSpan'],
+        unitPrice: double.parse(snap['unitPrice'].toString()));
   }
 
   factory Product.fromOrderSnapshot(Map<String, dynamic> snap) {
@@ -64,7 +68,8 @@ class Product extends Equatable {
         category: snap['category'],
         dateCreated: DateTime.parse(
             ((snap['dateCreated']) as Timestamp).toDate().toString()),
-        isNew: snap['isNew']);
+        isNew: snap['isNew'],
+        unitPrice: double.parse(snap['unitPrice'].toString()));
   }
 
   Map<String, Object> toDocument() {
@@ -75,7 +80,8 @@ class Product extends Equatable {
       'dateCreated': dateCreated,
       'isNew': isNew,
       'productImageUrl': productImageUrl,
-      'lifeSpan': lifeSpan
+      'lifeSpan': lifeSpan,
+      'unitPrice': unitPrice
     };
   }
 
@@ -86,7 +92,8 @@ class Product extends Equatable {
       'quantity': quantity,
       'category': category,
       'dateCreated': dateCreated,
-      'isNew': isNew
+      'isNew': isNew,
+      'unitPrice': unitPrice
     };
   }
 
@@ -99,6 +106,7 @@ class Product extends Equatable {
         dateCreated,
         isNew,
         productImageUrl,
-        lifeSpan
+        lifeSpan,
+        unitPrice
       ];
 }

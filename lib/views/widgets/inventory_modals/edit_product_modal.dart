@@ -25,6 +25,7 @@ class EditProductModal extends StatefulWidget {
 class _EditProductModalState extends State<EditProductModal> {
   TextEditingController productNameController = TextEditingController();
   TextEditingController lifeSpanController = TextEditingController();
+  TextEditingController unitPriceController = TextEditingController();
 
   //final _formKey = GlobalKey<FormState>();
   bool _canSave = false;
@@ -35,12 +36,14 @@ class _EditProductModalState extends State<EditProductModal> {
 
     productNameController.text = widget.selectedProduct.productName;
     lifeSpanController.text = widget.selectedProduct.lifeSpan;
+    unitPriceController.text = widget.selectedProduct.unitPrice.toString();
   }
 
   @override
   void dispose() {
     productNameController.dispose();
     lifeSpanController.dispose();
+    unitPriceController.dispose();
     super.dispose();
   }
 
@@ -49,10 +52,15 @@ class _EditProductModalState extends State<EditProductModal> {
         widget.selectedProduct.productName.toLowerCase();
     bool isLifeSpanSame = lifeSpanController.text.toLowerCase() !=
         widget.selectedProduct.lifeSpan.toLowerCase();
+    bool isUnitPriceSame =
+        unitPriceController.text != widget.selectedProduct.unitPrice.toString();
 
     if (productNameController.text.isNotEmpty &&
         lifeSpanController.text.isNotEmpty &&
-        (isProductNameNotSame || isLifeSpanSame || _productImage != null)) {
+        (isProductNameNotSame ||
+            isLifeSpanSame ||
+            _productImage != null ||
+            isUnitPriceSame)) {
       setState(() {
         _canSave = true;
       });
@@ -66,7 +74,8 @@ class _EditProductModalState extends State<EditProductModal> {
   void save() {
     Product editedProduct = widget.selectedProduct.copyWith(
         productName: productNameController.text.toLowerCase(),
-        lifeSpan: lifeSpanController.text);
+        lifeSpan: lifeSpanController.text,
+        unitPrice: double.parse(unitPriceController.text));
 
     BlocProvider.of<ProductBloc>(context)
         .add(EditProduct(editedProduct, _productImage, context));
@@ -74,98 +83,111 @@ class _EditProductModalState extends State<EditProductModal> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding:
-          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-      decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(30.0), topRight: Radius.circular(30.0))),
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Form(
-          //key: _formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text("Edit Product",
-                  style: Theme.of(context).textTheme.headline4),
-              const SizedBox(height: 20),
-              Stack(
-                children: [
-                  CircleAvatar(
-                      radius: (50),
-                      backgroundColor: Colors.white,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(70),
-                        child: _productImage == null
-                            ? Image.network(
-                                widget.selectedProduct.productImageUrl)
-                            : Image.file(_productImage!),
-                      )),
-                  Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: Container(
-                        width: 45,
-                        height: 45,
-                        padding: EdgeInsets.zero,
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.grey.withOpacity(0.6)),
-                        alignment: Alignment.center,
-                        child: IconButton(
-                          icon: const Icon(Icons.add),
-                          onPressed: () async {
-                            XFile? image = await getImage();
-                            if (image != null) {
-                              setState(() {
-                                _productImage = File(image.path);
-                              });
-                              setCanSave();
-                            }
-                          },
-                        ),
-                      ))
-                ],
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              CustomTextField(
+    return SingleChildScrollView(
+      child: Container(
+        padding:
+            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(30.0),
+                topRight: Radius.circular(30.0))),
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Form(
+            //key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text("Edit Product",
+                    style: Theme.of(context).textTheme.headline4),
+                const SizedBox(height: 20),
+                Stack(
+                  children: [
+                    CircleAvatar(
+                        radius: (50),
+                        backgroundColor: Colors.white,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(70),
+                          child: _productImage == null
+                              ? Image.network(
+                                  widget.selectedProduct.productImageUrl)
+                              : Image.file(_productImage!),
+                        )),
+                    Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: Container(
+                          width: 45,
+                          height: 45,
+                          padding: EdgeInsets.zero,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.grey.withOpacity(0.6)),
+                          alignment: Alignment.center,
+                          child: IconButton(
+                            icon: const Icon(Icons.add),
+                            onPressed: () async {
+                              XFile? image = await getImage();
+                              if (image != null) {
+                                setState(() {
+                                  _productImage = File(image.path);
+                                });
+                                setCanSave();
+                              }
+                            },
+                          ),
+                        ))
+                  ],
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                CustomTextField(
+                    onChange: (_) {
+                      setCanSave();
+                    },
+                    /*  validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Enter Product Name";
+                      }
+                      return null;
+                    }, */
+                    hintText: "Product Name",
+                    controller: productNameController),
+                const SizedBox(height: 15),
+                CustomTextField(
                   onChange: (_) {
                     setCanSave();
+                    //print(_formKey.currentState!.validate());
                   },
-                  /*  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Enter Product Name";
-                    }
-                    return null;
-                  }, */
-                  hintText: "Product Name",
-                  controller: productNameController),
-              const SizedBox(height: 15),
-              CustomTextField(
-                onChange: (_) {
-                  setCanSave();
-                  //print(_formKey.currentState!.validate());
-                },
-                controller: lifeSpanController,
-                hintText: "Life Span",
-              ),
-              const SizedBox(height: 15),
-              SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: CustomElevatedButton(
-                  backgroundColor: Colors.black,
-                  fontColor: Colors.white,
-                  isDisable: !_canSave,
-                  text: "Save",
-                  onPressed: () => save(),
+                  controller: unitPriceController,
+                  hintText: "Unit Price",
+                  textInputType: TextInputType.number,
                 ),
-              )
-            ],
+                const SizedBox(height: 15),
+                CustomTextField(
+                  onChange: (_) {
+                    setCanSave();
+                    //print(_formKey.currentState!.validate());
+                  },
+                  controller: lifeSpanController,
+                  hintText: "Life Span",
+                ),
+                const SizedBox(height: 15),
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: CustomElevatedButton(
+                    backgroundColor: Colors.black,
+                    fontColor: Colors.white,
+                    isDisable: !_canSave,
+                    text: "Save",
+                    onPressed: () => save(),
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),

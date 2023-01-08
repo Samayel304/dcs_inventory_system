@@ -1,3 +1,4 @@
+import 'package:dcs_inventory_system/bloc/activity_log_filter/activity_log_filter_bloc.dart';
 import 'package:dcs_inventory_system/bloc/bloc.dart';
 import 'package:dcs_inventory_system/models/model.dart';
 import 'package:dcs_inventory_system/views/widgets/widgets.dart';
@@ -5,8 +6,8 @@ import 'package:dcs_inventory_system/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class FilterOrder extends StatefulWidget {
-  const FilterOrder({
+class FilterActivityLog extends StatefulWidget {
+  const FilterActivityLog({
     Key? key,
     this.startDate,
     this.endDate,
@@ -14,10 +15,10 @@ class FilterOrder extends StatefulWidget {
   final DateTime? startDate;
   final DateTime? endDate;
   @override
-  State<FilterOrder> createState() => _FilterOrderState();
+  State<FilterActivityLog> createState() => _FilterActivityLogState();
 }
 
-class _FilterOrderState extends State<FilterOrder> {
+class _FilterActivityLogState extends State<FilterActivityLog> {
   TextEditingController startDateTextController = TextEditingController();
   TextEditingController endDateTextController = TextEditingController();
   //final _formKey = GlobalKey<FormState>();
@@ -44,8 +45,8 @@ class _FilterOrderState extends State<FilterOrder> {
   }
 
   void saveFilter(BuildContext context) {
-    BlocProvider.of<OrderFilterBloc>(context)
-        .add(SetDateRange(start, end, context));
+    BlocProvider.of<ActivityLogFilterBloc>(context)
+        .add(SetDateRangeActivityLog(start, end, context));
   }
 
   void setCanSave() {
@@ -105,8 +106,8 @@ class _FilterOrderState extends State<FilterOrder> {
   }
 
   void clearFilter(BuildContext context) {
-    BlocProvider.of<OrderFilterBloc>(context)
-        .add(SetDateRange(null, null, context));
+    BlocProvider.of<ActivityLogFilterBloc>(context)
+        .add(SetDateRangeActivityLog(null, null, context));
   }
 
   @override
