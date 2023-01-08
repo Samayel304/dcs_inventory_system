@@ -29,3 +29,5 @@ export 'order_modals/filter_order.dart';
 export 'labeled_password_field.dart';
 
 export 'manage_account_modal/change_password_modal.dart';
+
+export 'activity_log_modals/filter_activity_modal.dart';

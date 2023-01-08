@@ -21,8 +21,7 @@ class _FilterOrderState extends State<FilterOrder> {
   TextEditingController startDateTextController = TextEditingController();
   TextEditingController endDateTextController = TextEditingController();
   //final _formKey = GlobalKey<FormState>();
-  Product? selectedProduct;
-  Supplier? selectedSupplier;
+
   DateTime? start;
   DateTime? end;
   bool _canSave = false;
