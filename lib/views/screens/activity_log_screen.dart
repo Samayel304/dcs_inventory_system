@@ -29,7 +29,13 @@ class ActivityLogScreen extends StatelessWidget {
                           startDate: activityFilter.startDate,
                           endDate: activityFilter.endDate));
                 },
-                icon: const Icon(Icons.filter_alt))
+                icon: const Icon(Icons.filter_alt)),
+            IconButton(
+                onPressed: () {
+                  BlocProvider.of<ActivityLogBloc>(context)
+                      .add(ExportActivityLog(context));
+                },
+                icon: const Icon(Icons.file_download))
           ],
         ),
         body: Column(

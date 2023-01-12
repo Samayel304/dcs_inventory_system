@@ -22,3 +22,10 @@ class AddActivityLog extends ActivityLogEvent {
   @override
   List<Object> get props => [activityLog];
 }
+
+class ExportActivityLog extends ActivityLogEvent {
+  final BuildContext context;
+  const ExportActivityLog(this.context);
+  @override
+  List<Object> get props => [context];
+}

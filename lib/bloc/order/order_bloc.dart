@@ -59,11 +59,7 @@ class OrderBloc extends Bloc<OrderEvent, OrderState> {
   }
 
   void _onReceiveOrder(ReceiveOrder event, Emitter<OrderState> emit) async {
-    double totalCost = event.order.product.unitPrice * event.order.quantity;
-    print(event.order.product.unitPrice);
-    print(event.order.quantity);
-    OrderModel order = event.order.copyWith(totalCost: totalCost);
-    final res = await _orderRepository.editOrderDetails(order);
+    final res = await _orderRepository.editOrderDetails(event.order);
     res.fold((l) {
       showErrorSnackBar(event.context, l.message);
     }, (r) async {

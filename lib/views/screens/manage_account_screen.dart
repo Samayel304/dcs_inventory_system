@@ -57,16 +57,6 @@ class _ManageAccountScreenState extends State<ManageAccountScreen> {
             Expanded(
               child: Column(
                 children: [
-                  Row(
-                      children: Header.manageAccountHeaders
-                          .map((header) => Expanded(
-                              flex: header.flex,
-                              child: Text(
-                                header.title,
-                                style: Theme.of(context).textTheme.bodyText1,
-                              )))
-                          .toList()),
-                  const SizedBox(height: 10),
                   Expanded(child: BlocBuilder<UserBloc, UserState>(
                     builder: (context, state) {
                       if (state is UserLoading) {
@@ -99,97 +89,101 @@ class _ManageAccountScreenState extends State<ManageAccountScreen> {
                                   color: Color(0xEEEBE6E6),
                                 ),
                                 padding: const EdgeInsets.all(10),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                        child: Align(
-                                            alignment: Alignment.centerLeft,
-                                            child: CircleAvatar(
-                                                radius: (20),
-                                                backgroundColor: Colors.white,
-                                                child: ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(20),
-                                                  child: Image.network(
-                                                      user.avatarUrl),
-                                                )))),
-                                    Expanded(
-                                      flex: 3,
-                                      child: Text(
-                                        '${user.firstName} ${user.middleName} ${user.lastName}',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline5,
-                                      ),
-                                    ),
-                                    Expanded(
-                                        flex: 3,
-                                        child: Text(user.email,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline5)),
-                                    Expanded(
-                                        child: PopupMenuButton(
-                                            onSelected: (value) {
-                                              switch (value) {
-                                                case 0:
-                                                  showBottomModal(
-                                                      context,
-                                                      EditFullName(
-                                                          selectedUser: user));
-                                                  break;
-                                                case 1:
-                                                  showBottomModal(
-                                                      context,
-                                                      ChangePasswordModal(
-                                                        selectedUser: user,
-                                                      ));
-                                                  break;
+                                child: Stack(children: [
+                                  Row(
+                                    children: [
+                                      Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: CircleAvatar(
+                                              radius: (30),
+                                              backgroundColor: Colors.white,
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(30),
+                                                child: Image.network(
+                                                    user.avatarUrl),
+                                              ))),
+                                      Expanded(
+                                        child: Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 10),
+                                          child: Column(
+                                            children: [
+                                              buildDetailText(
+                                                  context,
+                                                  'FullName',
+                                                  '${user.firstName} ${user.middleName} ${user.lastName}'),
+                                              buildDetailText(
+                                                  context, 'Email', user.email),
+                                              buildDetailText(context,
+                                                  'Position', user.position),
+                                            ],
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  Positioned(
+                                      top: 0,
+                                      right: 0,
+                                      child: PopupMenuButton(
+                                          onSelected: (value) {
+                                            switch (value) {
+                                              case 0:
+                                                showBottomModal(
+                                                    context,
+                                                    EditFullName(
+                                                        selectedUser: user));
+                                                break;
+                                              case 1:
+                                                showBottomModal(
+                                                    context,
+                                                    ChangePasswordModal(
+                                                      selectedUser: user,
+                                                    ));
+                                                break;
 
-                                                case 2:
-                                                  changeProfilePicture(user);
-                                                  break;
-                                                default:
-                                                  showAlertDialog(
-                                                      context: context,
-                                                      title: "Delete Product",
-                                                      content:
-                                                          "Are you sure do you want to delete this user?",
-                                                      onPressed: () {
-                                                        Navigator.pop(context);
-                                                        BlocProvider.of<
-                                                                    UserBloc>(
-                                                                context)
-                                                            .add(DeleteUser(
-                                                                user, context));
-                                                      });
-                                                  break;
-                                              }
-                                            },
-                                            icon: const Icon(Icons.more_vert),
-                                            itemBuilder: (context) => [
-                                                  const PopupMenuItem(
-                                                    value: 0,
-                                                    child:
-                                                        Text("Edit Full Name"),
-                                                  ),
-                                                  const PopupMenuItem(
-                                                    value: 1,
-                                                    child:
-                                                        Text("Change Password"),
-                                                  ),
-                                                  const PopupMenuItem(
-                                                    value: 2,
-                                                    child: Text(
-                                                        "Change Display Picture"),
-                                                  ),
-                                                  const PopupMenuItem(
-                                                    value: 3,
-                                                    child: Text("Delete"),
-                                                  )
-                                                ]))
-                                  ],
-                                ),
+                                              case 2:
+                                                changeProfilePicture(user);
+                                                break;
+                                              default:
+                                                showAlertDialog(
+                                                    context: context,
+                                                    title: "Delete Product",
+                                                    content:
+                                                        "Are you sure do you want to delete this user?",
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                      BlocProvider.of<UserBloc>(
+                                                              context)
+                                                          .add(DeleteUser(
+                                                              user, context));
+                                                    });
+                                                break;
+                                            }
+                                          },
+                                          icon: const Icon(Icons.more_vert),
+                                          itemBuilder: (context) => [
+                                                const PopupMenuItem(
+                                                  value: 0,
+                                                  child: Text("Edit Full Name"),
+                                                ),
+                                                const PopupMenuItem(
+                                                  value: 1,
+                                                  child:
+                                                      Text("Change Password"),
+                                                ),
+                                                const PopupMenuItem(
+                                                  value: 2,
+                                                  child: Text(
+                                                      "Change Display Picture"),
+                                                ),
+                                                const PopupMenuItem(
+                                                  value: 3,
+                                                  child: Text("Delete"),
+                                                )
+                                              ])),
+                                ]),
                               );
                             }));
                       } else {
@@ -205,6 +199,22 @@ class _ManageAccountScreenState extends State<ManageAccountScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget buildDetailText(BuildContext context, String title, String text) {
+    return Row(
+      children: [
+        Text("$title :", style: Theme.of(context).textTheme.headline5),
+        const SizedBox(
+          width: 5,
+        ),
+        Text(text,
+            style: Theme.of(context)
+                .textTheme
+                .headline5!
+                .copyWith(color: Colors.black, fontWeight: FontWeight.normal))
+      ],
     );
   }
 }
