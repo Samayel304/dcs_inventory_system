@@ -204,8 +204,13 @@ class _TabBarViewChild extends StatelessWidget {
                                                     "Are you sure do you want to receive this order?",
                                                 onPressed: () {
                                                   Navigator.pop(context);
+                                                  double totalCost =
+                                                      order.product.unitPrice *
+                                                          order.quantity;
+
                                                   OrderModel editedOrder =
                                                       order.copyWith(
+                                                          totalCost: totalCost,
                                                           dateReceived:
                                                               Timestamp.now()
                                                                   .toDate(),
@@ -215,6 +220,10 @@ class _TabBarViewChild extends StatelessWidget {
                                                       order.quantity;
                                                   Product product =
                                                       order.product.copyWith(
+                                                          totalExpenses: order
+                                                                  .product
+                                                                  .totalExpenses +
+                                                              totalCost,
                                                           quantity: order
                                                                   .product
                                                                   .quantity +

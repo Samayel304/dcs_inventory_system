@@ -12,6 +12,7 @@ class Product extends Equatable {
   final String productImageUrl;
   final String lifeSpan;
   final double unitPrice;
+  final double totalExpenses;
 
   const Product(
       {this.productId,
@@ -22,7 +23,8 @@ class Product extends Equatable {
       this.isNew = true,
       this.productImageUrl = Constant.defaultProductImageUrl,
       this.lifeSpan = "",
-      this.unitPrice = 0});
+      this.unitPrice = 0,
+      this.totalExpenses = 0});
 
   Product copyWith(
       {String? productId,
@@ -33,7 +35,8 @@ class Product extends Equatable {
       DateTime? dateCreated,
       bool? isNew,
       String? productImageUrl,
-      String? lifeSpan}) {
+      String? lifeSpan,
+      double? totalExpenses}) {
     return Product(
         productId: productId ?? this.productId,
         productName: productName ?? this.productName,
@@ -43,7 +46,8 @@ class Product extends Equatable {
         isNew: isNew ?? this.isNew,
         productImageUrl: productImageUrl ?? this.productImageUrl,
         lifeSpan: lifeSpan ?? this.lifeSpan,
-        unitPrice: unitPrice ?? this.unitPrice);
+        unitPrice: unitPrice ?? this.unitPrice,
+        totalExpenses: totalExpenses ?? this.totalExpenses);
   }
 
   factory Product.fromSnapshot(DocumentSnapshot snap) {
@@ -57,7 +61,8 @@ class Product extends Equatable {
         isNew: snap['isNew'],
         productImageUrl: snap['productImageUrl'],
         lifeSpan: snap['lifeSpan'],
-        unitPrice: double.parse(snap['unitPrice'].toString()));
+        unitPrice: double.parse(snap['unitPrice'].toString()),
+        totalExpenses: double.parse(snap['totalExpenses'].toString()));
   }
 
   factory Product.fromOrderSnapshot(Map<String, dynamic> snap) {
@@ -69,7 +74,8 @@ class Product extends Equatable {
         dateCreated: DateTime.parse(
             ((snap['dateCreated']) as Timestamp).toDate().toString()),
         isNew: snap['isNew'],
-        unitPrice: double.parse(snap['unitPrice'].toString()));
+        unitPrice: double.parse(snap['unitPrice'].toString()),
+        totalExpenses: double.parse(snap['totalExpenses'].toString()));
   }
 
   Map<String, Object> toDocument() {
@@ -81,7 +87,8 @@ class Product extends Equatable {
       'isNew': isNew,
       'productImageUrl': productImageUrl,
       'lifeSpan': lifeSpan,
-      'unitPrice': unitPrice
+      'unitPrice': unitPrice,
+      'totalExpenses': totalExpenses
     };
   }
 
@@ -93,7 +100,8 @@ class Product extends Equatable {
       'category': category,
       'dateCreated': dateCreated,
       'isNew': isNew,
-      'unitPrice': unitPrice
+      'unitPrice': unitPrice,
+      'totalExpenses': totalExpenses
     };
   }
 
@@ -107,6 +115,7 @@ class Product extends Equatable {
         isNew,
         productImageUrl,
         lifeSpan,
-        unitPrice
+        unitPrice,
+        totalExpenses
       ];
 }

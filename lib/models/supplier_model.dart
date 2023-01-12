@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dcs_inventory_system/models/category_model.dart';
 import 'package:equatable/equatable.dart';
 
 class Supplier extends Equatable {

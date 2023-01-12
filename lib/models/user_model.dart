@@ -12,6 +12,7 @@ class UserModel extends Equatable {
 
   final String role;
   final String avatarUrl;
+  final String position;
 
   const UserModel(
       {this.id,
@@ -21,7 +22,8 @@ class UserModel extends Equatable {
       required this.lastName,
       required this.email,
       this.role = Constant.defaultUserRole,
-      this.avatarUrl = Constant.defaultUserProfileUrl});
+      this.avatarUrl = Constant.defaultUserProfileUrl,
+      this.position = Constant.defaultPosition});
 
   UserModel copyWith(
       {String? id,
@@ -32,7 +34,8 @@ class UserModel extends Equatable {
       String? password,
       String? role,
       String? avatarUrl,
-      List<dynamic>? deviceToken}) {
+      List<dynamic>? deviceToken,
+      String? position}) {
     return UserModel(
         id: id ?? this.id,
         firstName: firstName ?? this.firstName,
@@ -41,7 +44,8 @@ class UserModel extends Equatable {
         email: email ?? this.email,
         role: role ?? this.role,
         avatarUrl: avatarUrl ?? this.avatarUrl,
-        deviceToken: deviceToken ?? this.deviceToken);
+        deviceToken: deviceToken ?? this.deviceToken,
+        position: position ?? this.position);
   }
 
   factory UserModel.fromSnapshot(DocumentSnapshot snap) {
@@ -53,7 +57,8 @@ class UserModel extends Equatable {
         email: snap['email'],
         role: snap['role'],
         avatarUrl: snap['avatarUrl'],
-        deviceToken: snap['deviceToken']);
+        deviceToken: snap['deviceToken'],
+        position: snap['position']);
   }
 
   factory UserModel.fromActiviyLogSnapshot(Map<String, dynamic> snap) {
@@ -76,7 +81,8 @@ class UserModel extends Equatable {
       'email': email,
       'role': role,
       'avatarUrl': avatarUrl,
-      'deviceToken': deviceToken
+      'deviceToken': deviceToken,
+      'position': position
     };
   }
 
@@ -102,6 +108,7 @@ class UserModel extends Equatable {
         email,
         role,
         avatarUrl,
-        deviceToken
+        deviceToken,
+        position
       ];
 }

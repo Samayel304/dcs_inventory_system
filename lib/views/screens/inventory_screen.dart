@@ -288,7 +288,9 @@ class _TabBarViewChild extends StatelessWidget {
                                       buildDetailText(context, 'Life Span',
                                           product.lifeSpan),
                                       buildDetailText(context, 'Unit Price',
-                                          formatCurrency(product.unitPrice))
+                                          formatCurrency(product.unitPrice)),
+                                      buildDetailText(context, 'Total Expenses',
+                                          formatCurrency(product.totalExpenses))
                                     ],
                                   ),
                                 ),
